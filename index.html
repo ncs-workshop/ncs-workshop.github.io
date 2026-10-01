@@ -1,11 +1,147 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Meine erste Webseite</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nordic Semiconductor Workshops</title>
+<style>
+  :root {
+    --blueslate: #0032A0;
+    --blue: #00A2C6;
+    --sky: #6AD1E3;
+    --text: #333F48;
+    --muted: #768692;
+    --grey-light: #D9E1E2;
+    --bg: #F4F7F7;
+    --card: #FFFFFF;
+    --font: "Segoe UI Light", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    --font-semi: "Segoe UI Semilight", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { height: 100%; }
+  body {
+    margin: 0; min-height: 100%;
+    display: flex; flex-direction: column;
+    background: var(--bg); color: var(--text);
+    font-family: var(--font-semi); font-size: 1.0625rem; line-height: 1.5;
+  }
+
+  header {
+    position: relative; overflow: hidden;
+    background: var(--blueslate); color: #fff;
+    padding: clamp(2rem, 6vw, 4rem) clamp(1.25rem, 6vw, 5rem) clamp(3rem, 9vw, 6.5rem);
+  }
+  header::before { /* thin left-edge accent bar, as in Nordic section slides */
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--blue);
+  }
+  .logo { display: block; width: clamp(150px, 22vw, 220px); height: auto; }
+  h1 {
+    margin: clamp(2.5rem, 8vw, 5rem) 0 0;
+    max-width: 16ch;
+    font-family: var(--font); font-weight: 300;
+    font-size: clamp(2.5rem, 7vw, 4.75rem); line-height: 1.05; letter-spacing: -0.01em;
+  }
+  .lede { margin: 1.25rem 0 0; max-width: 46ch; color: #DCE6F7; }
+
+  main {
+    flex: 1; width: 100%; max-width: 62rem;
+    margin: 0 auto; padding: 0 clamp(1.25rem, 6vw, 5rem) 4rem;
+  }
+  .panel {
+    position: relative; margin-top: -2.5rem;
+    background: var(--card); border-radius: 6px;
+    box-shadow: 0 1px 0 var(--grey-light), 0 12px 32px rgba(0, 50, 160, .10);
+    padding: clamp(1.25rem, 4vw, 2.25rem);
+  }
+  h2 {
+    margin: 0 0 1rem;
+    font-family: var(--font-semi); font-weight: 600; font-size: 1.25rem; color: var(--blueslate);
+  }
+  ul.links { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--grey-light); }
+  ul.links li { border-bottom: 1px solid var(--grey-light); }
+  a.link {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1.1rem .5rem; color: var(--text); text-decoration: none;
+    transition: background-color .15s ease;
+  }
+  a.link:hover { background: #EEF6F8; }
+  a.link:focus-visible { outline: 3px solid var(--blue); outline-offset: -3px; }
+  .dot { /* Nordic's circle motif */
+    flex: none; width: 2.5rem; height: 2.5rem; border-radius: 50%;
+    background: var(--blue); position: relative;
+    transition: background-color .15s ease;
+  }
+  .dot::after {
+    content: ""; position: absolute; left: 50%; top: 50%;
+    width: .55rem; height: .55rem;
+    border-top: 2px solid #fff; border-right: 2px solid #fff;
+    transform: translate(-70%, -50%) rotate(45deg);
+  }
+  a.link:hover .dot { background: var(--blueslate); }
+  .text { display: flex; flex-direction: column; min-width: 0; }
+  .name { font-family: var(--font-semi); font-weight: 600; font-size: 1.15rem; color: var(--text); }
+  .meta { color: var(--muted); font-size: .95rem; }
+
+  .archive { margin: 1.75rem 0 0; padding: 0 clamp(1.25rem, 4vw, 2.25rem); font-size: .95rem; }
+  .archive a {
+    display: inline-flex; align-items: center; gap: .5rem;
+    color: var(--blueslate); text-decoration: none; padding: .35rem 0;
+    border-bottom: 1px solid transparent;
+  }
+  .archive a:hover { border-bottom-color: var(--blueslate); }
+  .archive a:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+  .archive .dot-sm {
+    width: 1.25rem; height: 1.25rem; border-radius: 50%; background: var(--blue); position: relative; flex: none;
+  }
+  .archive .dot-sm::after {
+    content: ""; position: absolute; left: 50%; top: 50%; width: .3rem; height: .3rem;
+    border-top: 1.5px solid #fff; border-right: 1.5px solid #fff;
+    transform: translate(-70%, -50%) rotate(45deg);
+  }
+
+  footer { padding: 1.5rem clamp(1.25rem, 6vw, 5rem); color: var(--muted); font-size: .85rem; border-top: 1px solid var(--grey-light); }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
 </head>
 <body>
-    <h1>Hallo Welt!</h1>
-    <p>Das ist meine erste eigene Website.</p>
+  <header>
+    <svg role="img" aria-label="Nordic Semiconductor" class="logo" viewBox="0 0 231.8 62.75" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" ><g><g><path d="M116.88 51.66 115.21 51.66 114.33 45.82 114.3 45.82 112.58 50.31 111.38 50.31 109.66 45.82 109.63 45.82 108.74 51.66 107.07 51.66 108.69 42.62 109.91 42.62 111.95 47.73 112 47.73 114.05 42.62 115.26 42.62 116.88 51.66Z" fill="#FFFFFF"/><path d="M109.39 36.17 105.24 36.17 93.38 19.43 93.35 19.43 93.35 36.18 88.88 36.18 88.88 11.76 93.03 11.76 104.89 28.54 104.93 28.54 104.93 11.76 109.4 11.76 109.39 36.17Z" fill="#FFFFFF"/><path d="M139.45 23.96C139.45 31.53 133.9 36.7 126.64 36.7 119.38 36.7 113.87 31.54 113.87 23.96 113.87 16.39 119.38 11.22 126.64 11.22 133.9 11.23 139.45 16.39 139.45 23.96ZM118.76 23.96C118.76 28.81 122.07 32.12 126.65 32.12 131.26 32.12 134.54 28.81 134.54 23.96 134.54 19.11 131.26 15.8 126.65 15.8 122.07 15.8 118.76 19.11 118.76 23.96Z" fill="#FFFFFF"/><path d="M150.42 26.44 148.75 26.44 148.75 36.17 144.28 36.17 144.28 11.75 153.28 11.75C158.13 11.75 161.17 14.75 161.17 19.15 161.17 22.78 159.04 25.5 155.45 26.23L162.67 36.17 157.05 36.17 150.42 26.44ZM148.74 22.5 152.58 22.5C155.16 22.5 156.38 21.28 156.38 19.22 156.38 17.23 155.16 15.87 152.58 15.87L148.74 15.87 148.74 22.5Z" fill="#FFFFFF"/><path d="M187.03 23.96C187.03 31.57 181.69 36.17 174.33 36.17L166.51 36.17 166.51 11.75 174.33 11.75C181.69 11.75 187.03 16.35 187.03 23.96ZM170.98 15.87 170.98 32.06 174.54 32.06C178.94 32.06 182.22 29.23 182.22 23.97 182.22 18.7 178.94 15.88 174.54 15.88L170.98 15.87Z" fill="#FFFFFF"/><path d="M196.26 36.17 191.76 36.17 191.76 11.75 196.26 11.75 196.26 36.17Z" fill="#FFFFFF"/><path d="M201.08 23.96C201.08 16.25 206.56 11.22 214.27 11.22 218.04 11.22 220.79 12.37 222.99 13.91L220.41 17.82C218.91 16.77 216.85 15.8 214.23 15.8 209.48 15.8 205.96 18.98 205.96 23.96 205.96 28.95 209.48 32.12 214.23 32.12 216.85 32.12 218.91 31.14 220.41 30.1L222.99 34.01C220.79 35.55 218.04 36.7 214.27 36.7 206.56 36.7 201.08 31.67 201.08 23.96Z" fill="#FFFFFF"/><path d="M88.31 50.98 89.05 49.47C89.77 49.9 90.63 50.26 91.49 50.26 92.34 50.26 92.77 49.89 92.77 49.34 92.77 48.88 92.43 48.57 91.85 48.15L90.39 47.1C89.43 46.44 88.96 45.69 88.96 44.72 88.96 43.31 89.92 42.42 91.65 42.42 92.55 42.42 93.46 42.67 94.3 43.05L93.59 44.56C92.91 44.21 92.26 44 91.67 44 90.99 44 90.73 44.26 90.73 44.66 90.73 45.01 90.94 45.24 91.43 45.59L92.99 46.69C94 47.37 94.54 48.1 94.54 49.23 94.54 50.93 93.35 51.84 91.45 51.84 90.26 51.86 89.16 51.51 88.31 50.98" fill="#FFFFFF"/><path d="M103.56 50.12 103.56 51.67 98.14 51.67 98.14 42.63 103.5 42.63 103.5 44.18 99.79 44.18 99.79 45.99 103.17 45.99 103.17 47.51 99.79 47.51 99.79 50.12 103.56 50.12Z" fill="#FFFFFF"/><path d="M122.24 51.66 120.57 51.66 120.57 42.62 122.24 42.62 122.24 51.66Z" fill="#FFFFFF"/><path d="M122.24 51.66 120.52 51.66 120.52 42.62 122.24 42.62 122.24 51.66Z" fill="#FFFFFF"/><path d="M125.58 47.15C125.58 44.3 127.61 42.44 130.46 42.44 131.85 42.44 132.88 42.87 133.69 43.43L132.73 44.88C132.17 44.49 131.41 44.13 130.44 44.13 128.68 44.13 127.38 45.31 127.38 47.15 127.38 49 128.68 50.17 130.44 50.17 131.41 50.17 132.17 49.81 132.73 49.42L133.69 50.87C132.88 51.44 131.86 51.86 130.46 51.86 127.61 51.86 125.58 50 125.58 47.15Z" fill="#FFFFFF"/><path d="M145.94 47.15C145.94 49.95 143.89 51.86 141.2 51.86 138.51 51.86 136.47 49.95 136.47 47.15 136.47 44.35 138.51 42.44 141.2 42.44 143.88 42.43 145.94 44.34 145.94 47.15ZM138.28 47.15C138.28 48.95 139.51 50.17 141.2 50.17 142.9 50.17 144.12 48.94 144.12 47.15 144.12 45.36 142.91 44.13 141.2 44.13 139.5 44.12 138.28 45.35 138.28 47.15Z" fill="#FFFFFF"/><path d="M156.99 51.66 155.45 51.66 151.06 45.46 151.05 45.46 151.05 51.66 149.4 51.66 149.4 42.62 150.94 42.62 155.33 48.83 155.34 48.83 155.34 42.62 156.99 42.62 156.99 51.66Z" fill="#FFFFFF"/><path d="M168.68 47.12C168.68 49.94 166.7 51.64 163.98 51.64L161.09 51.64 161.09 42.6 163.98 42.6C166.7 42.6 168.68 44.3 168.68 47.12ZM162.74 44.12 162.74 50.11 164.06 50.11C165.69 50.11 166.9 49.06 166.9 47.11 166.9 45.16 165.69 44.11 164.06 44.11L162.74 44.11Z" fill="#FFFFFF"/><path d="M179.57 48.07C179.57 50.36 178.21 51.82 175.85 51.82 173.47 51.82 172.12 50.36 172.12 48.07L172.12 42.59 173.86 42.59 173.86 47.96C173.86 49.26 174.63 50.1 175.85 50.1 177.05 50.1 177.83 49.26 177.83 47.96L177.83 42.59 179.57 42.59 179.57 48.07Z" fill="#FFFFFF"/><path d="M183 47.12C183 44.27 185.03 42.41 187.88 42.41 189.27 42.41 190.3 42.84 191.11 43.4L190.15 44.85C189.59 44.46 188.83 44.1 187.86 44.1 186.1 44.1 184.8 45.28 184.8 47.12 184.8 48.97 186.1 50.14 187.86 50.14 188.83 50.14 189.59 49.78 190.15 49.39L191.11 50.84C190.3 51.41 189.28 51.83 187.88 51.83 185.03 51.83 183 49.97 183 47.12Z" fill="#FFFFFF"/><path d="M200.39 44.15 197.92 44.15 197.92 51.64 196.27 51.64 196.27 44.15 193.8 44.15 193.8 42.6 200.39 42.6 200.39 44.15Z" fill="#FFFFFF"/><path d="M212.4 47.12C212.4 49.92 210.35 51.83 207.66 51.83 204.97 51.83 202.93 49.92 202.93 47.12 202.93 44.32 204.97 42.41 207.66 42.41 210.35 42.4 212.4 44.31 212.4 47.12ZM204.74 47.12C204.74 48.92 205.97 50.14 207.66 50.14 209.36 50.14 210.58 48.91 210.58 47.12 210.58 45.33 209.37 44.1 207.66 44.1 205.97 44.09 204.74 45.32 204.74 47.12Z" fill="#FFFFFF"/><path d="M218.06 48.03 217.44 48.03 217.44 51.63 215.79 51.63 215.79 42.59 219.12 42.59C220.92 42.59 222.04 43.7 222.04 45.33 222.04 46.67 221.25 47.68 219.92 47.95L222.59 51.63 220.51 51.63 218.06 48.03ZM217.44 46.57 218.86 46.57C219.82 46.57 220.27 46.12 220.27 45.36 220.27 44.62 219.82 44.12 218.86 44.12L217.44 44.12 217.44 46.57Z" fill="#FFFFFF"/><g><g><g><g><path d="M228 14.76 228 16.04 227.76 16.04 227.76 13.22 229 13.22C229.54 13.22 229.94 13.46 229.94 13.97 229.94 14.3 229.79 14.55 229.41 14.64 229.63 14.7 229.86 14.85 229.86 15.34L229.86 15.45C229.86 15.68 229.86 15.93 229.89 16.04L229.64 16.04C229.6 15.92 229.61 15.68 229.61 15.48L229.61 15.39C229.61 14.9 229.42 14.77 228.88 14.77L228 14.76ZM228 14.54 228.93 14.54C229.43 14.54 229.68 14.37 229.68 13.98 229.68 13.63 229.43 13.46 228.95 13.46L228 13.46 228 14.54Z" fill="#FFFFFF"/><path d="M230 16.12 229.59 16.12 229.57 16.07C229.53 15.96 229.54 15.78 229.54 15.6L229.54 15.39C229.54 14.96 229.4 14.84 228.89 14.84L228.09 14.84 228.09 16.12 227.69 16.12 227.69 13.15 229.01 13.15C229.64 13.15 230.02 13.46 230.02 13.97 230.02 14.29 229.89 14.52 229.63 14.65 229.84 14.78 229.95 15.01 229.95 15.34L229.95 15.45C229.95 15.67 229.95 15.92 229.98 16.02L230 16.12ZM229.7 15.97 229.8 15.97C229.78 15.84 229.78 15.65 229.78 15.46L229.78 15.35C229.78 14.88 229.55 14.77 229.38 14.73L229.08 14.65 229.38 14.58C229.7 14.5 229.85 14.31 229.85 13.98 229.85 13.38 229.25 13.31 228.99 13.31L227.82 13.31 227.82 15.98 227.91 15.98 227.91 14.7 228.87 14.7C229.38 14.7 229.68 14.81 229.68 15.4L229.68 15.61C229.69 15.73 229.69 15.87 229.7 15.97ZM228.93 14.61 227.93 14.61 227.93 13.38 228.95 13.38C229.62 13.38 229.76 13.7 229.76 13.98 229.76 14.4 229.48 14.61 228.93 14.61ZM228.08 14.46 228.93 14.46C229.53 14.46 229.6 14.2 229.6 13.98 229.6 13.87 229.6 13.54 228.95 13.54L228.08 13.54 228.08 14.46Z" fill="#FFFFFF"/></g></g><g><g><path d="M228.8 17.26C227.33 17.26 226.13 16.06 226.13 14.59 226.13 13.12 227.33 11.92 228.8 11.92 230.27 11.92 231.47 13.12 231.47 14.59 231.47 16.06 230.27 17.26 228.8 17.26ZM228.8 12.17C227.46 12.17 226.38 13.26 226.38 14.59 226.38 15.93 227.47 17.01 228.8 17.01 230.14 17.01 231.22 15.92 231.22 14.59 231.22 13.25 230.14 12.17 228.8 12.17Z" fill="#FFFFFF"/><path d="M228.8 17.34C227.29 17.34 226.05 16.11 226.05 14.59 226.05 13.08 227.28 11.84 228.8 11.84 230.32 11.84 231.55 13.07 231.55 14.59 231.55 16.11 230.31 17.34 228.8 17.34ZM228.8 12C227.37 12 226.2 13.16 226.2 14.59 226.2 16.02 227.36 17.18 228.8 17.18 230.23 17.18 231.4 16.02 231.4 14.59 231.39 13.16 230.23 12 228.8 12ZM228.8 17.09C227.42 17.09 226.3 15.97 226.3 14.59 226.3 13.21 227.42 12.09 228.8 12.09 230.18 12.09 231.3 13.21 231.3 14.59 231.3 15.97 230.18 17.09 228.8 17.09ZM228.8 12.24C227.51 12.24 226.45 13.29 226.45 14.59 226.45 15.89 227.5 16.94 228.8 16.94 230.1 16.94 231.15 15.89 231.15 14.59 231.15 13.29 230.09 12.24 228.8 12.24Z" fill="#FFFFFF"/></g></g></g></g></g><g><g><path d="M50.25 1.19C50.21 1.21 50.17 1.23 50.13 1.25 49.97 1.32 49.82 1.4 49.67 1.48L34.72 10.11 52.13 20.21 52.13 0.79C51.48 0.8 50.84 0.94 50.25 1.19Z" fill="#FFFFFF" opacity="0.6"/><path d="M19.58 61.84 35.41 52.69 17.97 42.65 17.98 62.29C18.56 62.3 19.09 62.13 19.58 61.84Z" fill="#FFFFFF" opacity="0.8"/><path d="M69.92 51.53 34.22 30.91 34.22 30.91 32.54 29.94 0.36 11.38C0.13 11.94 0 12.56 0 13.19 0 13.33 0 13.47 0 13.61L0 50.5C0 51.67 0.64 52.75 1.66 53.31L16.35 61.89C16.86 62.17 17.42 62.3 17.98 62.29L17.97 43.39 17.97 42.65 51.3 61.85C51.4 61.9 51.5 61.95 51.6 61.99 51.63 62 51.66 62.02 51.69 62.03 52.65 62.4 53.45 62.11 54.33 61.55L59.91 58.38 68.81 53.07C69.34 52.68 69.72 52.14 69.92 51.53Z" fill="#FFFFFF" opacity="0.5"/><path d="M70.1 27.2 70.1 13.21C70.1 11.42 69.12 9.77 67.55 8.91L54.63 1.41C53.85 0.98 52.98 0.78 52.12 0.79L52.12 20.22 22.98 3.31 19.74 1.49C18.33 0.7 17.07 0.64 15.62 1.3 15.58 1.32 15.55 1.34 15.51 1.36 15.34 1.44 15.18 1.53 15.02 1.63L9.91 4.6 2.54 8.87C2.54 8.89 2.54 8.87 2.54 8.87 1.53 9.42 0.78 10.34 0.36 11.37 0.4 11.4 32.54 29.94 32.54 29.94L34.22 30.91 34.22 30.91 69.93 51.53C70.11 50.87 70.11 49.65 70.11 49.65L70.11 27.2Z" fill="#FFFFFF"/></g></g></g></svg>
+    <h1>Nordic Semiconductor Workshops</h1>
+    <p class="lede">Choose your workshop to open its page.</p>
+  </header>
+
+  <main>
+    <section class="panel" aria-labelledby="ws-heading">
+      <h2 id="ws-heading">Available workshops</h2>
+      <ul class="links">
+        <li>
+          <!-- Replace href with the address of the workshop page -->
+          <a class="link" href="ntt2026_SA/workshop-guide.html">
+            <span class="dot" aria-hidden="true"></span>
+            <span class="text">
+              <span class="name">Nordic Tech Tour EMEA 2026: Hands-on Workshop</span>
+              <span class="meta">Cape Town, South Africa<br>Johannesburg, South Africa</span>
+            </span>
+          </a>
+        </li>
+        <!-- Add more workshops by copying the <li> above -->
+
+        <li>
+          <!-- Replace href with the address of the workshop page -->
+          <a class="link" href="ntt2026_DACH/workshop-guide.html">
+            <span class="dot" aria-hidden="true"></span>
+            <span class="text">
+              <span class="name">Nordic Tech Tour EMEA 2026: Hands-on Workshop</span>
+              <span class="meta">Zürich, Switzerland<br>Graz, Austria<br>Munich, Germany<br>Düsseldorf, Germany</span>
+            </span>
+          </a>
+        </li>
+
+      </ul>
+    </section>
+
+  </main>
+
+  <footer>&copy; Nordic Semiconductor</footer>
 </body>
 </html>

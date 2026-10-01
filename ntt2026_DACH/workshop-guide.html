@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Workshop Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+
+    --paper: #F7F6F3;
+    --panel: #FFFFFF;
+    --ink: #1B1F23;
+    --muted: #6B7280;
+    --accent: #2F6F4E;
+    --accent-ink: #FFFFFF;
+    --accent-soft: #E4EFE9;
+    --line: #DFDCD5;
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --paper: #14171A;
+      --panel: #1B1F22;
+      --ink: #ECECE9;
+      --muted: #9AA1A6;
+      --accent: #57B589;
+      --accent-ink: #0C1210;
+      --accent-soft: #1E2C25;
+      --line: #2B2F32;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #14171A;
+    --panel: #1B1F22;
+    --ink: #ECECE9;
+    --muted: #9AA1A6;
+    --accent: #57B589;
+    --accent-ink: #0C1210;
+    --accent-soft: #1E2C25;
+    --line: #2B2F32;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  html, body { height: 100%; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  code, pre, .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+
+  .app { max-width: 1180px; margin: 0 auto; padding: 20px 20px 40px; }
+
+  /* ---------- Header ---------- */
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px 24px;
+    padding: 18px env(safe-area-inset-top, 0px) 20px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 22px;
+  }
+  .title-block { flex: 1 1 320px; min-width: 0; }
+
+  .sidebar-toggle {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 0;
+    font-family: inherit;
+  }
+  .sidebar-toggle-track {
+    position: relative;
+    width: 34px;
+    height: 20px;
+    border-radius: 10px;
+    background: var(--line);
+    display: inline-block;
+    transition: background .15s ease;
+  }
+  .sidebar-toggle[aria-pressed="true"] .sidebar-toggle-track { background: var(--accent); }
+  .sidebar-toggle-thumb {
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--panel);
+    transition: transform .15s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  }
+  .sidebar-toggle[aria-pressed="true"] .sidebar-toggle-thumb { transform: translateX(14px); }
+  .sidebar-toggle-label { font-size: 12.5px; color: var(--muted); font-weight: 500; white-space: nowrap; }
+
+  /* ---------- Settings: gear button + modal ---------- */
+  .icon-btn {
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .settings-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 20, 18, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+  }
+  .settings-overlay[hidden] { display: none; }
+  .settings-panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 420px;
+    padding: 22px 24px 26px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+  }
+  .settings-panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .settings-panel-head h2 {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 19px;
+    font-weight: 600;
+    margin: 0;
+    color: var(--ink);
+  }
+  .settings-section {
+    padding: 16px 0;
+    border-top: 1px solid var(--line);
+  }
+  .settings-section:first-of-type { border-top: none; padding-top: 0; }
+  .settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .settings-row-label { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .settings-row-hint { font-size: 12.5px; color: var(--muted); margin-top: 3px; line-height: 1.4; }
+
+  .settings-select {
+    width: 100%;
+    margin-top: 10px;
+    padding: 9px 10px;
+    border-radius: 7px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--ink);
+    font-size: 13.5px;
+    font-family: inherit;
+  }
+
+  .settings-danger-btn {
+    margin-top: 12px;
+    padding: 9px 16px;
+    border-radius: 7px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--danger, #A23B2E);
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .settings-danger-btn:hover { border-color: var(--danger, #A23B2E); background: var(--accent-soft); }
+
+  /* Theme toggle switch — same visual language as the sidebar switch */
+  .theme-toggle { flex: 0 0 auto; background: none; border: none; cursor: pointer; padding: 2px; }
+  .theme-toggle-track {
+    position: relative;
+    width: 34px;
+    height: 20px;
+    border-radius: 10px;
+    background: var(--line);
+    display: inline-block;
+    transition: background .15s ease;
+  }
+  .theme-toggle[aria-pressed="true"] .theme-toggle-track { background: var(--accent); }
+  .theme-toggle-thumb {
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--panel);
+    transition: transform .15s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  }
+  .theme-toggle[aria-pressed="true"] .theme-toggle-thumb { transform: translateX(14px); }
+  #workshopTitle {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1.2;
+    word-break: break-word;
+  }
+
+  .progress-block { flex: 0 0 auto; min-width: 220px; display: flex; align-items: center; gap: 12px; }
+  .progress-info { text-align: right; }
+  .progress-text { font-size: 13.5px; color: var(--muted); margin-bottom: 6px; white-space: nowrap; }
+  .progress-text strong { color: var(--ink); font-weight: 600; }
+  .progress-bar {
+    position: relative;
+    width: 220px;
+    height: 6px;
+    background: var(--line);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    position: absolute; inset: 0 auto 0 0;
+    width: 0%;
+    background: var(--accent);
+    border-radius: 3px;
+    transition: width .35s ease;
+  }
+
+  /* ---------- Layout ---------- */
+  .layout { display: flex; gap: 26px; align-items: flex-start; }
+  .layout.sidebar-hidden nav.steps { display: none; }
+
+  /* Sidebar (chapters + steps) */
+  nav.steps {
+    flex: 0 0 250px;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .chapter { margin-bottom: 2px; }
+
+  .chapter-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 8px 8px 4px;
+    border-radius: 6px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .chapter-header:hover { background: var(--accent-soft); }
+  .chapter-header.locked { cursor: default; opacity: .5; }
+  .chapter-header.locked:hover { background: none; }
+
+  .chapter-chevron {
+    flex: 0 0 14px;
+    font-size: 11px;
+    color: var(--muted);
+    transform: rotate(0deg);
+    transition: transform .15s ease;
+    display: inline-block;
+  }
+  .chapter.expanded .chapter-chevron { transform: rotate(90deg); }
+
+  .chapter-lock {
+    flex: 0 0 auto;
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  .chapter-title {
+    flex: 1 1 auto;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink);
+    word-break: break-word;
+  }
+  .chapter-header.locked .chapter-title { color: var(--muted); }
+
+  .chapter-progress {
+    flex: 0 0 auto;
+    font-size: 11.5px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .chapter-header.viewing { background: var(--panel); border: 1px solid var(--line); }
+
+  .chapter-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-left: 18px;
+    margin-top: 2px;
+    margin-bottom: 6px;
+  }
+  .chapter:not(.expanded) .chapter-steps { display: none; }
+
+  .step-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    background: transparent;
+  }
+  .step-row:hover { background: var(--accent-soft); }
+  .step-row.active { background: var(--panel); border-color: var(--line); }
+  .step-num {
+    flex: 0 0 22px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11.5px; font-weight: 600; color: var(--muted);
+    background: var(--panel);
+  }
+  .step-row.done .step-num { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .step-row.active .step-num { border-color: var(--accent); color: var(--accent); }
+  .step-row.active.done .step-num { color: var(--accent-ink); }
+  .step-label { font-size: 13.5px; line-height: 1.35; word-break: break-word; }
+  .step-row.done .step-label { color: var(--muted); }
+
+  /* Main step panel */
+  main.step-panel {
+    flex: 1 1 auto;
+    min-width: 0;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: clamp(20px, 3vw, 40px);
+  }
+  .step-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 6px;
+  }
+  .step-eyebrow { color: var(--accent); font-weight: 600; font-size: 13px; margin-bottom: 6px; }
+  .complete-toggle {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .complete-toggle.done { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .complete-toggle input { display: none; }
+
+  /* Description font/size come from DESCRIPTION_FONT / DESCRIPTION_FONT_SIZE
+     at the top of the script (these are just the fallbacks). */
+  :root { --desc-font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif; --desc-size: 16px; }
+  #stepDesc {
+    margin-top: 16px;
+    font-family: var(--desc-font);
+    font-size: var(--desc-size);
+    line-height: 1.6;
+    max-width: 66ch;
+  }
+  #stepDesc p { margin: 0 0 12px; }
+  #stepDesc p:last-child { margin-bottom: 0; }
+  #stepDesc ul, #stepDesc ol { margin: 0 0 12px; padding-left: 22px; }
+  #stepDesc li { margin-bottom: 4px; }
+  #stepDesc b, #stepDesc strong { font-weight: 700; }
+  #stepDesc i, #stepDesc em { font-style: italic; }
+  #stepDesc u { text-decoration: underline; }
+  #stepDesc a { color: var(--accent); text-decoration: underline; }
+  #stepDesc code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.9em; background: rgba(129, 139, 152, 0.16); padding: 0.15em 0.4em; border-radius: 5px; }
+
+  .more-info-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .more-info-btn {
+    padding: 7px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .more-info-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+
+  #infoBody { font-family: var(--desc-font); font-size: var(--desc-size); line-height: 1.6; }
+  #infoBody p { margin: 0 0 12px; }
+  #infoBody p:last-child { margin-bottom: 0; }
+  #infoBody ul, #infoBody ol { margin: 0 0 12px; padding-left: 22px; }
+  #infoBody li { margin-bottom: 4px; }
+  #infoBody b, #infoBody strong { font-weight: 700; }
+  #infoBody i, #infoBody em { font-style: italic; }
+  #infoBody u { text-decoration: underline; }
+  #infoBody a { color: var(--accent); text-decoration: underline; }
+  #infoBody code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.9em; background: rgba(129, 139, 152, 0.16); padding: 0.15em 0.4em; border-radius: 5px; }
+
+  /* Force one font/size across all description text, beating inline
+     styles pasted in from other editors. Inline code stays monospace. */
+  #stepDesc :is(span, font, div, p, ul, ol, li, a, b, strong, i, em, u, td, th),
+  #infoBody :is(span, font, div, p, ul, ol, li, a, b, strong, i, em, u, td, th) {
+    font-family: inherit !important;
+    font-size: inherit !important;
+  }
+  #stepDesc code, #stepDesc code *, #infoBody code, #infoBody code * {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace !important;
+  }
+  #stepDesc code, #infoBody code { font-size: 0.9em !important; }
+
+  .block { margin-top: 24px; }
+  .block-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  /* Code block */
+  .code-block {
+    position: relative;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      .code-block { background: #5B6169; color: #F5F5F3; border: 1px solid var(--line); }
+    }
+  }
+  :root[data-theme="dark"] .code-block { background: #5B6169; color: #F5F5F3; border: 1px solid var(--line); }
+
+  /* Display-only code box (no Copy button): dark grey, tuned per theme so
+     it stays clearly different from the copyable box in both. */
+  .code-block.no-copy { background: #4A5057; color: #F5F5F3; }
+  .code-block.no-copy pre { padding-right: 18px; }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      .code-block.no-copy { background: #2B2F33; }
+    }
+  }
+  :root[data-theme="dark"] .code-block.no-copy { background: #2B2F33; }
+
+  .code-block pre {
+    margin: 0;
+    padding: 16px 44px 16px 18px;
+    overflow-x: auto;
+    font-size: 13.5px;
+    line-height: 1.55;
+    white-space: pre;
+  }
+  .copy-btn {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: rgba(255,255,255,0.12);
+    color: inherit;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: "Inter", system-ui, sans-serif;
+  }
+  .copy-btn:hover { background: rgba(255,255,255,0.22); }
+  .copy-btn.copied { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+
+  /* Image block */
+  .image-block img {
+    max-width: 100%;
+    display: block;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+  }
+  .image-caption {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* Footer nav */
+  .step-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .nav-btn {
+    padding: 10px 18px;
+    border-radius: 7px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .nav-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+  .nav-btn:disabled { opacity: .35; cursor: default; }
+  .nav-btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .nav-btn.primary:hover:not(:disabled) { color: var(--accent-ink); opacity: .9; }
+
+  /* Mobile */
+  @media (max-width: 760px) {
+    .layout { flex-direction: column; }
+    nav.steps {
+      position: static;
+      max-height: none;
+      width: 100%;
+    }
+    .progress-info { text-align: left; }
+    .progress-bar { width: 160px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="title-block">
+      <div id="workshopTitle"></div>
+    </div>
+    <div class="progress-block">
+      <button id="sidebarToggle" class="sidebar-toggle" type="button" aria-pressed="false">
+        <span class="sidebar-toggle-track"><span class="sidebar-toggle-thumb"></span></span>
+        <span class="sidebar-toggle-label">Sidebar</span>
+      </button>
+      <button id="imagesToggle" class="sidebar-toggle" type="button" aria-pressed="false">
+        <span class="sidebar-toggle-track"><span class="sidebar-toggle-thumb"></span></span>
+        <span class="sidebar-toggle-label">Hide images</span>
+      </button>
+      <div class="progress-info">
+        <div class="progress-text" id="progressText"></div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+    </div>
+    <button id="settingsBtn" class="icon-btn" type="button" aria-label="Settings" title="Settings">⚙</button>
+  </header>
+
+  <div class="layout">
+    <nav class="steps" id="stepsNav"></nav>
+    <main class="step-panel" id="stepPanel"></main>
+  </div>
+</div>
+
+<div id="settingsOverlay" class="settings-overlay" hidden>
+  <div class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="settings-panel-head">
+      <h2 id="settingsTitle">Settings</h2>
+      <button id="settingsClose" class="icon-btn" type="button" aria-label="Close settings">✕</button>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-row">
+        <div>
+          <div class="settings-row-label">Dark/White mode</div>
+          <div class="settings-row-hint">Overrides your system setting for this app.</div>
+        </div>
+        <button id="themeToggle" class="theme-toggle" type="button" aria-pressed="false">
+          <span class="theme-toggle-track"><span class="theme-toggle-thumb"></span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-row-label">Workshop database</div>
+      <div class="settings-row-hint">Choose which database file to load.</div>
+      <select id="dbSelect" class="settings-select"></select>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-row-label">Clear saved data</div>
+      <div class="settings-row-hint">Removes completed steps, theme, and sidebar preference stored on this device for every database. This can't be undone.</div>
+      <button id="clearStorageBtn" class="settings-danger-btn" type="button">Clear saved progress</button>
+    </div>
+  </div>
+</div>
+
+<div id="infoOverlay" class="settings-overlay" hidden>
+  <div class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+    <div class="settings-panel-head">
+      <h2 id="infoTitle"></h2>
+      <button id="infoClose" class="icon-btn" type="button" aria-label="Close">✕</button>
+    </div>
+    <div id="infoBody"></div>
+  </div>
+</div>
+
+<script>
+
+  /* ====================================================================
+     DISPLAY SETTINGS for all description text (step descriptions, chapter
+     overviews and "More info" popups). Edit these two lines:
+
+       DESCRIPTION_FONT       "Segoe UI", "Arial", or any other font that is
+                              installed on the viewer's computer.
+                              "" = keep the app's default font.
+       DESCRIPTION_FONT_SIZE  any CSS size, e.g. "14px", "16px", "1.1rem"
+
+     These override formatting pasted into descriptions (e.g. inline
+     font-family / font-size), so every description looks the same.
+     ==================================================================== */
+  var DESCRIPTION_FONT = "Segoe UI";
+  var DESCRIPTION_FONT_SIZE = "16px";
+
+  (function applyDescriptionSettings() {
+    var stacks = {
+      "arial": 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+      "segoe ui": '"Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif',
+      "segoe": '"Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif'
+    };
+    var root = document.documentElement;
+    var name = String(DESCRIPTION_FONT || "").trim();
+    if (name) {
+      var stack = stacks[name.toLowerCase()] || ('"' + name.replace(/"/g, "") + '", sans-serif');
+      root.style.setProperty("--desc-font", stack);
+    }
+    if (DESCRIPTION_FONT_SIZE) root.style.setProperty("--desc-size", DESCRIPTION_FONT_SIZE);
+  })();
+
+  /* ====================================================================
+     Available workshop databases.
+     Browsers can't scan a folder's contents for security reasons, so
+     this list has to be kept up to date by hand: add one line per
+     db_*.txt file you place in this folder, and it will show up in
+     Settings → Workshop database.
+     ==================================================================== */
+  var DB_FILES = [
+    { file: "ntt2026_helloWorld.dat", label: "NTT2026 - hello_world" },
+    { file: "ntt2026_Sensor.dat", label: "NTT2026 - Sensors" },
+    { file: "ntt2026_Bluetooth.dat", label: "NTT2026 - AI-assisted dev + Bluetooth" },
+    { file: "ntt2026_PMIC.dat", label: "NTT2026 - PMIC" },
+    { file: "ntt2026_Cellular.dat", label: "NTT2026 - Cellular" },
+    { file: "ntt2026_CellularBLE.dat", label: "NTT2026 - Cellular/BLE" },
+
+  ];
+
+  var SELECTED_DB_KEY = "workshop-guide:selected-db";
+  var WORKSHOP = null;   // set by whichever db_*.txt file is currently loaded
+  var FLAT = [];
+  var progress = {};
+  var currentDbFile = null;
+
+  function loadSelectedDbFile() {
+    try {
+      var stored = localStorage.getItem(SELECTED_DB_KEY);
+      if (stored && DB_FILES.some(function (d) { return d.file === stored; })) return stored;
+    } catch (e) { /* ignore */ }
+    return DB_FILES[0].file;
+  }
+  function saveSelectedDbFile(file) {
+    try { localStorage.setItem(SELECTED_DB_KEY, file); } catch (e) { /* ignore */ }
+  }
+
+  // Flatten chapters into a single ordered list of steps, each tagged
+  // with its chapter, so the rest of the app can treat steps as one
+  // sequence while still rendering them grouped by chapter.
+  function buildFlatFromWorkshop() {
+    FLAT = [];
+    WORKSHOP.chapters.forEach(function (chapter, ci) {
+      chapter.steps.forEach(function (step, si) {
+        FLAT.push({
+          chapterIndex: ci,
+          stepInChapter: si,
+          globalIndex: FLAT.length,
+          title: step.title,
+          description: step.description,
+          codeBlocks: step.codeBlocks || [],
+          images: step.images || [],
+          moreInfo: step.moreInfo || [],
+          codeBlocksNoCopy: step.codeBlocksNoCopy || []
+        });
+      });
+    });
+  }
+
+  function chapterIndicesFor(ci) {
+    var out = [];
+    FLAT.forEach(function (s) { if (s.chapterIndex === ci) out.push(s.globalIndex); });
+    return out;
+  }
+
+  function isChapterUnlocked(ci) {
+    if (ci === 0) return true;
+    for (var c = 0; c < ci; c++) {
+      var indices = chapterIndicesFor(c);
+      for (var k = 0; k < indices.length; k++) {
+        if (!progressDone(indices[k])) return false;
+      }
+    }
+    return true;
+  }
+
+  // ---------- Per-database progress (each db_*.txt keeps its own) ----------
+  function progressStorageKey(file) { return "workshop-guide:progress:v3::" + file; }
+
+  function loadProgressForDb(file) {
+    try {
+      var raw = localStorage.getItem(progressStorageKey(file));
+      if (raw) return JSON.parse(raw);
+    } catch (e) { /* ignore */ }
+    return {};
+  }
+
+  function initProgressForCurrentDb() {
+    progress = loadProgressForDb(currentDbFile);
+    if (typeof progress.currentIndex !== "number") progress.currentIndex = 0;
+    if (!progress.done) progress.done = {};
+    if (typeof progress.expandedChapter !== "number") progress.expandedChapter = null;
+  }
+
+  function progressDone(globalIndex) { return !!progress.done[globalIndex]; }
+
+  function saveProgress() {
+    try { localStorage.setItem(progressStorageKey(currentDbFile), JSON.stringify(progress)); }
+    catch (e) { /* storage unavailable — progress just won't persist */ }
+  }
+
+  function clampIndex() {
+    var max = FLAT.length - 1;
+    if (progress.currentIndex > max) progress.currentIndex = max;
+    if (progress.currentIndex < 0) progress.currentIndex = 0;
+    // If the current step's chapter isn't unlocked (e.g. an earlier step
+    // was unmarked after already moving past it), fall back to the last
+    // step that's actually reachable.
+    while (progress.currentIndex > 0 && !isChapterUnlocked(FLAT[progress.currentIndex].chapterIndex)) {
+      progress.currentIndex--;
+    }
+  }
+
+  function escapeHtml(str) {
+    var d = document.createElement("div");
+    d.textContent = str || "";
+    return d.innerHTML;
+  }
+
+  // ---------- Header ----------
+  function renderHeader() {
+    document.getElementById("workshopTitle").textContent = (WORKSHOP && WORKSHOP.title) || "";
+    var total = FLAT.length;
+    var doneCount = FLAT.filter(function (s) { return progressDone(s.globalIndex); }).length;
+    var pct = total ? Math.round((doneCount / total) * 100) : 0;
+    document.getElementById("progressText").innerHTML =
+      "<strong>" + doneCount + " of " + total + "</strong> steps complete &middot; " +
+      (total - doneCount) + " remaining";
+    document.getElementById("progressFill").style.width = pct + "%";
+  }
+
+  // ---------- Sidebar: chapters + steps ----------
+  var navEl = document.getElementById("stepsNav");
+
+  function effectiveExpandedChapter() {
+    // Accordion: exactly one chapter open at a time. Default to the
+    // chapter containing the current step until the user picks another.
+    if (typeof progress.expandedChapter === "number") return progress.expandedChapter;
+    return FLAT[progress.currentIndex] ? FLAT[progress.currentIndex].chapterIndex : 0;
+  }
+
+  function isExpanded(ci, unlocked) {
+    if (!unlocked) return false;
+    return effectiveExpandedChapter() === ci;
+  }
+
+  var viewingChapterIndex = null; // when set, main panel shows this chapter's overview instead of a step
+
+  function renderNav() {
+    navEl.innerHTML = "";
+    WORKSHOP.chapters.forEach(function (chapter, ci) {
+      var unlocked = isChapterUnlocked(ci);
+      var expanded = isExpanded(ci, unlocked);
+      var indices = chapterIndicesFor(ci);
+      var doneInChapter = indices.filter(function (gi) { return progressDone(gi); }).length;
+
+      var chapterEl = document.createElement("div");
+      chapterEl.className = "chapter" + (expanded ? " expanded" : "");
+
+      var headerEl = document.createElement("div");
+      headerEl.className = "chapter-header" + (unlocked ? "" : " locked") + (viewingChapterIndex === ci ? " viewing" : "");
+      headerEl.innerHTML =
+        '<span class="chapter-chevron">' + (unlocked ? "\u25B8" : "") + '</span>' +
+        (unlocked ? "" : '<span class="chapter-lock">\uD83D\uDD12</span>') +
+        '<span class="chapter-title">' + escapeHtml(chapter.title) + '</span>' +
+        '<span class="chapter-progress">' + doneInChapter + '/' + indices.length + '</span>';
+
+      if (unlocked) {
+        headerEl.addEventListener("click", function () {
+          progress.expandedChapter = expanded ? null : ci;
+          if (chapter.description) {
+            viewingChapterIndex = ci;
+          }
+          saveProgress();
+          renderAll();
+        });
+      } else {
+        headerEl.title = "Complete the previous chapter to unlock this one.";
+      }
+      chapterEl.appendChild(headerEl);
+
+      var stepsWrap = document.createElement("div");
+      stepsWrap.className = "chapter-steps";
+      chapter.steps.forEach(function (step, si) {
+        var gi = indices[si];
+        var isDone = progressDone(gi);
+        var row = document.createElement("div");
+        row.className = "step-row" + (viewingChapterIndex === null && gi === progress.currentIndex ? " active" : "") + (isDone ? " done" : "");
+        row.innerHTML =
+          '<div class="step-num">' + (isDone ? "✓" : (si + 1)) + '</div>' +
+          '<div class="step-label">' + (escapeHtml(step.title) || "Step " + (si + 1)) + '</div>';
+        row.addEventListener("click", function () {
+          viewingChapterIndex = null;
+          progress.currentIndex = gi;
+          progress.expandedChapter = ci;
+          saveProgress();
+          renderAll();
+        });
+        stepsWrap.appendChild(row);
+      });
+      chapterEl.appendChild(stepsWrap);
+
+      navEl.appendChild(chapterEl);
+    });
+  }
+
+  // ---------- Main panel ----------
+  var panelEl = document.getElementById("stepPanel");
+
+  function renderChapterOverview(ci) {
+    var chapter = WORKSHOP.chapters[ci];
+    panelEl.innerHTML = "";
+
+    var eyebrow = document.createElement("div");
+    eyebrow.className = "step-eyebrow";
+    eyebrow.textContent = chapter.title;
+    panelEl.appendChild(eyebrow);
+
+    if (chapter.description) {
+      var desc = document.createElement("div");
+      desc.id = "stepDesc";
+      // chapter.description is authored HTML, same as step descriptions —
+      // trusted content from your own db_*.txt file, not user input.
+      desc.innerHTML = chapter.description;
+      panelEl.appendChild(desc);
+    }
+
+    var indices = chapterIndicesFor(ci);
+    var stepNav = document.createElement("div");
+    stepNav.className = "step-nav";
+    var prevBtn = document.createElement("button");
+    prevBtn.className = "nav-btn";
+    prevBtn.textContent = "\u2190 Previous";
+    prevBtn.disabled = ci === 0;
+    prevBtn.addEventListener("click", function () {
+      if (ci === 0) return;
+      var prevIndices = chapterIndicesFor(ci - 1);
+      viewingChapterIndex = null;
+      progress.currentIndex = prevIndices[prevIndices.length - 1];
+      progress.expandedChapter = ci - 1;
+      saveProgress();
+      renderAll();
+    });
+    var startBtn = document.createElement("button");
+    startBtn.className = "nav-btn primary";
+    startBtn.textContent = "Go to first step \u2192";
+    startBtn.addEventListener("click", function () {
+      viewingChapterIndex = null;
+      progress.currentIndex = indices[0];
+      progress.expandedChapter = ci;
+      saveProgress();
+      renderAll();
+    });
+    stepNav.appendChild(prevBtn);
+    stepNav.appendChild(startBtn);
+    panelEl.appendChild(stepNav);
+  }
+
+  function renderPanel() {
+    if (viewingChapterIndex !== null) {
+      renderChapterOverview(viewingChapterIndex);
+      return;
+    }
+    clampIndex();
+    var i = progress.currentIndex;
+    var step = FLAT[i];
+    if (!step) { panelEl.innerHTML = ""; return; }
+
+    panelEl.innerHTML = "";
+    var isDone = progressDone(i);
+    var chapter = WORKSHOP.chapters[step.chapterIndex];
+
+    var head = document.createElement("div");
+    head.className = "step-head";
+
+    var titleWrap = document.createElement("div");
+    titleWrap.style.flex = "1 1 auto";
+    titleWrap.style.minWidth = "0";
+    var eyebrow = document.createElement("div");
+    eyebrow.className = "step-eyebrow";
+    eyebrow.textContent = chapter.title + " \u00B7 Step " + (step.stepInChapter + 1) + " of " + chapter.steps.length + (step.title ? " \u00B7 " + step.title : "");
+    titleWrap.appendChild(eyebrow);
+
+    var toggle = document.createElement("label");
+    toggle.className = "complete-toggle" + (isDone ? " done" : "");
+    toggle.innerHTML = '<input type="checkbox"' + (isDone ? " checked" : "") + '> <span>' + (isDone ? "Completed" : "Mark complete") + '</span>';
+    toggle.querySelector("input").addEventListener("change", function (e) {
+      progress.done[i] = e.target.checked;
+      saveProgress();
+      renderAll();
+    });
+
+    head.appendChild(titleWrap);
+    head.appendChild(toggle);
+    panelEl.appendChild(head);
+
+    if (step.description) {
+      var desc = document.createElement("div");
+      desc.id = "stepDesc";
+      // description is authored HTML (bold/italic/underline/lists etc.),
+      // trusted content from your own db_*.txt file — not user input.
+      desc.innerHTML = step.description;
+      panelEl.appendChild(desc);
+    }
+
+    if (step.moreInfo && step.moreInfo.length) {
+      var moreWrap = document.createElement("div");
+      moreWrap.className = "more-info-row";
+      step.moreInfo.forEach(function (item) {
+        var moreBtn = document.createElement("button");
+        moreBtn.type = "button";
+        moreBtn.className = "more-info-btn";
+        moreBtn.textContent = "\u24D8 " + (item.label || "More info");
+        moreBtn.addEventListener("click", function () {
+          openInfoModal(item.label || "More info", item.content || "");
+        });
+        moreWrap.appendChild(moreBtn);
+      });
+      panelEl.appendChild(moreWrap);
+    }
+
+    if (!hideImages) {
+      (step.images || []).forEach(function (img) {
+        var block = document.createElement("div");
+        block.className = "block image-block";
+        var imEl = document.createElement("img");
+        imEl.src = img.src;
+        imEl.alt = img.caption || step.title || "Workshop step image";
+        block.appendChild(imEl);
+        if (img.caption) {
+          var cap = document.createElement("div");
+          cap.className = "image-caption";
+          cap.textContent = img.caption;
+          block.appendChild(cap);
+        }
+        panelEl.appendChild(block);
+      });
+    }
+
+    // Copyable boxes first, then the display-only ones (codeBlocksNoCopy).
+    var allCodeBlocks = (step.codeBlocks || []).concat(
+      (step.codeBlocksNoCopy || []).map(function (cb) {
+        return { label: cb.label, code: cb.code, copy: false };
+      })
+    );
+    allCodeBlocks.forEach(function (cb) {
+      var block = document.createElement("div");
+      block.className = "block";
+      if (cb.label) {
+        var label = document.createElement("div");
+        label.className = "block-label";
+        label.textContent = cb.label;
+        block.appendChild(label);
+      }
+      // A block is display-only (no Copy button) when the data file sets
+      // copy: false on it.
+      var noCopy = cb.copy === false || cb.noCopy === true || cb.copyable === false;
+      var codeWrap = document.createElement("div");
+      codeWrap.className = "code-block" + (noCopy ? " no-copy" : "");
+      var pre = document.createElement("pre");
+      pre.textContent = cb.code || "";
+      codeWrap.appendChild(pre);
+
+      if (!noCopy) {
+      var copyBtn = document.createElement("button");
+      copyBtn.className = "copy-btn";
+      copyBtn.textContent = "Copy";
+      copyBtn.addEventListener("click", function () {
+        var text = cb.code || "";
+        var done = function () {
+          copyBtn.textContent = "Copied!";
+          copyBtn.classList.add("copied");
+          setTimeout(function () { copyBtn.textContent = "Copy"; copyBtn.classList.remove("copied"); }, 1400);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done).catch(function () { fallbackCopy(text, done); });
+        } else {
+          fallbackCopy(text, done);
+        }
+      });
+      codeWrap.appendChild(copyBtn);
+      }
+
+      block.appendChild(codeWrap);
+      panelEl.appendChild(block);
+    });
+
+    var stepNav = document.createElement("div");
+    stepNav.className = "step-nav";
+    var prevBtn = document.createElement("button");
+    prevBtn.className = "nav-btn";
+    prevBtn.textContent = "\u2190 Previous";
+    prevBtn.disabled = i === 0;
+    prevBtn.addEventListener("click", function () {
+      // Stepping back off the first step of a chapter that has a
+      // description shows that chapter's own overview, rather than
+      // skipping straight past it to the previous chapter's last step.
+      if (step.stepInChapter === 0 && chapter.description) {
+        viewingChapterIndex = step.chapterIndex;
+        progress.expandedChapter = step.chapterIndex;
+      } else {
+        viewingChapterIndex = null;
+        progress.currentIndex = Math.max(0, i - 1);
+        progress.expandedChapter = FLAT[progress.currentIndex].chapterIndex;
+      }
+      saveProgress();
+      renderAll();
+    });
+
+    var isLast = i === FLAT.length - 1;
+    var nextBtn = document.createElement("button");
+    nextBtn.className = "nav-btn primary";
+    nextBtn.textContent = isLast ? "Finish" : "Next step \u2192";
+    nextBtn.disabled = isLast && isDone;
+    nextBtn.addEventListener("click", function () {
+      progress.done[i] = true;
+      if (!isLast) {
+        var target = i + 1;
+        var targetStep = FLAT[target];
+        var targetChapter = targetStep.chapterIndex;
+        var crossingChapter = targetChapter !== step.chapterIndex;
+        // Only advance if completing this step actually unlocked the
+        // next chapter — guards against ever landing on a locked one.
+        if (isChapterUnlocked(targetChapter)) {
+          progress.currentIndex = target;
+          progress.expandedChapter = targetChapter;
+          // Entering a new chapter that has a description shows its
+          // overview first, instead of dropping straight onto step 1.
+          viewingChapterIndex = (crossingChapter && WORKSHOP.chapters[targetChapter].description) ? targetChapter : null;
+        }
+      }
+      saveProgress();
+      renderAll();
+    });
+
+    stepNav.appendChild(prevBtn);
+    stepNav.appendChild(nextBtn);
+    panelEl.appendChild(stepNav);
+  }
+
+  function fallbackCopy(text, done) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); done(); } catch (e) { /* ignore */ }
+    document.body.removeChild(ta);
+  }
+
+  // ---------- Sidebar show/hide switch (a device-wide preference,
+  // independent of which database is currently loaded) ----------
+  var SIDEBAR_HIDDEN_KEY = "workshop-guide:sidebar-hidden";
+  var layoutEl = document.querySelector(".layout");
+  var sidebarToggleEl = document.getElementById("sidebarToggle");
+  var sidebarHidden = false;
+  try { sidebarHidden = localStorage.getItem(SIDEBAR_HIDDEN_KEY) === "1"; } catch (e) { /* ignore */ }
+
+  function applySidebarState() {
+    layoutEl.classList.toggle("sidebar-hidden", sidebarHidden);
+    sidebarToggleEl.setAttribute("aria-pressed", sidebarHidden ? "false" : "true");
+  }
+  sidebarToggleEl.addEventListener("click", function () {
+    sidebarHidden = !sidebarHidden;
+    try { localStorage.setItem(SIDEBAR_HIDDEN_KEY, sidebarHidden ? "1" : "0"); } catch (e) { /* ignore */ }
+    applySidebarState();
+  });
+  applySidebarState();
+
+  // ---------- Images show/hide switch (device-wide; default: shown) ----------
+  var HIDE_IMAGES_KEY = "workshop-guide:hide-images";
+  var imagesToggleEl = document.getElementById("imagesToggle");
+  var hideImages = false;
+  try { hideImages = localStorage.getItem(HIDE_IMAGES_KEY) === "1"; } catch (e) { /* ignore */ }
+  function applyImagesToggleState() {
+    imagesToggleEl.setAttribute("aria-pressed", hideImages ? "true" : "false");
+  }
+  imagesToggleEl.addEventListener("click", function () {
+    hideImages = !hideImages;
+    try { localStorage.setItem(HIDE_IMAGES_KEY, hideImages ? "1" : "0"); } catch (e) { /* ignore */ }
+    applyImagesToggleState();
+    renderPanel();
+  });
+  applyImagesToggleState();
+
+  // ---------- Theme (dark / light) — also device-wide, not per-database ----------
+  var THEME_KEY = "workshop-guide:theme";
+  var themeToggleEl = document.getElementById("themeToggle");
+
+  function loadStoredTheme() {
+    try { return localStorage.getItem(THEME_KEY); } catch (e) { return null; }
+  }
+  function saveStoredTheme(theme) {
+    try {
+      if (theme) localStorage.setItem(THEME_KEY, theme);
+      else localStorage.removeItem(THEME_KEY);
+    } catch (e) { /* storage unavailable */ }
+  }
+  function isCurrentlyDark() {
+    var stored = loadStoredTheme();
+    if (stored === "dark") return true;
+    if (stored === "light") return false;
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  function applyStoredTheme() {
+    var stored = loadStoredTheme();
+    if (stored === "dark" || stored === "light") {
+      document.documentElement.setAttribute("data-theme", stored);
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+    }
+    themeToggleEl.setAttribute("aria-pressed", isCurrentlyDark() ? "true" : "false");
+  }
+  themeToggleEl.addEventListener("click", function () {
+    var nextTheme = isCurrentlyDark() ? "light" : "dark";
+    saveStoredTheme(nextTheme);
+    applyStoredTheme();
+  });
+  applyStoredTheme();
+
+  // ---------- Settings modal ----------
+  var settingsOverlayEl = document.getElementById("settingsOverlay");
+  var settingsBtnEl = document.getElementById("settingsBtn");
+  var settingsCloseEl = document.getElementById("settingsClose");
+
+  function openSettings() { settingsOverlayEl.hidden = false; }
+  function closeSettings() { settingsOverlayEl.hidden = true; }
+
+  settingsBtnEl.addEventListener("click", openSettings);
+  settingsCloseEl.addEventListener("click", closeSettings);
+  settingsOverlayEl.addEventListener("click", function (e) {
+    if (e.target === settingsOverlayEl) closeSettings();
+  });
+
+  // ---------- "More info" popup ----------
+  var infoOverlayEl = document.getElementById("infoOverlay");
+  var infoTitleEl = document.getElementById("infoTitle");
+  var infoBodyEl = document.getElementById("infoBody");
+  var infoCloseEl = document.getElementById("infoClose");
+
+  function openInfoModal(title, contentHtml) {
+    infoTitleEl.textContent = title;
+    // contentHtml is authored HTML from your own db_*.txt file — same
+    // trust level as step descriptions, not user input.
+    infoBodyEl.innerHTML = contentHtml;
+    infoOverlayEl.hidden = false;
+  }
+  function closeInfoModal() { infoOverlayEl.hidden = true; }
+
+  infoCloseEl.addEventListener("click", closeInfoModal);
+  infoOverlayEl.addEventListener("click", function (e) {
+    if (e.target === infoOverlayEl) closeInfoModal();
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    if (!infoOverlayEl.hidden) closeInfoModal();
+    else if (!settingsOverlayEl.hidden) closeSettings();
+  });
+
+  // ---------- Workshop database picker ----------
+  var dbSelectEl = document.getElementById("dbSelect");
+
+  function populateDbSelect() {
+    dbSelectEl.innerHTML = "";
+    DB_FILES.forEach(function (entry) {
+      var opt = document.createElement("option");
+      opt.value = entry.file;
+      opt.textContent = entry.label + " (" + entry.file + ")";
+      if (entry.file === currentDbFile) opt.selected = true;
+      dbSelectEl.appendChild(opt);
+    });
+  }
+  dbSelectEl.addEventListener("change", function () {
+    switchDatabase(dbSelectEl.value);
+  });
+
+  function loadDbScript(file, onload, onerror) {
+    var existing = document.getElementById("dbScript");
+    if (existing) existing.parentNode.removeChild(existing);
+    var s = document.createElement("script");
+    s.id = "dbScript";
+    s.src = file;
+    s.onload = onload;
+    s.onerror = onerror;
+    document.body.appendChild(s);
+  }
+
+  function switchDatabase(file) {
+    loadDbScript(file, function () {
+      currentDbFile = file;
+      saveSelectedDbFile(file);
+      buildFlatFromWorkshop();
+      initProgressForCurrentDb();
+      populateDbSelect();
+      // On load, show the overview of whichever chapter you're currently
+      // in (based on saved progress, or chapter 1 if there is none yet),
+      // instead of dropping straight onto the step itself — as long as
+      // that chapter has a description.
+      var landingStep = FLAT[progress.currentIndex] || FLAT[0];
+      if (landingStep && WORKSHOP.chapters[landingStep.chapterIndex] && WORKSHOP.chapters[landingStep.chapterIndex].description) {
+        viewingChapterIndex = landingStep.chapterIndex;
+      }
+      renderAll();
+    }, function () {
+      alert("Could not load \"" + file + "\". Make sure it's in the same folder as workshop-guide.html.");
+    });
+  }
+
+  // ---------- Clear saved data (all databases) ----------
+  document.getElementById("clearStorageBtn").addEventListener("click", function () {
+    var ok = confirm("Clear all saved progress and preferences on this device, for every workshop database? This can't be undone.");
+    if (!ok) return;
+    try {
+      var toRemove = [];
+      for (var k = 0; k < localStorage.length; k++) {
+        var key = localStorage.key(k);
+        if (key && key.indexOf("workshop-guide:") === 0) toRemove.push(key);
+      }
+      toRemove.forEach(function (key) { localStorage.removeItem(key); });
+    } catch (e) { /* storage unavailable */ }
+    location.reload();
+  });
+
+  function renderAll() {
+    renderHeader();
+    renderNav();
+    renderPanel();
+  }
+
+  // ---------- Startup: load the last-selected (or default) database ----------
+  switchDatabase(loadSelectedDbFile());
+</script>
+</body>
+</html>
