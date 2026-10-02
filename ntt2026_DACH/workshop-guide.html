@@ -431,8 +431,8 @@
 
   /* Force one font/size across all description text, beating inline
      styles pasted in from other editors. Inline code stays monospace. */
-  #stepDesc :is(span, font, div, p, ul, ol, li, a, b, strong, i, em, u, td, th),
-  #infoBody :is(span, font, div, p, ul, ol, li, a, b, strong, i, em, u, td, th) {
+  #stepDesc :is(span, font, div, p, ul, ol, li, a, b, strong, i, em, u, table, thead, tbody, tfoot, tr, caption, td, th),
+  #infoBody :is(span, font, div, p, ul, ol, li, a, b, strong, i, em, u, table, thead, tbody, tfoot, tr, caption, td, th) {
     font-family: inherit !important;
     font-size: inherit !important;
   }
@@ -440,6 +440,28 @@
     font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace !important;
   }
   #stepDesc code, #infoBody code { font-size: 0.9em !important; }
+
+  /* Tables inside descriptions: visible cell borders (overriding any
+     "no border" settings pasted in from other editors), padding, and a
+     lightly shaded header row. The semi-transparent grey works in both
+     light and dark mode. */
+  #stepDesc table, #infoBody table {
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+    max-width: 100% !important;
+    margin: 4px 0 14px;
+  }
+  #stepDesc th, #stepDesc td, #infoBody th, #infoBody td {
+    border: 1px solid rgba(129, 139, 152, 0.55) !important;
+    padding: 8px 12px !important;
+    text-align: left;
+    vertical-align: top;
+    overflow-wrap: break-word;
+  }
+  #stepDesc th, #infoBody th {
+    background: rgba(129, 139, 152, 0.16);
+    font-weight: 600;
+  }
 
   .block { margin-top: 24px; }
   .block-label {
