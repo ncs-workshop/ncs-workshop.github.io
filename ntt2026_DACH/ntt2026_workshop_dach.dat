@@ -1,0 +1,704 @@
+var WORKSHOP = {
+  "title": "Nordic Tech Tour EMEA 2026: Hands-on Workshop",
+  "chapters": [
+    {
+      "title": "Welcome & Introduction",
+      "steps": [
+        {
+          "title": "How to use this guide",
+          "description": "<div>The Workshop Guide can be opened in any standard web browser or, if preferred, directly in VS Code using its integrated browser. This allows you to follow the hands-on, step-by-step instructions without leaving your development environment.</div><div><br></div><div>The following list outlines what is possible with this workshop guide:</div><ul dir=\"ltr\"><li>This guide walks you through the hands-on step by step.</li>\n<li>Use <strong>Next step</strong> to move forward, and <strong>Previous</strong> to go back.</li>\n<li>Chapters must be completed in order — a locked chapter (🔒) opens once every step in the chapters before it is checked off.</li>\n<li>Click a chapter's title in the sidebar to see a short summary of that chapter, if one is available.</li>\n<li>Your progress (steps completed / remaining) is shown at the top and updates automatically.</li>\n<li>Use the <strong>Sidebar</strong> switch (top row) to collapse the chapter list, and <strong>Hide images</strong> to hide pictures in the steps.</li>\n<li>Some steps have <strong>ⓘ More info</strong> buttons under their description — click one for extra background or troubleshooting tips.</li>\n<li>Click <strong>Copy</strong> on a code snippet to copy it to your clipboard.</li>\n<li>Open the ⚙ <strong>Settings</strong> menu (top right) to switch between dark and light mode, or to clear your saved progress.</li></ul>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/browser.jpg",
+              "caption": "VS code built-in browser"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Enable Auto Save in VS Code",
+          "description": "<p dir=\"ltr\">Throughout this workshop you'll be editing several files (source code, DeviceTree overlays, configuration files) and then triggering builds or flashing. To avoid confusion later — for example, forgetting to save before a build and wondering why your changes don't take effect — we recommend enabling <strong>Auto Save</strong> now, once, for the rest of the workshop.</p>\n<p dir=\"ltr\"><strong>Steps:</strong></p>\n<ol dir=\"ltr\">\n<li>Open the <strong>File</strong> menu in the VS Code menu bar.</li>\n<li>Click <strong>Auto Save</strong> to toggle it on. A checkmark next to the entry confirms it's enabled.</li></ol><div>That's it — from now on, any change you make to a file is written to disk automatically after a short delay (or when you switch focus away from the editor), so you won't need to press <strong>Ctrl+S</strong> / <strong>Cmd+S</strong> throughout the workshop.</div>",
+          "codeBlocks": [],
+          "images": [],
+          "moreInfo": [
+            {
+              "label": "But I want to save it manually",
+              "content": "If you prefer to save manually and know what you're doing, you can skip this step — just remember to save (<strong>Ctrl+S</strong> / <strong>Cmd+S</strong>) before every build in the steps ahead, since an unsaved change will not be picked up by the build system."
+            }
+          ],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Overview of Our Project",
+          "description": "<div>Today we will develop step-by-step an application that covers following functionalities:</div><ul><li>Sensor: first, we use a simultated sensor. And later a real sensor</li><li>Bluetooth: we will use Bluetooth to send battery level to a smartphone. Code will be created with AI-assisted development.</li><li>PMIC: configure device for voltage supply and use fuel gauge</li><li>Cellular: Get location information and send sensor data to cloud.</li></ul>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/ProjectOverview.jpg",
+              "caption": ""
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        }
+      ],
+      "description": "<p dir=\"ltr\">Welcome to our first Nordic Tech Tour EMEA hands-on workshop!&nbsp;</p><p dir=\"ltr\">This year, alongside our usual Nordic product updates, we're introducing a second day dedicated entirely to hands-on work. Together, we'll build a project using Nordic products including the nRF54L15, nRF93M1, and nPM1300.</p>\n<p dir=\"ltr\">We're looking forward to a productive and enjoyable session together — welcome aboard!</p>"
+    },
+    {
+      "title": "1. Copy hello_word Sample",
+      "steps": [
+        {
+          "title": "Open the nRF Connect Extension",
+          "description": "Click the <strong>nRF Connect</strong> icon in the VS Code left sidebar (the Nordic \"N\" logo). This opens the extension's main panel, where you manage applications, build configurations, and connected devices.",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/nrfConnect.jpg",
+              "caption": "nRF Connect"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Create a New Application",
+          "description": "In the nRF Connect panel, click <strong>Create New Application</strong>.<div><br></div><div>An application in this context is just a folder containing your source code, build settings, and configuration files — everything Zephyr needs to compile firmware for your board.</div>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/CreateNewApp.jpg",
+              "caption": "Create new aplication"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Copy the hello_world Sample",
+          "description": "<div>Rather than writing an application from scratch, you'll start from one of Zephyr's built-in samples and copy it into your own workspace. This is the normal way to start a new nRF Connect SDK project.</div><div><ul><li>Click <strong>Copy Sample</strong>.&nbsp;</li></ul></div>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/CopySample.jpg",
+              "caption": "Copy Sample"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Select Zephyr's hello_world sample",
+          "description": "<span style=\"font-size: 0.9rem;\">In the search box, type </span><code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">hello world</code><span style=\"font-size: 0.9rem;\">, then select the sample.<br></span><span style=\"font-size: 0.9rem;\">⚠️ </span><strong style=\"font-size: 0.9rem;\">Take care:</strong><span style=\"font-size: 0.9rem;\"> several samples can match this search. Make sure you pick the one with the path </span><strong style=\"font-size: 0.9rem;\"><code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">zephyr/samples/hello_world</code></strong><span style=\"font-size: 0.9rem;\"> — this is Zephyr's own minimal example, not a vendor-specific variant.&nbsp;</span>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/helloworld.jpg",
+              "caption": "Zephyr hello_world sample"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Save the Project in your own Workspace Directory",
+          "description": "<span style=\"font-size: 0.9rem;\">Choose a destination folder and confirm. VS Code will copy the sample files into your new application folder.</span><div><br><div>⚠️ <strong>Keep your workspace path short.</strong> <strong style=\"font-size: 0.9rem;\">Recommendation:</strong><span style=\"font-size: 0.9rem;\"> place your application in a short root path, for example </span><code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">C:\\nordic\\workspace\\hello_world</code></div><div><font color=\"#0e8a7d\" face=\"IBM Plex Mono, monospace\"><span style=\"font-size: 12.672px;\"><br></span></font><div><span style=\"font-size: 14.4px;\">Once you've confirmed the path by pressing Enter, you can choose whether to open a new VS Code instance (“Open in New Window”) or to display the project in the current instance (“Open”).&nbsp;</span></div></div></div>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/saveas.jpg",
+              "caption": "Choose application location"
+            }
+          ],
+          "moreInfo": [
+            {
+              "label": "Why to keep your workspace path short?",
+              "content": "Windows has a hard 260-character limit on full file paths. The build process for this SDK generates several nested subfolders (build files, CMake cache, generated headers, per-core output, and so on), and their combined path can get long fast. If your workspace already starts somewhere deep — e.g. <code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">C:\\Users\\YourName\\Documents\\Workshops\\2026\\</code><div><code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">NordicWorkshop\\...</code> — the build can fail with confusing \"permission denied\" or \"file not found\" errors that have nothing to do with your code.&nbsp;<div><strong>Recommendation:</strong> place your application in a short root path, for example <code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">C:\\nordic\\workspace\\hello_world</code>, rather than several folders deep inside your user profile or a synced cloud folder (OneDrive/Dropbox paths are usually long and best avoided entirely for this reason).</div></div>"
+            }
+          ],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Add a Build Configuration",
+          "description": "<p dir=\"ltr\" style=\"font-size: 0.9rem; display: inline !important;\">A build configuration tells the toolchain <em>which board</em> and <em>which core</em> to compile the firmware for. Without one, there's nothing to build.</p><ol dir=\"ltr\" style=\"font-size: 0.9rem;\"><li>Open the <strong>nRF Connect</strong> view.</li><li>In the <strong>Application</strong> section, click <strong>Add Build Configuration</strong>.</li><li>Under <strong>Board target</strong>, select: nrf93m1dk/nrf54l15/cpuapp<br></li><li>Leave the other options at their defaults.</li>\n<li>Scroll down and click <strong>Generate and Build</strong>.&nbsp;</li></ol>Wait for the build to finish — you'll see a \"Build complete\" message in the build log at the bottom of the window. If the build fails, check that the board target was typed/selected exactly as above.<span style=\"font-size: 14.4px;\"></span>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/BuildConf.jpg",
+              "caption": "Add build configuration"
+            }
+          ],
+          "moreInfo": [
+            {
+              "label": "Naming Convention for Board Targets",
+              "content": "The <code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">cpuapp</code> qualifier tells the build system which CPU core on the SoC to build for. The nRF54L15 is a multi-core chip: it has a main <strong>application core</strong> (<code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">cpuapp</code>) that runs your everyday application code, and a small, low-power <strong>FLPR core</strong> (<code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">cpuflpr</code>, a RISC-V co-processor) intended for offloading specific peripheral or real-time tasks. For this workshop, we always target <code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">cpuapp</code> — it's the general-purpose core, has full support for logging, sensors, and connectivity, and is where you should build and run applications unless a task specifically calls for the FLPR core."
+            },
+            {
+              "label": "What would “nrf54l15/cpuapp/ns” be used for?",
+              "content": "Alongside plain <code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">cpuapp</code><span style=\"font-size: 0.9rem;\">, the nRF54L15 also supports </span><strong style=\"font-size: 0.9rem;\"><code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">.../nrf54l15/cpuapp/ns</code></strong><span style=\"font-size: 0.9rem;\">. This builds your application to run in the </span><strong style=\"font-size: 0.9rem;\">non-secure</strong><span style=\"font-size: 0.9rem;\"> execution environment, with </span><strong style=\"font-size: 0.9rem;\">Trusted Firmware-M (TF-M)</strong><span style=\"font-size: 0.9rem;\"> occupying the secure side underneath it. TF-M isolates security-critical operations — cryptographic keys, secure storage, firmware update handling — from your application code, so a bug or vulnerability in your application can't reach into that protected area.</span>"
+            }
+          ],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Prepare the development kit",
+          "description": "<div>Connect USB-C (USB1) to your PC. The antenna and SIM card aren&#39;t needed for this step.</div>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/nRF93M1DK.jpg",
+              "caption": "nRF93M1-DK"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Flash the Application ",
+          "description": "<p dir=\"ltr\" style=\"font-size: 0.9rem; display: inline !important;\">Now you'll load the compiled firmware onto the physical board.&nbsp;</p><span style=\"font-size: 0.9rem;\">In the nRF Connect view, under </span><strong style=\"font-size: 0.9rem;\">Actions</strong><span style=\"font-size: 0.9rem;\">, click </span><strong style=\"font-size: 0.9rem;\">Flash</strong><span style=\"font-size: 0.9rem;\">.</span>",
+          "codeBlocks": [],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Verify the Serial Terminal Output",
+          "description": "<div>We'll now check whether the compiled firmware runs on the board.</div><ol dir=\"ltr\"><li><span style=\"font-size: 0.9rem;\">Open a </span><strong style=\"font-size: 0.9rem;\">Serial Terminal</strong><span style=\"font-size: 0.9rem;\"> (via the nRF Connect </span><strong style=\"font-size: 0.9rem;\">Connected Devices</strong><span style=\"font-size: 0.9rem;\"> panel or the </span><strong style=\"font-size: 0.9rem;\">Serial Terminal</strong><span style=\"font-size: 0.9rem;\"> icon) and select your device's COM/serial port.</span></li>\n<li>Press the <strong>Reset</strong> button on the DK, or power-cycle it, and watch the terminal.</li>\n</ol>\n<p dir=\"ltr\">You should see output similar to:</p>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/terminal_helloworld.jpg",
+              "caption": "Serial Terminal"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        }
+      ],
+      "description": "<div>By the end of this chapter, you will have created your first application from a Zephyr/nRF Connect SDK sample, built it for the nRF93M1 DK, flashed it onto your kit, and confirmed it's running by reading its output over a serial connection. This chapter also introduces the core nRF Connect for VS Code workflow (create → configure → build → flash) that you'll reuse for every later chapter.</div>"
+    },
+    {
+      "title": "2. Sensor - simulated sensor",
+      "steps": [
+        {
+          "title": "Extending the Existing Project",
+          "description": "<div>Each chapter builds upon the project developed in the previous chapter. All concepts, instructions, and implementation steps introduced in the current chapter should be applied directly to the existing project.</div>",
+          "codeBlocks": [],
+          "codeBlocksNoCopy": [],
+          "images": [],
+          "moreInfo": []
+        },
+        {
+          "title": "Enable the sensor subsystem (Kconfig)",
+          "description": "Open <code dir=\"ltr\">prj.conf</code> in your project folder and add below KCONIFG settings.",
+          "codeBlocks": [
+            {
+              "label": "prj.conf",
+              "code": "# Enable Zephyr's common sensor API and sensor drivers\nCONFIG_SENSOR=y\n\n# Enable Floating Point output \nCONFIG_CBPRINTF_FP_SUPPORT=y"
+            }
+          ],
+          "images": [],
+          "moreInfo": [
+            {
+              "label": "CONFIG_SENSOR",
+              "content": "<code dir=\"ltr\">CONFIG_SENSOR=y</code> pulls in the sensor subsystem core and enables the sensor drivers relevant to your board configuration — including the simulated sensor driver, which only needs a matching DeviceTree node to activate (next step)."
+            },
+            {
+              "label": "Why is CONFIG_CBPRINTF_FP_SUPPORT needed?",
+              "content": "<p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" data-assistant-stream-block=\"\" data-assistant-stream-block-index=\"8\" style=\"text-wrap: pretty; overflow-wrap: break-word; margin-bottom: 0.25rem; margin-top: 0.25rem; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; background-color: rgb(252, 252, 252);\">Zephyr's <code class=\"x1amw8k4 xymaag xbs2zpe xjb2p0i x1qlqyl8 x1gqwrcx xw2csxc x7p5m3t xarctil x11pq3io\" style=\"border-radius: 0.25rem; padding-block: 0.15rem; padding-inline: 0.3rem; color: rgb(13, 13, 13); font-family: inherit; font-size: inherit; background-color: color(srgb 0.970588 0.970588 0.970588); overflow-x: auto; overscroll-behavior-x: contain;\">printk()</code> uses its own lightweight formatting implementation, called <span class=\"x7amdea\" style=\"font-weight: 600;\">cbprintf</span>. Floating-point formatting is disabled by default because it requires additional code and increases the application's footprint.</p><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" data-assistant-stream-block=\"\" data-assistant-stream-block-index=\"9\" style=\"text-wrap: pretty; overflow-wrap: break-word; margin-bottom: 1rem; margin-top: 1rem; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; background-color: rgb(252, 252, 252);\">When you enable&nbsp;&nbsp;<span style=\"background-color: rgba(79, 209, 197, 0.16); color: rgb(14, 138, 125); font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: inherit;\">CONFIG_CBPRINTF_FP_SUPPORT=y</span><span style=\"text-wrap-mode: initial;\">&nbsp;you tell Zephyr:</span></p><blockquote class=\"x1ux7cnd xp43mbd x1yc453h x1qeawuv x19gujjy x1cpjm7i x1g6lqjk x1ft583c x1682cnc x1hmns74 xbs2zpe x17mssa0 x19ekbn6 x1fie51u xgyxj25 x1xobyvs x1m9urvh x1fv8qjw x128ud7f x1pjt2rx x160d6zm xqsupf2 xrxpjvj x26vrf4 xutjtvt x1n2onr6\" data-assistant-stream-block=\"\" data-assistant-stream-block-index=\"12\" style=\"margin-inline: 0px; padding-block: 0.5rem; color: rgb(13, 13, 13); line-height: 1.5rem; padding-inline-start: 1.5rem; position: relative; direction: ltr; margin-bottom: 1rem; margin-top: 0.5rem; font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; background-color: rgb(252, 252, 252);\"><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 0px; margin-top: 0px;\">Include support for formatting floating-point values with <code class=\"x1amw8k4 xymaag xbs2zpe xjb2p0i x1qlqyl8 x1gqwrcx xw2csxc x7p5m3t xarctil x11pq3io\" style=\"border-radius: 0.25rem; padding-block: 0.15rem; padding-inline: 0.3rem; color: rgb(13, 13, 13); font-family: inherit; font-size: inherit; background-color: color(srgb 0.970588 0.970588 0.970588); overflow-x: auto; overscroll-behavior-x: contain;\">printk()</code>.</p></blockquote>"
+            }
+          ],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Describe the sensor in the DeviceTree",
+          "description": "<p dir=\"ltr\">Zephyr drivers are matched to hardware (real or virtual) through the <strong>DeviceTree</strong>. Since the simulated sensor isn't part of the nRF93M1 DK's default board definition, we add it ourselves with a <strong>DeviceTree overlay</strong> — a file that layers extra nodes on top of the board's base DeviceTree without modifying the board files themselves.</p>\n\n<p dir=\"ltr\">Create a file named <strong><code dir=\"ltr\">app.overlay</code></strong> in your project's root folder (the same folder as <code dir=\"ltr\">prj.conf</code>) with the following DeviceTree content.</p>",
+          "codeBlocks": [
+            {
+              "label": "app.overlay",
+              "code": "/ {\n     simulated_sensor: sensor_sim{\n          compatible = \"nordic,sensor-sim\";\n          status = \"okay\";\n          acc-signal = \"wave\";\n          base-temperature = < 20 >;\n          base-pressure = < 98 >;\n     };\n};"
+            }
+          ],
+          "images": [],
+          "moreInfo": [
+            {
+              "label": "What is a DeviceTree overlay?",
+              "content": "<div><p dir=\"ltr\">The nRF Connect SDK (and Zephyr, which it's built on) describes hardware using <strong>DeviceTree</strong> — a text-based format that tells the firmware which peripherals exist, how they're wired, and how they should be configured. Every board has a base DeviceTree file; for the nRF93M1-DK's application core, this is <code dir=\"ltr\">nrf93m1dk_nrf54l15_cpuapp.dts</code>.</p>\n<p dir=\"ltr\">Rather than editing that board file directly (which affects every project using this board), we use an <strong>overlay file</strong> — <code dir=\"ltr\">app.overlay</code>. An overlay lets us add or override DeviceTree settings <em>just for our application</em>, without touching the board definition. This is the standard, recommended way to enable a sensor or peripheral that the board file doesn't already configure for you.</p></div>The nRF Connect SDK build system automatically picks up <code dir=\"ltr\">app.overlay</code> if it's placed in the project root — no extra CMake configuration is needed."
+            },
+            {
+              "label": "simulated_sensor",
+              "content": "A <strong>node label</strong> — lets us refer to this node from C code without knowing its full DeviceTree path."
+            },
+            {
+              "label": "compatible = \"nordic,sensor-sim\"",
+              "content": "<div>Tells Zephyr which driver to bind to this node — this string is what triggers the simulated sensor driver to build.</div>"
+            },
+            {
+              "label": "status = \"okay\"",
+              "content": "<table><tbody><tr><td><code dir=\"ltr\"></code></td><td><span style=\"font-size: 0.9rem;\">Marks the node as active. A node with </span><code dir=\"ltr\">status = \"disabled\"</code><span style=\"font-size: 0.9rem;\"> is ignored, even if the driver is enabled.</span></td></tr></tbody></table>"
+            },
+            {
+              "label": "acc-signal = \"wave\"",
+              "content": "<table><tbody><tr><td><code dir=\"ltr\"></code></td><td>Configures the simulated accelerometer to output a smooth waveform instead of a flat/random signal.</td></tr></tbody></table>"
+            },
+            {
+              "label": "base-temperature = <20>",
+              "content": "<table><tbody><tr><td><code dir=\"ltr\"></code></td><td>Baseline value (°C) the simulated temperature channel fluctuates around.</td></tr></tbody></table>"
+            },
+            {
+              "label": "base-pressure = <98>",
+              "content": "<div>Baseline value (kPa) the simulated pressure channel fluctuates around.</div>"
+            }
+          ],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Bind the sensor in application code",
+          "description": "The sensor API is declared in <code dir=\"ltr\">sensor.h</code>. Open <code dir=\"ltr\">main.c</code> and add the includes and device handle.",
+          "codeBlocks": [
+            {
+              "label": "main.c",
+              "code": "#include <zephyr/kernel.h>\n#include <zephyr/drivers/sensor.h>\n\n#define SENSOR_NODE DT_NODELABEL(simulated_sensor)\nconst struct device *const dev = DEVICE_DT_GET(SENSOR_NODE);"
+            }
+          ],
+          "images": [],
+          "moreInfo": [
+            {
+              "label": "DT_NODELABEL(siumlated sensor)",
+              "content": "<code dir=\"ltr\">DT_NODELABEL(simulated_sensor)</code> resolves, <strong>at compile time</strong>, to the DeviceTree node labeled <code dir=\"ltr\">simulated_sensor:</code> in <code dir=\"ltr\">app.overlay</code>."
+            },
+            {
+              "label": "DEVICE_DT_GET(...)",
+              "content": "<code dir=\"ltr\">DEVICE_DT_GET(...)</code> turns that DeviceTree node into a <code dir=\"ltr\">const struct device *</code> handle — the same kind of handle used for <em>any</em> Zephyr or nRF Connect SDK device driver (sensors, UARTs, GPIOs, etc.).<div>At this point <code dir=\"ltr\">dev</code> is a compile-time constant pointer to your sensor device — but drivers still need to initialize at boot, so we check that next.</div>"
+            }
+          ],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Verify the sensor initialized correctly",
+          "description": "Hardware (and simulated hardware) initializes during system boot. Before using a device, always confirm it's ready. Insert the following code at the beginning of <code>main()</code>, right before your main loop.",
+          "codeBlocks": [
+            {
+              "label": "main.c",
+              "code": "    if (!device_is_ready(dev)) {\n        printk(\"Sensor is not ready %s\\n\", dev->name);\n        return 0;\n    }\n    printk(\"Sensor is ready!\\n\");"
+            }
+          ],
+          "images": [],
+          "moreInfo": [
+            {
+              "label": "device_is_ready()",
+              "content": "<code dir=\"ltr\">device_is_ready()</code> checks that the driver's init function ran and completed without error. <strong>Always guard sensor (and other driver) use with this check</strong> — skipping it is a common source of confusing crashes when a DeviceTree node is misconfigured or disabled."
+            }
+          ],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Read the sensor in a loop",
+          "description": "<p dir=\"ltr\">Reading a Zephyr sensor is a <strong>two-step process</strong>, and it's important to understand why:</p>\n\n<ol dir=\"ltr\">\n<li><strong><code dir=\"ltr\">sensor_sample_fetch(dev)</code></strong> — talks to the device (real bus transaction, or in this case, the simulator's internal logic) and pulls a <em>fresh</em> reading into the driver's internal buffer.</li>\n<li><strong><code dir=\"ltr\">sensor_channel_get(dev, channel, &amp;value)</code></strong> — reads <em>one specific channel</em> out of that already-fetched buffer, without touching the device again.</li></ol>Add the following code as the main loop.",
+          "codeBlocks": [
+            {
+              "label": "main.c",
+              "code": "    struct sensor_value temp;\n\n    while (true) {\n        // Fetch a sample from the sensor and store it in an internal driver buffer\n        if (sensor_sample_fetch(dev) < 0) {\n            printk(\"Error: Sensor sample update error\\n\");\n            return 0;\n        }\n\n        // Get a reading from a sensor device (read temperature)\n        if (sensor_channel_get(dev, SENSOR_CHAN_AMBIENT_TEMP, &temp) < 0) {\n            printk(\"Error: Cannot read temperature channel\\n\");\n            return 0;\n        }\n\n        /* display temperature */\n        printk(\"Temperature: %.1f C\\n\", sensor_value_to_double(&temp));\n\n        k_sleep(K_MSEC(2000));\n    }"
+            }
+          ],
+          "images": [],
+          "moreInfo": [
+            {
+              "label": "Why is it split?",
+              "content": "This split exists because many sensors report several channels (temperature, pressure, humidity, acceleration on 3 axes) from a <em>single</em> bus transaction. Fetching once and then getting multiple channels avoids unnecessary, repeated hardware access."
+            },
+            {
+              "label": "sensor_value_to_double()",
+              "content": "Values come back as a <code dir=\"ltr\">struct sensor_value</code> — a fixed-point type (<code dir=\"ltr\">val1</code> = integer part, <code dir=\"ltr\">val2</code> = fractional part in millionths) chosen so the API works even without a hardware FPU. <code dir=\"ltr\">sensor_value_to_double()</code> converts this into a normal <code dir=\"ltr\">double</code> for easy printing."
+            }
+          ],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Build, flash, and observe",
+          "description": "<ol dir=\"ltr\"><li><strong>Pristine build</strong> — a clean build ensures your new <code dir=\"ltr\">prj.conf</code> and <code dir=\"ltr\">app.overlay</code> are picked up correctly:\n<ul dir=\"ltr\">\n<li>VS Code: nRF Connect extension → select your build configuration → move the mouse over <span class=\"x7amdea\" style=\"text-wrap-mode: initial; font-size: 0.9rem; font-weight: 600;\">Build</span><span style=\"text-wrap-mode: initial; font-size: 0.9rem;\"> to open the build actions.&nbsp;</span>Select <span class=\"x7amdea\" style=\"text-wrap-mode: initial; font-size: 0.9rem; font-weight: 600;\">Pristine Build</span><span style=\"text-wrap-mode: initial; font-size: 0.9rem;\"> by clicking the </span><span class=\"x7amdea\" style=\"text-wrap-mode: initial; font-size: 0.9rem; font-weight: 600;\">circular arrow icon</span><span style=\"text-wrap-mode: initial; font-size: 0.9rem;\"> next to it.</span></li>\n</ul>\n\n</li>\n<li><strong>Flash</strong> to the DK</li>\n<li><strong>Open the Serial Terminal</strong> (nRF Connect for VS Code → Connected Devices → Serial Terminal), or an external tool such as <code dir=\"ltr\">nRF Serial Terminal</code>&nbsp;at the DK's default baud rate.</li></ol><div>The expected output is shown in the following screenshot.</div>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/terminal_simSensor.jpg",
+              "caption": "Serial Terminal output"
+            }
+          ],
+          "moreInfo": [
+            {
+              "label": "Why do the values fluctuate slightly?",
+              "content": "Values will fluctuate slightly around the <code dir=\"ltr\">base-temperature</code> you set in the overlay (<code dir=\"ltr\">20</code>) — this confirms the simulator is generating live data and your application is successfully fetching and reading it every 2 seconds."
+            }
+          ],
+          "codeBlocksNoCopy": []
+        }
+      ],
+      "description": "<p dir=\"ltr\"><b>Learning Objectives</b></p><p dir=\"ltr\">By the end of this chapter you will be able to:</p>\n\n<ul dir=\"ltr\">\n<li>Explain what Zephyr's sensor subsystem does and why applications use it instead of talking to hardware directly.</li>\n<li>Enable the sensor subsystem in a Zephyr/nRF Connect SDK project via Kconfig.</li>\n<li>Describe a virtual sensor device in the DeviceTree and bind it to your application.</li>\n<li>Read a sensor value in application code using the standard sensor API.</li>\n<li>Build, flash, and verify the result on your nRF93M1 DK.</li></ul><div><br></div><div><b>Background: Why a Sensor Subsystem?</b></div><div><p dir=\"ltr\">Every sensor — a real accelerometer, a temperature IC, or a simulated one — has its own register map and bus protocol. If application code talked to each sensor directly, swapping one sensor for another (or testing without hardware at all) would mean rewriting your application logic.</p>\n\n<p dir=\"ltr\">Zephyr solves this with a <strong>common sensor API</strong>: a single, standardized set of functions (<code dir=\"ltr\">sensor_sample_fetch()</code>, <code dir=\"ltr\">sensor_channel_get()</code>, …) that every sensor driver implements. Your application code calls these generic functions; the driver underneath handles the device-specific details. This is why we can develop and test with a <strong>simulated sensor</strong> now, and later swap in a real physical sensor with little or no change to <code dir=\"ltr\">main.c</code>.</p>\n\n<p dir=\"ltr\">For this exercise we use nRF Connect SDK's built-in <strong>sensor simulator</strong> (<code dir=\"ltr\">nordic,sensor-sim</code>), which generates plausible temperature, pressure, humidity, and acceleration values without any physical hardware.</p></div>"
+    },
+    {
+      "title": "3. Sensor - real sensor (nRF54L15 on-chip TEMP sensor)",
+      "description": "Next steps: enable the nRF54L15's on-chip TEMP peripheral via a DeviceTree overlay and alias, update the sensor node/channel in <code dir=\"ltr\">main.c</code> to bind to it instead of the simulated sensor, then rebuild and reflash — the fetch/get logic itself stays unchanged.",
+      "steps": [
+        {
+          "title": "Extending the Existing Project",
+          "description": "<div>Each chapter builds upon the project developed in the previous chapter. All concepts, instructions, and implementation steps introduced in the current chapter should be applied directly to the existing project.</div><div><br></div><div>The latest version of the project is available for download&nbsp;<a href=\"solutions/2-Sensor_simulated.zip\" download=\"\">here</a>&nbsp;as a ZIP file.</div>",
+          "codeBlocks": [],
+          "codeBlocksNoCopy": [],
+          "images": [],
+          "moreInfo": []
+        },
+        {
+          "title": "Add Sensor Hardware Configuration in DeviceTree ",
+          "description": "<span style=\"color: rgba(0, 0, 0, 0.8); font-family: -apple-system, BlinkMacSystemFont, &quot;SF Pro&quot;, &quot;Segoe UI&quot;, sans-serif; font-size: 14px;\">Let's enable the TEMP node (if not already </span><code style=\"background: none 0% 0% / auto repeat scroll padding-box border-box rgba(0, 0, 0, 0.04); padding: 1px 3px; border-radius: 4px; font-style: normal; font-variant: normal; font-size-adjust: none; font-language-override: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-stretch: normal; font-size: 0.92em; line-height: normal; font-family: &quot;SF Mono&quot;, ui-monospace, Menlo, Consolas, monospace; color: rgba(0, 0, 0, 0.8);\">okay</code><span style=\"color: rgba(0, 0, 0, 0.8); font-family: -apple-system, BlinkMacSystemFont, &quot;SF Pro&quot;, &quot;Segoe UI&quot;, sans-serif; font-size: 14px;\"> by default for your SoC/board revision) and create the alias your code will use.</span>",
+          "codeBlocks": [
+            {
+              "label": "app.overlay",
+              "code": "&temp {\n    status = \"okay\";\n};\n\n/ {\n    aliases {\n        die-temp0 = &temp;\n    };\n};"
+            }
+          ],
+          "images": [],
+          "moreInfo": [
+            {
+              "label": "nRF54L15 on-chip TEMP peripheral",
+              "content": "<p style=\"margin: 0px; color: rgba(0, 0, 0, 0.8); font-family: -apple-system, BlinkMacSystemFont, &quot;SF Pro&quot;, &quot;Segoe UI&quot;, sans-serif; font-size: 14px;\">The nRF54L15 contains a <span style=\"font-weight: 600;\">TEMP</span> peripheral that measures the die temperature of the chip itself (not ambient room temperature — expect it to run a few degrees above ambient once the CPU is active). Per Nordic's product specification:</p><ul style=\"margin: 0px; display: flex; flex-direction: column; gap: 6px; padding-left: 22px; list-style: disc; color: rgba(0, 0, 0, 0.8); font-family: -apple-system, BlinkMacSystemFont, &quot;SF Pro&quot;, &quot;Segoe UI&quot;, sans-serif; font-size: 14px;\"><li>Resolution: <span style=\"font-weight: 600;\">0.25 °C</span>.</li><li>The TEMP analog electronics power down automatically after a measurement completes (low power).</li><li>To hit the accuracy stated in the electrical specification, the <span style=\"font-weight: 600;\">crystal oscillator (HFXO) must be the HFCLK source</span> during measurement — this is already the default configuration on the nRF54L15, so you don't need to change anything for this workshop.</li></ul>"
+            }
+          ],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Update sensor binding",
+          "description": "In the previous chapter, we created a link from the simulated sensor definition in the DeviceTree file to the C code using <code style=\"color: rgb(14, 138, 125);\">DT_NODELABEL()</code>. We need to update this link so that it points to the TEMP sensor. Instead of&nbsp;<div><code style=\"color: rgb(14, 138, 125);\">#define SENSOR_NODE DT_NODELABEL(simulated_sensor)</code></div><div>&nbsp;we now use&nbsp;</div>",
+          "codeBlocks": [
+            {
+              "label": "main.c",
+              "code": "/* Resolves to the DeviceTree node aliased as \"die-temp0\" in our overlay */\n#define SENSOR_NODE DT_ALIAS(die_temp0)"
+            }
+          ],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Update reading from TEMP device",
+          "description": "<p class=\"isSelectedEnd\">The simulated sensor uses the following line to read the temperature sensor value:</p><pre dir=\"ltr\"><code dir=\"ltr\">if (sensor_channel_get(dev, SENSOR_CHAN_AMBIENT_TEMP, &amp;temp) &lt; 0) {</code></pre><p class=\"isSelectedEnd\">The <strong>TEMP device</strong> uses a different sensor channel for reading the temperature. Therefore, instead of <code dir=\"ltr\">SENSOR_CHAN_AMBIENT_TEMP</code>, the <strong>die temperature</strong> channel must be used:</p><pre dir=\"ltr\"><code dir=\"ltr\">SENSOR_CHAN_DIE_TEMP</code></pre>",
+          "codeBlocks": [
+            {
+              "label": "The resulting code is:",
+              "code": "if (sensor_channel_get(dev, SENSOR_CHAN_DIE_TEMP, &temp) < 0) {"
+            }
+          ],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Build, flash, and observe",
+          "description": "<ol dir=\"ltr\"><li><strong>Pristine build</strong> — a clean build ensures your new <code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">prj.conf</code> and <code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">app.overlay</code> are picked up correctly:<ul dir=\"ltr\"><li>VS Code: nRF Connect extension → select your build configuration → move the mouse over <span class=\"x7amdea\" style=\"text-wrap-mode: initial; font-size: 0.9rem; font-weight: 600;\">Build</span><span style=\"text-wrap-mode: initial; font-size: 0.9rem;\"> to open the build actions. </span>Select <span class=\"x7amdea\" style=\"text-wrap-mode: initial; font-size: 0.9rem; font-weight: 600;\">Pristine Build</span><span style=\"text-wrap-mode: initial; font-size: 0.9rem;\"> by clicking the </span><span class=\"x7amdea\" style=\"text-wrap-mode: initial; font-size: 0.9rem; font-weight: 600;\">circular arrow icon</span><span style=\"text-wrap-mode: initial; font-size: 0.9rem;\"> next to it. </span>The application is then rebuilt from a clean build directory.</li></ul></li><li><strong>Flash</strong> to the DK</li><li><strong>Open the Serial Terminal</strong> (nRF Connect for VS Code → Connected Devices → Serial Terminal), or an external tool such as <code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">nRF Serial Terminal</code> at the DK's default baud rate.</li></ol><div>Expected output:</div>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/terminal_tmpSensor.jpg",
+              "caption": "Serial Terminal"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        }
+      ]
+    },
+    {
+      "title": "4. AI-assisted development",
+      "steps": [
+        {
+          "title": "Sign up for myNordic",
+          "description": "<span style=\"font-size: 14.4px;\">Create a </span><a href=\"http://mynordic.nordicsemi.com/\" target=\"_blank\" rel=\"noopener\">myNordic</a><span style=\"font-size: 14.4px;\"> account if you don't already have one. You will need this later to log in to the AI Assistant's user interface.</span>",
+          "codeBlocks": [],
+          "codeBlocksNoCopy": [],
+          "images": [],
+          "moreInfo": []
+        },
+        {
+          "title": "Github Copilot Chat",
+          "description": "<div>Check if Github Copilot Chat extension is installed by looking for it in Extensions</div>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/githubCopilotChat.jpg",
+              "caption": "Github Copilot Chat in Extensions"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Open Chat window",
+          "description": "<div>Github Copilot Chat window must be opened. It is possible that by default the Chat window opens. If not, go to menu &quot;View&quot; and click &quot;Chat&quot; to open it.</div>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/StartChat.jpg",
+              "caption": "Open Github Copilot Chat window"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Click gear icon and add Nordic MCP",
+          "description": "<ul><li>Click on top of the Chat window on the gear</li><li>In the window that opens click on the <b>Add Server</b>&nbsp;button&nbsp;</li></ul>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/addMCP.jpg",
+              "caption": "Add Server"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Connect to a remote HTTP server",
+          "description": "<div><ul><li>Choose the type of MCP server to add:&nbsp; &nbsp;HTTP (HTTP or Server-Send Events)</li><li><span style=\"font-size: 14.4px;\">URL of the MCP server:&nbsp; &nbsp;</span><span style=\"font-size: 14.4px;\">&nbsp;</span><b style=\"background-color: rgba(79, 209, 197, 0.16); color: rgb(14, 138, 125); font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 0.88em;\">https://aidev.nordicsemi.com/mcp</b><b style=\"background-color: rgba(79, 209, 197, 0.16); color: rgb(14, 138, 125); font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 0.88em;\"></b></li><li>Enter Server ID (name of the server that is used in VS Code):&nbsp; &nbsp;nordic-mcp</li><li>Select configuration target:&nbsp; &nbsp; Global available in all workspaces, runs locally&nbsp;</li></ul></div><div><br></div>",
+          "codeBlocks": [],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Check if Nordic MCP is running",
+          "description": "<p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" data-assistant-stream-block=\"\" data-assistant-stream-block-index=\"0\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 0.25rem; margin-top: 0px; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; background-color: rgb(252, 252, 252);\"><span class=\"x7amdea\" style=\"font-weight: 600;\">“Is Nordic MCP running?”</span> is a natural way to ask whether the Nordic MCP service/process is currently up and functioning.</p>",
+          "codeBlocks": [
+            {
+              "label": "Chat",
+              "code": "is nordic mcp running?"
+            }
+          ],
+          "images": [
+            {
+              "src": "images/IsNordicMCPrunning.jpg",
+              "caption": "Is Nordic MCP running?"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        }
+      ],
+      "description": "<p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\">Nordic Semiconductor’s AI-assisted development integrates AI coding capabilities with the Nordic development ecosystem through the Model Context Protocol (MCP). Within VS Code, the AI assistant can combine general software-development reasoning with Nordic-specific documentation, APIs, SDK configuration, project context, and development tools. This enables the assistant to support developers across the embedded-software lifecycle—from understanding and generating application code to configuring the nRF Connect SDK, resolving build issues, and interacting with target hardware. The MCP-based approach provides the AI with structured access to relevant development context and tools, while keeping the developer in control of reviewing, validating, and executing the resulting changes.</p><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 0.25rem; margin-top: 0.25rem; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px;\">The workshop demonstrates the practical setup of Nordic AI-assisted development in VS Code:</p><ol class=\"xonam98 x1epdd7z xemmon1 xn020vs xfl32do xluzp7q x1yc453h x3yw8vx xat24cr x1xobyvs x1fv8qjw xdj266r xrxpjvj x1bxe5rh\" style=\"margin-inline: 0px; direction: ltr; padding-inline-start: 1.625rem; margin-bottom: 0.25rem; margin-top: 0px; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px;\"><li class=\"x1datfip xp5n6w9 x2xbuc6\"><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 0px; margin-top: 0px;\">Start <span class=\"x7amdea\" style=\"font-weight: 600;\">GitHub Copilot Chat</span>.</p></li><li class=\"x1datfip xp5n6w9 x2xbuc6\" style=\"margin-top: 0.5rem;\"><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 0px; margin-top: 0px;\">Add and configure the <span class=\"x7amdea\" style=\"font-weight: 600;\">Nordic MCP server</span>.&nbsp;<span style=\"text-wrap-mode: initial;\">Connect to a </span><span class=\"x7amdea\" style=\"text-wrap-mode: initial; font-weight: 600;\">remote HTTP MCP server</span><span style=\"text-wrap-mode: initial;\">.</span></p></li><li class=\"x1datfip xp5n6w9 x2xbuc6\" style=\"margin-top: 0.5rem;\"><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 0px; margin-top: 0px;\">Verify that the <span class=\"x7amdea\" style=\"font-weight: 600;\">Nordic MCP server is running and accessible</span>.</p></li></ol>"
+    },
+    {
+      "title": "5. Bluetooth",
+      "steps": [
+        {
+          "title": "Extending the Existing Project",
+          "description": "Each chapter builds upon the project developed in the previous chapter. All concepts, instructions, and implementation steps introduced in the current chapter should be applied directly to the existing project.<div><br></div><div>The latest version of the project is available for download&nbsp;<a href=\"solutions/3-Sensor_TEMP.zip\" download=\"\">here&nbsp;</a>as a ZIP file.</div>",
+          "codeBlocks": [],
+          "codeBlocksNoCopy": [],
+          "images": [],
+          "moreInfo": []
+        },
+        {
+          "title": "Use Nordic MCP: Init Bluetooth Stack and start advertising",
+          "description": "<span style=\"font-size: 0.9rem;\">Look for the </span><strong data-start=\"191\" data-end=\"215\" style=\"font-size: 0.9rem;\">permissions dropdown</strong><span style=\"font-size: 0.9rem;\"> near the chat input. And p</span>lease set the permissions to \"Allow all\".<br><br><div>Let's enter the following prompt in the VS Code Chat window, that should add Bluetooth initialization and advertising to the project.<div><br></div><div><div><div><span style=\"font-size: 0.9rem;\">⚠️ </span><strong style=\"font-size: 0.9rem;\">Take care:&nbsp;</strong><span style=\"font-size: 14.4px;\">The text we copy into the chat window contains a placeholder for entering a unique name. Before you start editing in the VS Code chat window, enter your own name. See “4. Set the Bluetooth ...”</span></div></div></div></div>",
+          "codeBlocks": [
+            {
+              "label": "Bluetooth stack initialization and advertising prompt",
+              "code": "Use the Nordic MCP server to add Bluetooth initialization and advertising to my existing project.\n\nPlease:\n1. Initialize the Bluetooth stack using the appropriate APIs and configuration for this project and its target board.\n2. Check and handle the initialization result before proceeding.\n3. Only after successful Bluetooth initialization, start Bluetooth LE advertising.\n4. Set the Bluetooth advertising/device name to <ENTER YOUR BT ADV NAME HERE>. The name must start with BAS_.\n5. Use the existing project structure and nRF Connect SDK conventions. Do not introduce unnecessary changes to unrelated code.\n6. Update any required Kconfig or project configuration so that the Bluetooth functionality is enabled.\n7. Clearly identify all files and configuration changes you make.\n8. All Bluetooth functions should be placed in the file bluetooth.c. Create a header file bluetooth.h that declares a function that declares the bluetooth_init() function..\n\nUse the Nordic MCP documentation and tools to verify that the implementation is appropriate for the project's nRF Connect SDK version and target board."
+            }
+          ],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Test your project",
+          "description": "<ul><li data-section-id=\"vbzc7h\" data-start=\"55\" data-end=\"194\">Review the proposed changes. If they are sensible and consistent with the intended behavior, choose <strong data-start=\"158\" data-end=\"166\">Keep</strong>; otherwise choose <strong data-start=\"185\" data-end=\"193\">Undo</strong>.<span aria-hidden=\"true\" class=\"PDq2pG_selectionAnchor\"></span>\n</li>\n<li data-section-id=\"1v5mjad\" data-start=\"195\" data-end=\"251\">\nFlash the resulting software/firmware to the dev kit.\n</li>\n<li data-section-id=\"xx66rj\" data-start=\"252\" data-end=\"284\">\nOpen the <strong data-start=\"264\" data-end=\"283\">Serial Terminal</strong>.\n</li>\n<li data-section-id=\"kxu94p\" data-start=\"285\" data-end=\"380\">\nReset the dev kit and inspect the received logs for errors, crashes, or unexpected behavior.\n</li>\n<li data-section-id=\"1a4d1um\" data-start=\"381\" data-end=\"504\">\nUse <strong data-start=\"388\" data-end=\"414\">nRF Connect for Mobile</strong> to scan for BLE advertising and verify that the expected device/advertisement is visible.</li></ul>",
+          "codeBlocks": [],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Add connection handling and BAS profile",
+          "description": "<div><span style=\"font-size: 14.4px;\">Add connection establishment and BAS GATT service to the existing Bluetooth implementation.</span></div>",
+          "codeBlocks": [
+            {
+              "label": "Bluetooth Connection + BAS Prompt",
+              "code": "Use Nordic MCP.\nExtend the existing Bluetooth LE implementation to include connection establishment and the Battery Service (BAS).\nThe Bluetooth stack is already initialized and connectable advertising is already running. Do not reinitialize the Bluetooth stack, recreate advertising, or replace existing Bluetooth functionality.\nFirst inspect the existing project to determine the Bluetooth SDK/framework and follow its existing APIs and architecture.\n\nRequirements:\n- Add Bluetooth connection establishment.\n- Handle connection success and failure through the existing Bluetooth event/callback mechanism.\n- Add the standard Bluetooth SIG Battery Service (BAS) to the existing GATT database.\n- Add the Battery Level characteristic with read and notification support.\n- Provide an application API to update the battery level (0–100%). \n- In the main loop, a variable named “battery_level” should be used, whose value is decremented from 100 to 0 and which is used for BAS notifications.\n- Send Battery Level notifications when the connected client has enabled them.\n- Preserve the existing initialization, advertising, connection, and application architecture.\n- Do not invent APIs; use APIs available in the detected SDK/version.\n- Build the project after implementation and fix compilation errors and warnings introduced by the changes.\n- Add all Bluetooth code to the bluetooth.c file. \n- Handle a disconnect and restarting of advertising.\n\nAfter implementation, briefly summarize:\n- Modified files.\n- Connection establishment behavior.\n- BAS implementation.\n- Battery Level update API.\n- Build/validation results."
+            }
+          ],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Test your project",
+          "description": "<ul><li data-section-id=\"vbzc7h\" data-start=\"55\" data-end=\"194\">Review the proposed changes. If they are sensible and consistent with the intended behavior, choose <strong data-start=\"158\" data-end=\"166\">Keep</strong>; otherwise choose <strong data-start=\"185\" data-end=\"193\">Undo</strong>.<span aria-hidden=\"true\" class=\"PDq2pG_selectionAnchor\"></span></li><li data-section-id=\"1v5mjad\" data-start=\"195\" data-end=\"251\">Flash the resulting software/firmware to the dev kit.</li><li data-section-id=\"xx66rj\" data-start=\"252\" data-end=\"284\">Open the <strong data-start=\"264\" data-end=\"283\">Serial Terminal</strong>.</li><li data-section-id=\"kxu94p\" data-start=\"285\" data-end=\"380\">Reset the dev kit and check the received logs for expected startup messages, errors, warnings, crashes, or unexpected behavior.</li><li data-section-id=\"1a4d1um\" data-start=\"381\" data-end=\"504\">Use <strong data-start=\"388\" data-end=\"414\">nRF Connect for Mobile</strong> to scan for BLE advertising and verify that the expected device/advertisement is visible.&nbsp;</li><li data-section-id=\"1a4d1um\" data-start=\"381\" data-end=\"504\">Check advertising restart after disconnect.</li><li data-section-id=\"1a4d1um\" data-start=\"381\" data-end=\"504\">Check BAS (Battery Service): <br>&gt; Verify that BAS service is present after connecting.<br>&gt; Read current battery level.<br>&gt; Enable Battery Level notifications.<br>&gt; Verify that notifications can be enabled successfully.<br></li></ul>",
+          "codeBlocks": [],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        }
+      ],
+      "description": "<p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" data-assistant-stream-block=\"\" data-assistant-stream-block-index=\"1\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 0.25rem; margin-top: 0.25rem; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; background-color: rgb(252, 252, 252);\">In this chapter, all Bluetooth stack-related functionality will be implemented using <span class=\"x7amdea\" style=\"font-weight: 600;\">Nordic's AI-assisted development approach with the Nordic MCP</span>, ensuring that the implementation follows the appropriate Nordic SDK APIs, configuration, and recommended Bluetooth architecture.</p><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" data-assistant-stream-block=\"\" data-assistant-stream-block-index=\"2\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 1rem; margin-top: 1rem; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; background-color: rgb(252, 252, 252);\">The planned Bluetooth solution will extend the existing BLE implementation without changing its established stack initialization or advertising mechanism. The solution will add <span class=\"x7amdea\" style=\"font-weight: 600;\">LE Secure Connections pairing</span> to provide a secure connection between the device and a BLE central, while intentionally <span class=\"x7amdea\" style=\"font-weight: 600;\">excluding bonding and persistent pairing information</span>. In addition, the GATT database will be extended with the standard <span class=\"x7amdea\" style=\"font-weight: 600;\">Battery Service (BAS)</span>, including a readable and notifiable Battery Level characteristic.</p><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" data-assistant-stream-block=\"\" data-assistant-stream-block-index=\"3\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 1rem; margin-top: 1rem; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; background-color: rgb(252, 252, 252);\">The application will provide an interface to update the battery level and notify connected clients when notifications are enabled. For initial testing, the battery level can be simulated using a counter that decreases from 100% to 0% and then starts again at 100%.</p><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" data-assistant-stream-block=\"\" data-assistant-stream-block-index=\"4\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 1rem; margin-top: 1rem; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; background-color: rgb(252, 252, 252);\">The connection lifecycle will also be completed by handling <span class=\"x7amdea\" style=\"font-weight: 600;\">BLE disconnections and automatically restarting connectable advertising</span>. This ensures that after a connection is lost, the device becomes discoverable again and can accept a new connection without requiring a device reset.</p><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" data-assistant-stream-block=\"\" data-assistant-stream-block-index=\"5\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 1rem; margin-top: 1rem; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; background-color: rgb(252, 252, 252);\">Overall, the solution will provide a complete BLE flow:</p><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" data-assistant-stream-block=\"\" data-assistant-stream-block-index=\"6\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 0.25rem; margin-top: 1rem; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; background-color: rgb(252, 252, 252);\"><span class=\"x7amdea\" style=\"font-weight: 600;\">Advertising → Connection → LE Secure Connections pairing → GATT/BAS access → Battery notifications → Disconnection → Advertising restart → Reconnection.</span></p>"
+    },
+    {
+      "title": "6. PMIC",
+      "steps": [
+        {
+          "title": "Extending the Existing Project",
+          "description": "Each chapter builds upon the project developed in the previous chapter. All concepts, instructions, and implementation steps introduced in the current chapter should be applied directly to the existing project.<div><br></div><div>The latest version of the project is available for download&nbsp;<a href=\"solutions/5-Bluetooth.zip\" download=\"\">here&nbsp;</a>as a ZIP file.</div>",
+          "codeBlocks": [],
+          "codeBlocksNoCopy": [],
+          "images": [],
+          "moreInfo": []
+        },
+        {
+          "title": "Include nPM13xx and Fuel Gauge software library",
+          "description": "<div><span style=\"font-size: 14.4px;\">Now add the libraries and drivers required for the nPM13xx to our project.&nbsp;</span></div><div><span style=\"font-size: 14.4px;\">Fuel Gauge is based on Zephyr’s sensing subsystem. This means we need to set <code>CONFIG_SENSOR=y</code>. We already did this in an earlier step when we integrated the simulated sensor. For this reason, it won’t be set again here. However, the other KCONFIG settings for nPM1300 still need to be set in prj.conf.</span></div>",
+          "codeBlocks": [
+            {
+              "label": "prj.conf",
+              "code": "# Enable I2C support\nCONFIG_I2C=y\n\n# Enable float-based math\nCONFIG_FPU=y\n\n# nPM13xx and Fuel Gauge support\nCONFIG_MFD=y\nCONFIG_MFD_NPM13XX=y\nCONFIG_REGULATOR=y\nCONFIG_REGULATOR_NPM13XX=y\nCONFIG_NPM13XX_CHARGER=y\nCONFIG_NRF_FUEL_GAUGE=y\n"
+            }
+          ],
+          "images": [],
+          "moreInfo": [
+            {
+              "label": "MFD_NPM13XX / REGULATOR_NPM13XX",
+              "content": "<code dir=\"ltr\">MFD_NPM13XX</code> / <code dir=\"ltr\">REGULATOR_NPM13XX</code> bring in the base chip driver and its buck/LDO regulators."
+            },
+            {
+              "label": "NPM13XX_CHARGER",
+              "content": "<code dir=\"ltr\">NPM13XX_CHARGER</code> is the Zephyr <strong>sensor</strong> driver that reads V/I/T off the chip."
+            },
+            {
+              "label": "NRF_FUEL_GAUGE",
+              "content": "<code dir=\"ltr\">NRF_FUEL_GAUGE</code> pulls in Nordic's algorithm library from nrfxlib."
+            },
+            {
+              "label": "FPU",
+              "content": "The FPU/cbprintf lines are there because the fuel gauge math is float-based and you'll want <code dir=\"ltr\">%f</code> in <code dir=\"ltr\">printk</code>."
+            }
+          ],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Get a battery model",
+          "description": "<ul><li><strong style=\"font-size: 0.9rem;\">Locate the existing sample's model file</strong><span style=\"font-size: 0.9rem;\"> in your NCS checkout.&nbsp;<br><code>nrf/samples/pmic/native/npm13xx_fuel_gauge/src/battery_model.inc</code></span></li><li><strong style=\"font-size: 0.9rem;\">Copy that file into your project's <code dir=\"ltr\">src/</code> folder</strong><span style=\"font-size: 0.9rem;\">, unmodified, so you're using a real, previously-generated model rather than typing numbers by hand.</span></li><li><strong style=\"font-size: 0.9rem;\">Include the battery model by adding below code lines</strong></li></ul>\n",
+          "codeBlocks": [
+            {
+              "label": "main.c",
+              "code": "static const struct battery_model battery_model = {\n#include \"battery_model.inc\"\n};"
+            }
+          ],
+          "images": [],
+          "moreInfo": [
+            {
+              "label": "What would I do with a battery I'd chosen myself? ",
+              "content": "<div><span style=\"font-size: 14.4px;\">If no predefined battery model matches, then you would do the following.</span></div>Install nRF Connect for Desktop's nPM PowerUP app, connect the nPM1300 EK (+ nPM Fuel Gauge Board for a rechargeable model), and profile the actual battery you're using. PowerUP exports the same kind of <code dir=\"ltr\">.inc</code> file — swap it in for a model that matches your specific cells."
+            }
+          ],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Update nPM13xx binding",
+          "description": "<div><strong style=\"font-size: 0.9rem;\">Get the device handle and check readiness first</strong><span style=\"font-size: 0.9rem;\">, print-and-flash before doing anything else.</span></div>",
+          "codeBlocks": [
+            {
+              "label": "main.c",
+              "code": "#include <zephyr/device.h>\n#include <zephyr/devicetree.h>\n\nstatic const struct device *charger = DEVICE_DT_GET(DT_NODELABEL(npm1300_charger));\n\n"
+            },
+            {
+              "label": "main.c => main() function",
+              "code": "    if (!device_is_ready(charger)) {\n        printk(\"Charger device not ready\\n\");\n        return 0;\n    }\n    printk(\"Charger device OK\\n\");"
+            }
+          ],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Add the sensor read function",
+          "description": "<strong>Add the sensor read function</strong> and print raw values, before touching the fuel gauge library at all — this isolates \"can I talk to the PMIC\" from \"does the algorithm work\".",
+          "codeBlocks": [
+            {
+              "label": "main.c",
+              "code": "#include <nrf_fuel_gauge.h>\n\nstatic int read_sensors(float *voltage, float *current, float *temp)\n{\n    struct sensor_value value;\n    int err = sensor_sample_fetch(charger);\n    if (err) {\n        printk(\"Error: nPM13xx sample update error\\n\");\n        return err;\n    }\n\n    sensor_channel_get(charger, SENSOR_CHAN_GAUGE_VOLTAGE, &value);\n    *voltage = (float)value.val1 + ((float)value.val2 / 1000000.f);\n\n    sensor_channel_get(charger, SENSOR_CHAN_GAUGE_AVG_CURRENT, &value);\n    *current = (float)value.val1 + ((float)value.val2 / 1000000.f);\n\n    sensor_channel_get(charger, SENSOR_CHAN_GAUGE_TEMP, &value);\n    *temp = (float)value.val1 + ((float)value.val2 / 1000000.f);\n\n    return 0;\n}"
+            }
+          ],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Fuel Gauge library",
+          "description": "<div>Bring in the fuel gauge library and initialize it.</div>",
+          "codeBlocks": [
+            {
+              "label": "main.c => main() function",
+              "code": "    float batt_voltage, batt_current, batt_temp, batt_soc;\n\n    /* First reading should be taken with the battery at rest for an\n     * accurate baseline (see Nordic's fuel gauge app note). */\n    read_sensors(&batt_voltage, &batt_current, &batt_temp);\n\n    struct nrf_fuel_gauge_init_parameters params =\n           NRF_FUEL_GAUGE_DEFAULT_INIT_PARAMETERS_SECONDARY(batt_voltage,\n                                                            batt_current, \n                                                            batt_temp,\n                                                            &battery_model);\n    err = nrf_fuel_gauge_init(&params, NULL);\n    if (err) {\n        printk(\"Fuel gauge init failed: %d\\n\", err);\n        return 0;\n    }\n    printk(\"Fuel gauge initialized\\n\");"
+            }
+          ],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Polling loop",
+          "description": "Add the polling loop last.<div><br></div><div><div><b>Note:</b> place below code in main() function before the</div><div><span style=\"font-size: 14.4px;\"><code>&nbsp; &nbsp; bluetooth_battery_level_update()</code></span></div><div>function is called. This allows us easily to replace the simulated <code style=\"color: rgb(14, 138, 125);\">batt_level</code> by the real State-of-Charge (<code>soc</code>) value.</div></div>",
+          "codeBlocks": [
+            {
+              "label": "main.c => main() function => in entire loop",
+              "code": "        // Fuel Gauge: State-of-Charge calculation\n        read_sensors(&batt_voltage, &batt_current, &batt_temp);\n        err = nrf_fuel_gauge_process(batt_voltage, batt_current, batt_temp, 1.0f, &batt_soc, NULL);\n        if (err) {\n            printk(\"Fuel gauge process error: %d\\n\", err);\n            continue;\n        }        \n        printk(\"V: %.3f, I: %.3f, T: %.2f, SoC: %.2f%%\\n\",\n               (double)batt_voltage, (double)batt_current, (double)batt_temp, (double)batt_soc);"
+            }
+          ],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Use State-of-Charge value for Bluetooth Notification",
+          "description": "<div><span style=\"font-size: 14.4px;\">In the previous chapter, we transmitted the battery level via Bluetooth. The level was simulated in that case. Since we now have a calculated SOC level, we can use it.</span></div><div><span style=\"font-size: 14.4px;\"><br></span></div><div><span style=\"font-size: 14.4px;\">We will modify the function&nbsp;</span></div><div><span style=\"font-size: 14.4px;\">&nbsp; &nbsp; &nbsp;<code>err = app_battery_level_update(batt_level);</code></span></div><div><span style=\"font-size: 14.4px;\">as shown below. Note that the <code>batt_level</code> simulation can be removed.</span></div>",
+          "codeBlocks": [
+            {
+              "label": "main.c => use SoC from Fuel Gauge instead of simulated value",
+              "code": "        err = app_battery_level_update(batt_soc);"
+            }
+          ],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Build, flash, and test",
+          "description": "<div><ul><li><span style=\"font-size: 0.9rem;\">Perform a build. (pristine build is not needed this time!)</span></li><li>After the build is successful, we'll flash the software to the dev kit.</li></ul></div><div><ul><li>Use “NRF Connect for Mobile” to connect to your device. Enable BAS notifications and check whether the SOC value in the Serial Terminal matches the battery level in the app.</li></ul></div>",
+          "codeBlocks": [],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        }
+      ],
+      "description": ""
+    },
+    {
+      "title": "Completed",
+      "steps": [
+        {
+          "title": "Congratulation!!!",
+          "description": "<br>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/courseCompleted.jpg",
+              "caption": ""
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        }
+      ],
+      "description": ""
+    }
+  ]
+};
