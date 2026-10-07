@@ -6,21 +6,24 @@
 <title>Workshop Guide</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     box-sizing: border-box;
     padding-top: env(safe-area-inset-top, 0px);
     padding-bottom: env(safe-area-inset-bottom, 0px);
 
-    --paper: #F7F6F3;
+    /* Nordic Semiconductor palette: accent = Nordic Blueslate (#0032A0);
+       dark mode uses Nordic Sky (#6AD1E3). Previous green theme was
+       accent #2F6F4E / soft #E4EFE9 (light) and #57B589 / #1E2C25 (dark). */
+    --paper: #F3F6F8;
     --panel: #FFFFFF;
     --ink: #1B1F23;
     --muted: #6B7280;
-    --accent: #2F6F4E;
+    --accent: #0032A0;
     --accent-ink: #FFFFFF;
-    --accent-soft: #E4EFE9;
-    --line: #DFDCD5;
+    --accent-soft: #E3F1F8;
+    --line: #D8E0E6;
   }
   :root:not([data-theme="light"]) {
     @media (prefers-color-scheme: dark) {
@@ -28,9 +31,9 @@
       --panel: #1B1F22;
       --ink: #ECECE9;
       --muted: #9AA1A6;
-      --accent: #57B589;
-      --accent-ink: #0C1210;
-      --accent-soft: #1E2C25;
+      --accent: #6AD1E3;
+      --accent-ink: #00161F;
+      --accent-soft: #123240;
       --line: #2B2F32;
     }
   }
@@ -39,9 +42,9 @@
     --panel: #1B1F22;
     --ink: #ECECE9;
     --muted: #9AA1A6;
-    --accent: #57B589;
-    --accent-ink: #0C1210;
-    --accent-soft: #1E2C25;
+    --accent: #6AD1E3;
+    --accent-ink: #00161F;
+    --accent-soft: #123240;
     --line: #2B2F32;
   }
   html { scroll-padding-top: env(safe-area-inset-top, 0px); }
@@ -149,9 +152,9 @@
     margin-bottom: 18px;
   }
   .settings-panel-head h2 {
-    font-family: "Source Serif 4", Georgia, serif;
+    font-family: var(--title-font);
+    font-weight: var(--title-weight);
     font-size: 19px;
-    font-weight: 600;
     margin: 0;
     color: var(--ink);
   }
@@ -217,8 +220,8 @@
   }
   .theme-toggle[aria-pressed="true"] .theme-toggle-thumb { transform: translateX(14px); }
   #workshopTitle {
-    font-family: "Source Serif 4", Georgia, serif;
-    font-weight: 600;
+    font-family: var(--title-font);
+    font-weight: var(--title-weight);
     font-size: 22px;
     line-height: 1.2;
     word-break: break-word;
@@ -284,7 +287,7 @@
     transition: transform .15s ease;
     display: inline-block;
   }
-  .chapter.expanded .chapter-chevron { transform: rotate(90deg); }
+  .chapter.expanded > .chapter-header .chapter-chevron { transform: rotate(90deg); }
 
   .chapter-lock {
     flex: 0 0 auto;
@@ -319,6 +322,29 @@
     margin-bottom: 6px;
   }
   .chapter:not(.expanded) .chapter-steps { display: none; }
+
+  /* Sub-chapters: a smaller header nested inside an expanded chapter */
+  .subchapter { margin: 2px 0 2px 10px; }
+  .sub-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px 6px 4px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .sub-header:hover { background: var(--accent-soft); }
+  .sub-header.viewing { background: var(--panel); border-color: var(--line); }
+  .sub-header .chapter-title { font-weight: 500; }
+  .sub-header.locked { cursor: default; opacity: .5; }
+  .sub-header.locked:hover { background: none; }
+  .subchapter.expanded > .sub-header .chapter-chevron { transform: rotate(90deg); }
+  .sub-steps { padding-left: 12px; }
+  .chapter:not(.expanded) .subchapter { display: none; }
+  .subchapter:not(.expanded) .chapter-steps { display: none; }
 
   .step-row {
     display: flex;
@@ -385,6 +411,8 @@
   /* Description font/size come from DESCRIPTION_FONT / DESCRIPTION_FONT_SIZE
      at the top of the script (these are just the fallbacks). */
   :root { --desc-font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif; --desc-size: 16px; }
+  /* Title font comes from TITLE_FONT at the top of the script (these are fallbacks). */
+  :root { --title-font: "GT Eesti", "DM Sans", system-ui, -apple-system, "Segoe UI", Arial, sans-serif; --title-weight: 300; }
   #stepDesc {
     margin-top: 16px;
     font-family: var(--desc-font);
@@ -675,6 +703,45 @@
   })();
 
   /* ====================================================================
+     TITLE FONT (the workshop title and the Settings heading), Nordic style.
+     Only the title: description text is controlled by DESCRIPTION_FONT above.
+
+       TITLE_FONT              font to use first. Nordic's brand typeface is
+                               "GT Eesti" (commercial, from Grilli Type); it is
+                               used wherever it is installed. Other choices:
+                               "Segoe UI", "Arial", or any installed font.
+       TITLE_FONT_WEB_FALLBACK a free Google font loaded as the stand-in on
+                               computers without TITLE_FONT. "" = none.
+                               Suggestions: "DM Sans", "Figtree", "Outfit".
+       TITLE_FONT_WEIGHT       300 = light (the Nordic headline look), 400, 600...
+                               The stand-in font must offer this weight.
+     ==================================================================== */
+  var TITLE_FONT = "GT Eesti";
+  var TITLE_FONT_WEB_FALLBACK = "DM Sans";
+  var TITLE_FONT_WEIGHT = "300";
+
+  (function applyTitleSettings() {
+    var quote = function (name) { return '"' + String(name).replace(/"/g, "") + '"'; };
+    var stack = [];
+    var first = String(TITLE_FONT || "").trim();
+    var web = String(TITLE_FONT_WEB_FALLBACK || "").trim();
+    var weight = String(TITLE_FONT_WEIGHT || "").trim();
+    if (first) stack.push(quote(first));
+    if (web) {
+      stack.push(quote(web));
+      var link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "https://fonts.googleapis.com/css2?family=" + encodeURIComponent(web).replace(/%20/g, "+") +
+        (weight ? ":wght@" + encodeURIComponent(weight) : "") + "&display=swap";
+      document.head.appendChild(link);
+    }
+    stack.push("system-ui", "-apple-system", '"Segoe UI"', "Arial", "sans-serif");
+    var root = document.documentElement;
+    root.style.setProperty("--title-font", stack.join(", "));
+    if (weight) root.style.setProperty("--title-weight", weight);
+  })();
+
+  /* ====================================================================
      Available workshop databases.
      Browsers can't scan a folder's contents for security reasons, so
      this list has to be kept up to date by hand: add one line per
@@ -682,8 +749,8 @@
      Settings → Workshop database.
      ==================================================================== */
   var DB_FILES = [
-    { file: "ntt2026_workshop_dach.dat", label: "NTT2026 Workshop DACH" },
-
+    { file: "ntt2026_Cellular.dat", label: "version Frans" },
+    { file: "CK_ntt2026_Cellular.dat", label: "latest Chris" },
   ];
 
   var SELECTED_DB_KEY = "workshop-guide:selected-db";
@@ -703,23 +770,54 @@
     try { localStorage.setItem(SELECTED_DB_KEY, file); } catch (e) { /* ignore */ }
   }
 
-  // Flatten chapters into a single ordered list of steps, each tagged
-  // with its chapter, so the rest of the app can treat steps as one
-  // sequence while still rendering them grouped by chapter.
+  // Normalize the chapters, then flatten every step into one ordered list.
+  //
+  // A chapter either holds "steps" directly (all older data files) or a list
+  // of "subChapters", each with its own title, description and steps. Steps
+  // placed directly in a chapter are kept in an "implicit" sub-chapter that has
+  // no header of its own, so the rest of the app only has to deal with one shape.
+  var CH = [];      // normalized chapters: { title, description, subs: [...] }
+  var PAGES = [];   // linear reading order: overviews + steps (drives Previous/Next)
+
+  function normalizeChapters() {
+    return WORKSHOP.chapters.map(function (chapter) {
+      var direct = chapter.steps || [];
+      var explicit = chapter.subChapters || chapter.subchapters || [];
+      var subs = [];
+      if (direct.length || !explicit.length) {
+        subs.push({ title: "", description: "", implicit: true, steps: direct, indices: [] });
+      }
+      explicit.forEach(function (sub) {
+        subs.push({ title: sub.title || "", description: sub.description || "", implicit: false, steps: sub.steps || [], indices: [] });
+      });
+      return { title: chapter.title, description: chapter.description || "", subs: subs };
+    });
+  }
+
   function buildFlatFromWorkshop() {
     FLAT = [];
-    WORKSHOP.chapters.forEach(function (chapter, ci) {
-      chapter.steps.forEach(function (step, si) {
-        FLAT.push({
-          chapterIndex: ci,
-          stepInChapter: si,
-          globalIndex: FLAT.length,
-          title: step.title,
-          description: step.description,
-          codeBlocks: step.codeBlocks || [],
-          images: step.images || [],
-          moreInfo: step.moreInfo || [],
-          codeBlocksNoCopy: step.codeBlocksNoCopy || []
+    PAGES = [];
+    CH = normalizeChapters();
+    CH.forEach(function (chapter, ci) {
+      if (chapter.description) PAGES.push({ type: "chapter", ci: ci });
+      chapter.subs.forEach(function (sub, subi) {
+        if (!sub.implicit && sub.description) PAGES.push({ type: "sub", ci: ci, subi: subi });
+        sub.steps.forEach(function (step, si) {
+          var gi = FLAT.length;
+          FLAT.push({
+            chapterIndex: ci,
+            subIndex: subi,
+            stepInSub: si,
+            globalIndex: gi,
+            title: step.title,
+            description: step.description,
+            codeBlocks: step.codeBlocks || [],
+            images: step.images || [],
+            moreInfo: step.moreInfo || [],
+            codeBlocksNoCopy: step.codeBlocksNoCopy || []
+          });
+          sub.indices.push(gi);
+          PAGES.push({ type: "step", ci: ci, subi: subi, gi: gi });
         });
       });
     });
@@ -742,6 +840,27 @@
     return true;
   }
 
+  // A sub-chapter opens once every step in the sub-chapters before it (in the
+  // same chapter) is done, on top of its chapter being unlocked. The first
+  // sub-chapter is open as soon as its chapter is.
+  function isSubUnlocked(ci, subi) {
+    if (!isChapterUnlocked(ci)) return false;
+    var subs = CH[ci].subs;
+    for (var j = 0; j < subi; j++) {
+      for (var k = 0; k < subs[j].indices.length; k++) {
+        if (!progressDone(subs[j].indices[k])) return false;
+      }
+    }
+    return true;
+  }
+
+  // Can this entry of PAGES be shown? Chapter overviews only need the chapter
+  // unlocked; sub-chapter overviews and steps also need their sub-chapter.
+  function isPageUnlocked(pg) {
+    if (!isChapterUnlocked(pg.ci)) return false;
+    return pg.type === "chapter" ? true : isSubUnlocked(pg.ci, pg.subi);
+  }
+
   // ---------- Per-database progress (each db_*.txt keeps its own) ----------
   function progressStorageKey(file) { return "workshop-guide:progress:v3::" + file; }
 
@@ -757,7 +876,8 @@
     progress = loadProgressForDb(currentDbFile);
     if (typeof progress.currentIndex !== "number") progress.currentIndex = 0;
     if (!progress.done) progress.done = {};
-    if (typeof progress.expandedChapter !== "number") progress.expandedChapter = null;
+    if (typeof progress.expandedChapter !== "number") delete progress.expandedChapter;
+    if (!progress.expandedSubs) progress.expandedSubs = {};
   }
 
   function progressDone(globalIndex) { return !!progress.done[globalIndex]; }
@@ -771,10 +891,10 @@
     var max = FLAT.length - 1;
     if (progress.currentIndex > max) progress.currentIndex = max;
     if (progress.currentIndex < 0) progress.currentIndex = 0;
-    // If the current step's chapter isn't unlocked (e.g. an earlier step
+    // If the current step's chapter or sub-chapter isn't unlocked (e.g. an earlier step
     // was unmarked after already moving past it), fall back to the last
     // step that's actually reachable.
-    while (progress.currentIndex > 0 && !isChapterUnlocked(FLAT[progress.currentIndex].chapterIndex)) {
+    while (progress.currentIndex > 0 && !isSubUnlocked(FLAT[progress.currentIndex].chapterIndex, FLAT[progress.currentIndex].subIndex)) {
       progress.currentIndex--;
     }
   }
@@ -803,7 +923,10 @@
   function effectiveExpandedChapter() {
     // Accordion: exactly one chapter open at a time. Default to the
     // chapter containing the current step until the user picks another.
+    // Three states: a number = that chapter is open, null = the user collapsed
+    // it so none is open, undefined = nothing chosen yet (open the current one).
     if (typeof progress.expandedChapter === "number") return progress.expandedChapter;
+    if (progress.expandedChapter === null) return null;
     return FLAT[progress.currentIndex] ? FLAT[progress.currentIndex].chapterIndex : 0;
   }
 
@@ -812,21 +935,93 @@
     return effectiveExpandedChapter() === ci;
   }
 
-  var viewingChapterIndex = null; // when set, main panel shows this chapter's overview instead of a step
+  // null = a step is showing. Otherwise { ci, subi }: the overview of chapter ci
+  // (subi === null) or of its sub-chapter subi is showing in place of a step.
+  var viewing = null;
+
+  function firstStepOfChapter(ci) {
+    var subs = CH[ci].subs;
+    for (var k = 0; k < subs.length; k++) {
+      if (subs[k].indices.length) return subs[k].indices[0];
+    }
+    return null;
+  }
+
+  // Position of whatever is currently on screen within PAGES.
+  function currentPageIndex() {
+    for (var p = 0; p < PAGES.length; p++) {
+      var pg = PAGES[p];
+      if (viewing) {
+        if (viewing.subi === null && pg.type === "chapter" && pg.ci === viewing.ci) return p;
+        if (viewing.subi !== null && pg.type === "sub" && pg.ci === viewing.ci && pg.subi === viewing.subi) return p;
+      } else if (pg.type === "step" && pg.gi === progress.currentIndex) {
+        return p;
+      }
+    }
+    return -1;
+  }
+
+  function goToPage(p) {
+    var pg = PAGES[p];
+    if (!pg) return;
+    var first;
+    progress.expandedChapter = pg.ci;
+    if (pg.type === "step") {
+      viewing = null;
+      progress.currentIndex = pg.gi;
+      progress.expandedSubs[pg.ci] = pg.subi;
+    } else if (pg.type === "sub") {
+      viewing = { ci: pg.ci, subi: pg.subi };
+      first = CH[pg.ci].subs[pg.subi].indices[0];
+      if (first !== undefined) progress.currentIndex = first;
+      progress.expandedSubs[pg.ci] = pg.subi;
+    } else {
+      viewing = { ci: pg.ci, subi: null };
+      first = firstStepOfChapter(pg.ci);
+      if (first !== null) progress.currentIndex = first;
+    }
+    saveProgress();
+    renderAll();
+  }
+
+  function makePrevButton(cur) {
+    var btn = document.createElement("button");
+    btn.className = "nav-btn";
+    btn.textContent = "\u2190 Previous";
+    btn.disabled = cur <= 0;
+    btn.addEventListener("click", function () { if (cur > 0) goToPage(cur - 1); });
+    return btn;
+  }
+
+  // Which sub-chapter is open inside chapter ci. Accordion again: one at a time,
+  // defaulting to the one that holds the current step.
+  function effectiveExpandedSub(ci) {
+    var v = progress.expandedSubs[ci];
+    if (v === null) return null;
+    if (typeof v === "number") return v;
+    var cur = FLAT[progress.currentIndex];
+    if (cur && cur.chapterIndex === ci) return cur.subIndex;
+    for (var k = 0; k < CH[ci].subs.length; k++) {
+      if (!CH[ci].subs[k].implicit) return k;
+    }
+    return null;
+  }
 
   function renderNav() {
     navEl.innerHTML = "";
-    WORKSHOP.chapters.forEach(function (chapter, ci) {
+    CH.forEach(function (chapter, ci) {
       var unlocked = isChapterUnlocked(ci);
       var expanded = isExpanded(ci, unlocked);
       var indices = chapterIndicesFor(ci);
       var doneInChapter = indices.filter(function (gi) { return progressDone(gi); }).length;
+      var openSub = effectiveExpandedSub(ci);
 
       var chapterEl = document.createElement("div");
       chapterEl.className = "chapter" + (expanded ? " expanded" : "");
 
       var headerEl = document.createElement("div");
-      headerEl.className = "chapter-header" + (unlocked ? "" : " locked") + (viewingChapterIndex === ci ? " viewing" : "");
+      headerEl.className = "chapter-header" + (unlocked ? "" : " locked") +
+        (viewing && viewing.ci === ci && viewing.subi === null ? " viewing" : "");
       headerEl.innerHTML =
         '<span class="chapter-chevron">' + (unlocked ? "\u25B8" : "") + '</span>' +
         (unlocked ? "" : '<span class="chapter-lock">\uD83D\uDD12</span>') +
@@ -837,7 +1032,7 @@
         headerEl.addEventListener("click", function () {
           progress.expandedChapter = expanded ? null : ci;
           if (chapter.description) {
-            viewingChapterIndex = ci;
+            viewing = { ci: ci, subi: null };
           }
           saveProgress();
           renderAll();
@@ -847,26 +1042,65 @@
       }
       chapterEl.appendChild(headerEl);
 
-      var stepsWrap = document.createElement("div");
-      stepsWrap.className = "chapter-steps";
-      chapter.steps.forEach(function (step, si) {
-        var gi = indices[si];
-        var isDone = progressDone(gi);
-        var row = document.createElement("div");
-        row.className = "step-row" + (viewingChapterIndex === null && gi === progress.currentIndex ? " active" : "") + (isDone ? " done" : "");
-        row.innerHTML =
-          '<div class="step-num">' + (isDone ? "✓" : (si + 1)) + '</div>' +
-          '<div class="step-label">' + (escapeHtml(step.title) || "Step " + (si + 1)) + '</div>';
-        row.addEventListener("click", function () {
-          viewingChapterIndex = null;
-          progress.currentIndex = gi;
-          progress.expandedChapter = ci;
-          saveProgress();
-          renderAll();
+      chapter.subs.forEach(function (sub, subi) {
+        var stepsWrap = document.createElement("div");
+        stepsWrap.className = "chapter-steps" + (sub.implicit ? "" : " sub-steps");
+        sub.indices.forEach(function (gi, si) {
+          var step = FLAT[gi];
+          var isDone = progressDone(gi);
+          var row = document.createElement("div");
+          row.className = "step-row" + (viewing === null && gi === progress.currentIndex ? " active" : "") + (isDone ? " done" : "");
+          row.innerHTML =
+            '<div class="step-num">' + (isDone ? "✓" : (si + 1)) + '</div>' +
+            '<div class="step-label">' + (escapeHtml(step.title) || "Step " + (si + 1)) + '</div>';
+          row.addEventListener("click", function () {
+            viewing = null;
+            progress.currentIndex = gi;
+            progress.expandedChapter = ci;
+            progress.expandedSubs[ci] = subi;
+            saveProgress();
+            renderAll();
+          });
+          stepsWrap.appendChild(row);
         });
-        stepsWrap.appendChild(row);
+
+        // Steps placed directly in the chapter have no sub-chapter header.
+        if (sub.implicit) {
+          chapterEl.appendChild(stepsWrap);
+          return;
+        }
+
+        var subUnlocked = isSubUnlocked(ci, subi);
+        var subOpen = subUnlocked && openSub === subi;
+        var doneInSub = sub.indices.filter(function (gi) { return progressDone(gi); }).length;
+        var subEl = document.createElement("div");
+        subEl.className = "subchapter" + (subOpen ? " expanded" : "");
+
+        var subHeader = document.createElement("div");
+        subHeader.className = "sub-header" + (subUnlocked ? "" : " locked") +
+          (viewing && viewing.ci === ci && viewing.subi === subi ? " viewing" : "");
+        subHeader.innerHTML =
+          '<span class="chapter-chevron">' + (subUnlocked ? "\u25B8" : "") + '</span>' +
+          (subUnlocked ? "" : '<span class="chapter-lock">\uD83D\uDD12</span>') +
+          '<span class="chapter-title">' + (escapeHtml(sub.title) || "Sub-chapter " + (subi + 1)) + '</span>' +
+          '<span class="chapter-progress">' + doneInSub + '/' + sub.indices.length + '</span>';
+        if (subUnlocked) {
+          subHeader.addEventListener("click", function () {
+            progress.expandedChapter = ci;
+            progress.expandedSubs[ci] = subOpen ? null : subi;
+            if (sub.description) {
+              viewing = { ci: ci, subi: subi };
+            }
+            saveProgress();
+            renderAll();
+          });
+        } else {
+          subHeader.title = "Complete the previous sub-chapter to unlock this one.";
+        }
+        subEl.appendChild(subHeader);
+        subEl.appendChild(stepsWrap);
+        chapterEl.appendChild(subEl);
       });
-      chapterEl.appendChild(stepsWrap);
 
       navEl.appendChild(chapterEl);
     });
@@ -875,58 +1109,49 @@
   // ---------- Main panel ----------
   var panelEl = document.getElementById("stepPanel");
 
-  function renderChapterOverview(ci) {
-    var chapter = WORKSHOP.chapters[ci];
+  // Overview page of a chapter (v.subi === null) or of one of its sub-chapters.
+  function renderOverview(v) {
+    var chapter = CH[v.ci];
+    var sub = v.subi === null ? null : chapter.subs[v.subi];
+    var text = sub ? sub.description : chapter.description;
     panelEl.innerHTML = "";
 
     var eyebrow = document.createElement("div");
     eyebrow.className = "step-eyebrow";
-    eyebrow.textContent = chapter.title;
+    eyebrow.textContent = chapter.title + (sub ? " \u00B7 " + (sub.title || "Sub-chapter " + (v.subi + 1)) : "");
     panelEl.appendChild(eyebrow);
 
-    if (chapter.description) {
+    if (text) {
       var desc = document.createElement("div");
       desc.id = "stepDesc";
-      // chapter.description is authored HTML, same as step descriptions —
-      // trusted content from your own db_*.txt file, not user input.
-      desc.innerHTML = chapter.description;
+      // Authored HTML, same as step descriptions — trusted content from your
+      // own db_*.txt file, not user input.
+      desc.innerHTML = text;
       panelEl.appendChild(desc);
     }
 
-    var indices = chapterIndicesFor(ci);
+    var cur = currentPageIndex();
+    var nextPage = PAGES[cur + 1];
     var stepNav = document.createElement("div");
     stepNav.className = "step-nav";
-    var prevBtn = document.createElement("button");
-    prevBtn.className = "nav-btn";
-    prevBtn.textContent = "\u2190 Previous";
-    prevBtn.disabled = ci === 0;
-    prevBtn.addEventListener("click", function () {
-      if (ci === 0) return;
-      var prevIndices = chapterIndicesFor(ci - 1);
-      viewingChapterIndex = null;
-      progress.currentIndex = prevIndices[prevIndices.length - 1];
-      progress.expandedChapter = ci - 1;
-      saveProgress();
-      renderAll();
-    });
-    var startBtn = document.createElement("button");
-    startBtn.className = "nav-btn primary";
-    startBtn.textContent = "Go to first step \u2192";
-    startBtn.addEventListener("click", function () {
-      viewingChapterIndex = null;
-      progress.currentIndex = indices[0];
-      progress.expandedChapter = ci;
-      saveProgress();
-      renderAll();
-    });
-    stepNav.appendChild(prevBtn);
-    stepNav.appendChild(startBtn);
+    var nextBtn = document.createElement("button");
+    nextBtn.className = "nav-btn primary";
+    nextBtn.textContent = (nextPage && nextPage.type !== "step") ? "Continue \u2192" : "Go to first step \u2192";
+    nextBtn.disabled = !nextPage || !isPageUnlocked(nextPage);
+    nextBtn.addEventListener("click", function () { goToPage(cur + 1); });
+    stepNav.appendChild(makePrevButton(cur));
+    stepNav.appendChild(nextBtn);
     panelEl.appendChild(stepNav);
   }
 
   function renderPanel() {
-    if (viewingChapterIndex !== null) {
-      renderChapterOverview(viewingChapterIndex);
+    // An overview that has become locked (e.g. an earlier step was unticked)
+    // can't stay on screen.
+    if (viewing && !isPageUnlocked(viewing.subi === null ? { type: "chapter", ci: viewing.ci } : { type: "sub", ci: viewing.ci, subi: viewing.subi })) {
+      viewing = null;
+    }
+    if (viewing) {
+      renderOverview(viewing);
       return;
     }
     clampIndex();
@@ -936,7 +1161,8 @@
 
     panelEl.innerHTML = "";
     var isDone = progressDone(i);
-    var chapter = WORKSHOP.chapters[step.chapterIndex];
+    var chapter = CH[step.chapterIndex];
+    var sub = chapter.subs[step.subIndex];
 
     var head = document.createElement("div");
     head.className = "step-head";
@@ -946,7 +1172,8 @@
     titleWrap.style.minWidth = "0";
     var eyebrow = document.createElement("div");
     eyebrow.className = "step-eyebrow";
-    eyebrow.textContent = chapter.title + " \u00B7 Step " + (step.stepInChapter + 1) + " of " + chapter.steps.length + (step.title ? " \u00B7 " + step.title : "");
+    eyebrow.textContent = chapter.title + (sub.implicit ? "" : " \u00B7 " + (sub.title || "Sub-chapter " + (step.subIndex + 1))) +
+      " \u00B7 Step " + (step.stepInSub + 1) + " of " + sub.steps.length + (step.title ? " \u00B7 " + step.title : "");
     titleWrap.appendChild(eyebrow);
 
     var toggle = document.createElement("label");
@@ -1055,50 +1282,30 @@
 
     var stepNav = document.createElement("div");
     stepNav.className = "step-nav";
-    var prevBtn = document.createElement("button");
-    prevBtn.className = "nav-btn";
-    prevBtn.textContent = "\u2190 Previous";
-    prevBtn.disabled = i === 0;
-    prevBtn.addEventListener("click", function () {
-      // Stepping back off the first step of a chapter that has a
-      // description shows that chapter's own overview, rather than
-      // skipping straight past it to the previous chapter's last step.
-      if (step.stepInChapter === 0 && chapter.description) {
-        viewingChapterIndex = step.chapterIndex;
-        progress.expandedChapter = step.chapterIndex;
-      } else {
-        viewingChapterIndex = null;
-        progress.currentIndex = Math.max(0, i - 1);
-        progress.expandedChapter = FLAT[progress.currentIndex].chapterIndex;
-      }
-      saveProgress();
-      renderAll();
-    });
 
-    var isLast = i === FLAT.length - 1;
+    // Previous/Next walk the linear page list, so they behave the same at every
+    // level: Next from a chapter's last step lands on the next chapter's (or
+    // sub-chapter's) overview if it has one, and Previous from a first step
+    // lands on that overview rather than skipping past it.
+    var cur = currentPageIndex();
+    var isLast = cur === PAGES.length - 1;
+    var prevBtn = makePrevButton(cur);
+
     var nextBtn = document.createElement("button");
     nextBtn.className = "nav-btn primary";
     nextBtn.textContent = isLast ? "Finish" : "Next step \u2192";
     nextBtn.disabled = isLast && isDone;
     nextBtn.addEventListener("click", function () {
       progress.done[i] = true;
-      if (!isLast) {
-        var target = i + 1;
-        var targetStep = FLAT[target];
-        var targetChapter = targetStep.chapterIndex;
-        var crossingChapter = targetChapter !== step.chapterIndex;
-        // Only advance if completing this step actually unlocked the
-        // next chapter — guards against ever landing on a locked one.
-        if (isChapterUnlocked(targetChapter)) {
-          progress.currentIndex = target;
-          progress.expandedChapter = targetChapter;
-          // Entering a new chapter that has a description shows its
-          // overview first, instead of dropping straight onto step 1.
-          viewingChapterIndex = (crossingChapter && WORKSHOP.chapters[targetChapter].description) ? targetChapter : null;
-        }
+      var nextPage = PAGES[cur + 1];
+      // Only advance if completing this step actually unlocked the next
+      // chapter — guards against ever landing on a locked one.
+      if (nextPage && isPageUnlocked(nextPage)) {
+        goToPage(cur + 1);
+      } else {
+        saveProgress();
+        renderAll();
       }
-      saveProgress();
-      renderAll();
     });
 
     stepNav.appendChild(prevBtn);
@@ -1266,9 +1473,17 @@
       // in (based on saved progress, or chapter 1 if there is none yet),
       // instead of dropping straight onto the step itself — as long as
       // that chapter has a description.
+      clampIndex();
+      viewing = null;
       var landingStep = FLAT[progress.currentIndex] || FLAT[0];
-      if (landingStep && WORKSHOP.chapters[landingStep.chapterIndex] && WORKSHOP.chapters[landingStep.chapterIndex].description) {
-        viewingChapterIndex = landingStep.chapterIndex;
+      if (landingStep) {
+        var lch = CH[landingStep.chapterIndex];
+        var lsub = lch.subs[landingStep.subIndex];
+        if (lch.description) {
+          viewing = { ci: landingStep.chapterIndex, subi: null };
+        } else if (!lsub.implicit && lsub.description) {
+          viewing = { ci: landingStep.chapterIndex, subi: landingStep.subIndex };
+        }
       }
       renderAll();
     }, function () {
