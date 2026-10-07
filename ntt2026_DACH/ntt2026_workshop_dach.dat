@@ -450,7 +450,7 @@ var WORKSHOP = {
           "codeBlocks": [],
           "images": [
             {
-              "src": "images/addMcp.jpg",
+              "src": "images/mcpServers.jpg",
               "caption": "Add Server"
             }
           ],
