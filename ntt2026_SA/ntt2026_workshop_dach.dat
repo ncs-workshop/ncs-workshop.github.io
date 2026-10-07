@@ -1,0 +1,1265 @@
+var WORKSHOP = {
+  "title": "Nordic Tech Tour EMEA 2026: Hands-on Workshop",
+  "chapters": [
+    {
+      "title": "Welcome & Introduction",
+      "steps": [
+        {
+          "title": "How to use this guide",
+          "description": "<div>The Workshop Guide can be opened in any standard web browser or, if preferred, directly in VS Code using its integrated browser. This allows you to follow the hands-on, step-by-step instructions without leaving your development environment.</div><div><br></div><div>The following list outlines what is possible with this workshop guide:</div><ul dir=\"ltr\"><li>This guide walks you through the hands-on step by step.</li>\n<li>Use <strong>Next step</strong> to move forward, and <strong>Previous</strong> to go back.</li>\n<li>Chapters must be completed in order — a locked chapter (🔒) opens once every step in the chapters before it is checked off.</li>\n<li>Click a chapter's title in the sidebar to see a short summary of that chapter, if one is available.</li>\n<li>Your progress (steps completed / remaining) is shown at the top and updates automatically.</li>\n<li>Use the <strong>Sidebar</strong> switch (top row) to collapse the chapter list, and <strong>Hide images</strong> to hide pictures in the steps.</li>\n<li>Some steps have <strong>ⓘ More info</strong> buttons under their description — click one for extra background or troubleshooting tips.</li>\n<li>Click <strong>Copy</strong> on a code snippet to copy it to your clipboard.</li>\n<li>Open the ⚙ <strong>Settings</strong> menu (top right) to switch between dark and light mode, or to clear your saved progress.</li></ul>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/browser.jpg",
+              "caption": "VS code built-in browser"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Enable Auto Save in VS Code",
+          "description": "<p dir=\"ltr\">Throughout this workshop you'll be editing several files (source code, DeviceTree overlays, configuration files) and then triggering builds or flashing. To avoid confusion later — for example, forgetting to save before a build and wondering why your changes don't take effect — we recommend enabling <strong>Auto Save</strong> now, once, for the rest of the workshop.</p>\n<p dir=\"ltr\"><strong>Steps:</strong></p>\n<ol dir=\"ltr\">\n<li>Open the <strong>File</strong> menu in the VS Code menu bar.</li>\n<li>Click <strong>Auto Save</strong> to toggle it on. A checkmark next to the entry confirms it's enabled.</li></ol><div>That's it — from now on, any change you make to a file is written to disk automatically after a short delay (or when you switch focus away from the editor), so you won't need to press <strong>Ctrl+S</strong> / <strong>Cmd+S</strong> throughout the workshop.</div>",
+          "codeBlocks": [],
+          "images": [],
+          "moreInfo": [
+            {
+              "label": "But I want to save it manually",
+              "content": "If you prefer to save manually and know what you're doing, you can skip this step — just remember to save (<strong>Ctrl+S</strong> / <strong>Cmd+S</strong>) before every build in the steps ahead, since an unsaved change will not be picked up by the build system."
+            }
+          ],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Overview of Our Project",
+          "description": "<div>Today we will develop step-by-step an application that covers following functionalities:</div><ul><li>Sensor: first, we use a simultated sensor. And later a real sensor</li><li>Bluetooth: we will use Bluetooth to send battery level to a smartphone. Code will be created with AI-assisted development.</li><li>Cellular: Get location information and send sensor data to cloud.</li></ul>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/ProjectOverview_noPMIC.png",
+              "caption": ""
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        }
+      ],
+      "description": "<p dir=\"ltr\">Welcome to our first Nordic Tech Tour EMEA hands-on workshop!&nbsp;</p><p dir=\"ltr\">This year, alongside our usual Nordic product updates, we're introducing a second day dedicated entirely to hands-on work. Together, we'll build a project using Nordic products including the nRF54L15, nRF93M1, and nPM1300.</p>\n<p dir=\"ltr\">We're looking forward to a productive and enjoyable session together — welcome aboard!</p>"
+    },
+    {
+      "title": "1. Copy hello_word Sample",
+      "steps": [
+        {
+          "title": "Open the nRF Connect Extension",
+          "description": "Click the <strong>nRF Connect</strong> icon in the VS Code left sidebar (the Nordic \"N\" logo). This opens the extension's main panel, where you manage applications, build configurations, and connected devices.",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/nrfConnect.jpg",
+              "caption": "nRF Connect"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Create a New Application",
+          "description": "In the nRF Connect panel, click <strong>Create New Application</strong>.<div><br></div><div>An application in this context is just a folder containing your source code, build settings, and configuration files — everything Zephyr needs to compile firmware for your board.</div>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/CreateNewApp.jpg",
+              "caption": "Create new aplication"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Copy the hello_world Sample",
+          "description": "<div>Rather than writing an application from scratch, you'll start from one of Zephyr's built-in samples and copy it into your own workspace. This is the normal way to start a new nRF Connect SDK project.</div><div><ul><li>Click <strong>Copy Sample</strong>.&nbsp;</li></ul></div>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/CopySample.jpg",
+              "caption": "Copy Sample"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Select Zephyr's hello_world sample",
+          "description": "<span style=\"font-size: 0.9rem;\">In the search box, type </span><code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">hello world</code><span style=\"font-size: 0.9rem;\">, then select the sample.<br></span><span style=\"font-size: 0.9rem;\">⚠️ </span><strong style=\"font-size: 0.9rem;\">Take care:</strong><span style=\"font-size: 0.9rem;\"> several samples can match this search. Make sure you pick the one with the path </span><strong style=\"font-size: 0.9rem;\"><code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">zephyr/samples/hello_world</code></strong><span style=\"font-size: 0.9rem;\"> — this is Zephyr's own minimal example, not a vendor-specific variant.&nbsp;</span>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/helloworld.jpg",
+              "caption": "Zephyr hello_world sample"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Save the Project in your own Workspace Directory",
+          "description": "<span style=\"font-size: 0.9rem;\">Choose a destination folder and confirm. VS Code will copy the sample files into your new application folder.</span><div><br><div>⚠️ <strong>Keep your workspace path short.</strong> <strong style=\"font-size: 0.9rem;\">Recommendation:</strong><span style=\"font-size: 0.9rem;\"> place your application in a short root path, for example </span><code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">C:\\nordic\\workspace\\hello_world</code></div><div><font color=\"#0e8a7d\" face=\"IBM Plex Mono, monospace\"><span style=\"font-size: 12.672px;\"><br></span></font><div><span style=\"font-size: 14.4px;\">Once you've confirmed the path by pressing Enter, you can choose whether to open a new VS Code instance (“Open in New Window”) or to display the project in the current instance (“Open”).&nbsp;</span></div></div></div>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/saveas.jpg",
+              "caption": "Choose application location"
+            }
+          ],
+          "moreInfo": [
+            {
+              "label": "Why to keep your workspace path short?",
+              "content": "Windows has a hard 260-character limit on full file paths. The build process for this SDK generates several nested subfolders (build files, CMake cache, generated headers, per-core output, and so on), and their combined path can get long fast. If your workspace already starts somewhere deep — e.g. <code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">C:\\Users\\YourName\\Documents\\Workshops\\2026\\</code><div><code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">NordicWorkshop\\...</code> — the build can fail with confusing \"permission denied\" or \"file not found\" errors that have nothing to do with your code.&nbsp;<div><strong>Recommendation:</strong> place your application in a short root path, for example <code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">C:\\nordic\\workspace\\hello_world</code>, rather than several folders deep inside your user profile or a synced cloud folder (OneDrive/Dropbox paths are usually long and best avoided entirely for this reason).</div></div>"
+            }
+          ],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Add a Build Configuration",
+          "description": "<p dir=\"ltr\" style=\"font-size: 0.9rem; display: inline !important;\">A build configuration tells the toolchain <em>which board</em> and <em>which core</em> to compile the firmware for. Without one, there's nothing to build.</p><ol dir=\"ltr\" style=\"font-size: 0.9rem;\"><li>Open the <strong>nRF Connect</strong> view.</li><li>In the <strong>Application</strong> section, click <strong>Add Build Configuration</strong>.</li><li>Under <strong>Board target</strong>, select: nrf93m1dk/nrf54l15/cpuapp<br></li><li>Leave the other options at their defaults.</li>\n<li>Scroll down and click <strong>Generate and Build</strong>.&nbsp;</li></ol>Wait for the build to finish — you'll see a \"Build complete\" message in the build log at the bottom of the window. If the build fails, check that the board target was typed/selected exactly as above.<span style=\"font-size: 14.4px;\"></span>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/BuildConf.jpg",
+              "caption": "Add build configuration"
+            }
+          ],
+          "moreInfo": [
+            {
+              "label": "Naming Convention for Board Targets",
+              "content": "The <code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">cpuapp</code> qualifier tells the build system which CPU core on the SoC to build for. The nRF54L15 is a multi-core chip: it has a main <strong>application core</strong> (<code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">cpuapp</code>) that runs your everyday application code, and a small, low-power <strong>FLPR core</strong> (<code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">cpuflpr</code>, a RISC-V co-processor) intended for offloading specific peripheral or real-time tasks. For this workshop, we always target <code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">cpuapp</code> — it's the general-purpose core, has full support for logging, sensors, and connectivity, and is where you should build and run applications unless a task specifically calls for the FLPR core."
+            },
+            {
+              "label": "What would “nrf54l15/cpuapp/ns” be used for?",
+              "content": "Alongside plain <code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">cpuapp</code><span style=\"font-size: 0.9rem;\">, the nRF54L15 also supports </span><strong style=\"font-size: 0.9rem;\"><code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">.../nrf54l15/cpuapp/ns</code></strong><span style=\"font-size: 0.9rem;\">. This builds your application to run in the </span><strong style=\"font-size: 0.9rem;\">non-secure</strong><span style=\"font-size: 0.9rem;\"> execution environment, with </span><strong style=\"font-size: 0.9rem;\">Trusted Firmware-M (TF-M)</strong><span style=\"font-size: 0.9rem;\"> occupying the secure side underneath it. TF-M isolates security-critical operations — cryptographic keys, secure storage, firmware update handling — from your application code, so a bug or vulnerability in your application can't reach into that protected area.</span>"
+            }
+          ],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Prepare the development kit",
+          "description": "<div>Connect USB-C (USB1) to your PC. The antenna and SIM card aren&#39;t needed for this step.</div>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/nRF93M1DK.jpg",
+              "caption": "nRF93M1-DK"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Flash the Application ",
+          "description": "<p dir=\"ltr\" style=\"font-size: 0.9rem; display: inline !important;\">Now you'll load the compiled firmware onto the physical board.&nbsp;</p><span style=\"font-size: 0.9rem;\">In the nRF Connect view, under </span><strong style=\"font-size: 0.9rem;\">Actions</strong><span style=\"font-size: 0.9rem;\">, click </span><strong style=\"font-size: 0.9rem;\">Flash</strong><span style=\"font-size: 0.9rem;\">.</span>",
+          "codeBlocks": [],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Verify the Serial Terminal Output",
+          "description": "<div>We'll now check whether the compiled firmware runs on the board.</div><ol dir=\"ltr\"><li><span style=\"font-size: 0.9rem;\">Open a </span><strong style=\"font-size: 0.9rem;\">Serial Terminal</strong><span style=\"font-size: 0.9rem;\"> (via the nRF Connect </span><strong style=\"font-size: 0.9rem;\">Connected Devices</strong><span style=\"font-size: 0.9rem;\"> panel or the </span><strong style=\"font-size: 0.9rem;\">Serial Terminal</strong><span style=\"font-size: 0.9rem;\"> icon) and select your device's COM/serial port.</span></li>\n<li>Press the <strong>Reset</strong> button on the DK, or power-cycle it, and watch the terminal.</li>\n</ol>\n<p dir=\"ltr\">You should see output similar to:</p>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/terminal_helloworld.jpg",
+              "caption": "Serial Terminal"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        }
+      ],
+      "description": "<div>By the end of this chapter, you will have created your first application from a Zephyr/nRF Connect SDK sample, built it for the nRF93M1 DK, flashed it onto your kit, and confirmed it's running by reading its output over a serial connection. This chapter also introduces the core nRF Connect for VS Code workflow (create → configure → build → flash) that you'll reuse for every later chapter.</div>"
+    },
+    {
+      "title": "2. Sensor - simulated sensor",
+      "steps": [
+        {
+          "title": "Extending the Existing Project",
+          "description": "<div>Each chapter builds upon the project developed in the previous chapter. All concepts, instructions, and implementation steps introduced in the current chapter should be applied directly to the existing project.</div>",
+          "codeBlocks": [],
+          "codeBlocksNoCopy": [],
+          "images": [],
+          "moreInfo": []
+        },
+        {
+          "title": "Enable the sensor subsystem (Kconfig)",
+          "description": "Open <code dir=\"ltr\">prj.conf</code> in your project folder and add below KCONIFG settings.",
+          "codeBlocks": [
+            {
+              "label": "prj.conf",
+              "code": "# Enable Zephyr's common sensor API and sensor drivers\nCONFIG_SENSOR=y\n\n# Enable Floating Point output \nCONFIG_CBPRINTF_FP_SUPPORT=y"
+            }
+          ],
+          "images": [],
+          "moreInfo": [
+            {
+              "label": "CONFIG_SENSOR",
+              "content": "<code dir=\"ltr\">CONFIG_SENSOR=y</code> pulls in the sensor subsystem core and enables the sensor drivers relevant to your board configuration — including the simulated sensor driver, which only needs a matching DeviceTree node to activate (next step)."
+            },
+            {
+              "label": "Why is CONFIG_CBPRINTF_FP_SUPPORT needed?",
+              "content": "<p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" data-assistant-stream-block=\"\" data-assistant-stream-block-index=\"8\" style=\"text-wrap: pretty; overflow-wrap: break-word; margin-bottom: 0.25rem; margin-top: 0.25rem; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; background-color: rgb(252, 252, 252);\">Zephyr's <code class=\"x1amw8k4 xymaag xbs2zpe xjb2p0i x1qlqyl8 x1gqwrcx xw2csxc x7p5m3t xarctil x11pq3io\" style=\"border-radius: 0.25rem; padding-block: 0.15rem; padding-inline: 0.3rem; color: rgb(13, 13, 13); font-family: inherit; font-size: inherit; background-color: color(srgb 0.970588 0.970588 0.970588); overflow-x: auto; overscroll-behavior-x: contain;\">printk()</code> uses its own lightweight formatting implementation, called <span class=\"x7amdea\" style=\"font-weight: 600;\">cbprintf</span>. Floating-point formatting is disabled by default because it requires additional code and increases the application's footprint.</p><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" data-assistant-stream-block=\"\" data-assistant-stream-block-index=\"9\" style=\"text-wrap: pretty; overflow-wrap: break-word; margin-bottom: 1rem; margin-top: 1rem; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; background-color: rgb(252, 252, 252);\">When you enable&nbsp;&nbsp;<span style=\"background-color: rgba(79, 209, 197, 0.16); color: rgb(14, 138, 125); font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: inherit;\">CONFIG_CBPRINTF_FP_SUPPORT=y</span><span style=\"text-wrap-mode: initial;\">&nbsp;you tell Zephyr:</span></p><blockquote class=\"x1ux7cnd xp43mbd x1yc453h x1qeawuv x19gujjy x1cpjm7i x1g6lqjk x1ft583c x1682cnc x1hmns74 xbs2zpe x17mssa0 x19ekbn6 x1fie51u xgyxj25 x1xobyvs x1m9urvh x1fv8qjw x128ud7f x1pjt2rx x160d6zm xqsupf2 xrxpjvj x26vrf4 xutjtvt x1n2onr6\" data-assistant-stream-block=\"\" data-assistant-stream-block-index=\"12\" style=\"margin-inline: 0px; padding-block: 0.5rem; color: rgb(13, 13, 13); line-height: 1.5rem; padding-inline-start: 1.5rem; position: relative; direction: ltr; margin-bottom: 1rem; margin-top: 0.5rem; font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; background-color: rgb(252, 252, 252);\"><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 0px; margin-top: 0px;\">Include support for formatting floating-point values with <code class=\"x1amw8k4 xymaag xbs2zpe xjb2p0i x1qlqyl8 x1gqwrcx xw2csxc x7p5m3t xarctil x11pq3io\" style=\"border-radius: 0.25rem; padding-block: 0.15rem; padding-inline: 0.3rem; color: rgb(13, 13, 13); font-family: inherit; font-size: inherit; background-color: color(srgb 0.970588 0.970588 0.970588); overflow-x: auto; overscroll-behavior-x: contain;\">printk()</code>.</p></blockquote>"
+            }
+          ],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Describe the sensor in the DeviceTree",
+          "description": "<p dir=\"ltr\">Zephyr drivers are matched to hardware (real or virtual) through the <strong>DeviceTree</strong>. Since the simulated sensor isn't part of the nRF93M1 DK's default board definition, we add it ourselves with a <strong>DeviceTree overlay</strong> — a file that layers extra nodes on top of the board's base DeviceTree without modifying the board files themselves.</p>\n\n<p dir=\"ltr\">Create a file named <strong><code dir=\"ltr\">app.overlay</code></strong> in your project's root folder (the same folder as <code dir=\"ltr\">prj.conf</code>) with the following DeviceTree content.</p>",
+          "codeBlocks": [
+            {
+              "label": "app.overlay",
+              "code": "/ {\n     simulated_sensor: sensor_sim{\n          compatible = \"nordic,sensor-sim\";\n          status = \"okay\";\n          acc-signal = \"wave\";\n          base-temperature = < 20 >;\n          base-pressure = < 98 >;\n     };\n};"
+            }
+          ],
+          "images": [],
+          "moreInfo": [
+            {
+              "label": "What is a DeviceTree overlay?",
+              "content": "<div><p dir=\"ltr\">The nRF Connect SDK (and Zephyr, which it's built on) describes hardware using <strong>DeviceTree</strong> — a text-based format that tells the firmware which peripherals exist, how they're wired, and how they should be configured. Every board has a base DeviceTree file; for the nRF93M1-DK's application core, this is <code dir=\"ltr\">nrf93m1dk_nrf54l15_cpuapp.dts</code>.</p>\n<p dir=\"ltr\">Rather than editing that board file directly (which affects every project using this board), we use an <strong>overlay file</strong> — <code dir=\"ltr\">app.overlay</code>. An overlay lets us add or override DeviceTree settings <em>just for our application</em>, without touching the board definition. This is the standard, recommended way to enable a sensor or peripheral that the board file doesn't already configure for you.</p></div>The nRF Connect SDK build system automatically picks up <code dir=\"ltr\">app.overlay</code> if it's placed in the project root — no extra CMake configuration is needed."
+            },
+            {
+              "label": "simulated_sensor",
+              "content": "A <strong>node label</strong> — lets us refer to this node from C code without knowing its full DeviceTree path."
+            },
+            {
+              "label": "compatible = \"nordic,sensor-sim\"",
+              "content": "<div>Tells Zephyr which driver to bind to this node — this string is what triggers the simulated sensor driver to build.</div>"
+            },
+            {
+              "label": "status = \"okay\"",
+              "content": "<table><tbody><tr><td><code dir=\"ltr\"></code></td><td><span style=\"font-size: 0.9rem;\">Marks the node as active. A node with </span><code dir=\"ltr\">status = \"disabled\"</code><span style=\"font-size: 0.9rem;\"> is ignored, even if the driver is enabled.</span></td></tr></tbody></table>"
+            },
+            {
+              "label": "acc-signal = \"wave\"",
+              "content": "<table><tbody><tr><td><code dir=\"ltr\"></code></td><td>Configures the simulated accelerometer to output a smooth waveform instead of a flat/random signal.</td></tr></tbody></table>"
+            },
+            {
+              "label": "base-temperature = <20>",
+              "content": "<table><tbody><tr><td><code dir=\"ltr\"></code></td><td>Baseline value (°C) the simulated temperature channel fluctuates around.</td></tr></tbody></table>"
+            },
+            {
+              "label": "base-pressure = <98>",
+              "content": "<div>Baseline value (kPa) the simulated pressure channel fluctuates around.</div>"
+            }
+          ],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Bind the sensor in application code",
+          "description": "The sensor API is declared in <code dir=\"ltr\">sensor.h</code>. Open <code dir=\"ltr\">main.c</code> and add the includes and device handle.",
+          "codeBlocks": [
+            {
+              "label": "main.c",
+              "code": "#include <zephyr/kernel.h>\n#include <zephyr/drivers/sensor.h>\n\n#define SENSOR_NODE DT_NODELABEL(simulated_sensor)\nconst struct device *const dev = DEVICE_DT_GET(SENSOR_NODE);"
+            }
+          ],
+          "images": [],
+          "moreInfo": [
+            {
+              "label": "DT_NODELABEL(siumlated sensor)",
+              "content": "<code dir=\"ltr\">DT_NODELABEL(simulated_sensor)</code> resolves, <strong>at compile time</strong>, to the DeviceTree node labeled <code dir=\"ltr\">simulated_sensor:</code> in <code dir=\"ltr\">app.overlay</code>."
+            },
+            {
+              "label": "DEVICE_DT_GET(...)",
+              "content": "<code dir=\"ltr\">DEVICE_DT_GET(...)</code> turns that DeviceTree node into a <code dir=\"ltr\">const struct device *</code> handle — the same kind of handle used for <em>any</em> Zephyr or nRF Connect SDK device driver (sensors, UARTs, GPIOs, etc.).<div>At this point <code dir=\"ltr\">dev</code> is a compile-time constant pointer to your sensor device — but drivers still need to initialize at boot, so we check that next.</div>"
+            }
+          ],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Verify the sensor initialized correctly",
+          "description": "Hardware (and simulated hardware) initializes during system boot. Before using a device, always confirm it's ready. Insert the following code at the beginning of <code>main()</code>, right before your main loop.",
+          "codeBlocks": [
+            {
+              "label": "main.c",
+              "code": "    if (!device_is_ready(dev)) {\n        printk(\"Sensor is not ready %s\\n\", dev->name);\n        return 0;\n    }\n    printk(\"Sensor is ready!\\n\");"
+            }
+          ],
+          "images": [],
+          "moreInfo": [
+            {
+              "label": "device_is_ready()",
+              "content": "<code dir=\"ltr\">device_is_ready()</code> checks that the driver's init function ran and completed without error. <strong>Always guard sensor (and other driver) use with this check</strong> — skipping it is a common source of confusing crashes when a DeviceTree node is misconfigured or disabled."
+            }
+          ],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Read the sensor in a loop",
+          "description": "<p dir=\"ltr\">Reading a Zephyr sensor is a <strong>two-step process</strong>, and it's important to understand why:</p>\n\n<ol dir=\"ltr\">\n<li><strong><code dir=\"ltr\">sensor_sample_fetch(dev)</code></strong> — talks to the device (real bus transaction, or in this case, the simulator's internal logic) and pulls a <em>fresh</em> reading into the driver's internal buffer.</li>\n<li><strong><code dir=\"ltr\">sensor_channel_get(dev, channel, &amp;value)</code></strong> — reads <em>one specific channel</em> out of that already-fetched buffer, without touching the device again.</li></ol>Add the following code as the main loop.",
+          "codeBlocks": [
+            {
+              "label": "main.c",
+              "code": "    struct sensor_value temp;\n\n    while (true) {\n        // Fetch a sample from the sensor and store it in an internal driver buffer\n        if (sensor_sample_fetch(dev) < 0) {\n            printk(\"Error: Sensor sample update error\\n\");\n            return 0;\n        }\n\n        // Get a reading from a sensor device (read temperature)\n        if (sensor_channel_get(dev, SENSOR_CHAN_AMBIENT_TEMP, &temp) < 0) {\n            printk(\"Error: Cannot read temperature channel\\n\");\n            return 0;\n        }\n\n        /* display temperature */\n        printk(\"Temperature: %.1f C\\n\", sensor_value_to_double(&temp));\n\n        k_sleep(K_MSEC(2000));\n    }"
+            }
+          ],
+          "images": [],
+          "moreInfo": [
+            {
+              "label": "Why is it split?",
+              "content": "This split exists because many sensors report several channels (temperature, pressure, humidity, acceleration on 3 axes) from a <em>single</em> bus transaction. Fetching once and then getting multiple channels avoids unnecessary, repeated hardware access."
+            },
+            {
+              "label": "sensor_value_to_double()",
+              "content": "Values come back as a <code dir=\"ltr\">struct sensor_value</code> — a fixed-point type (<code dir=\"ltr\">val1</code> = integer part, <code dir=\"ltr\">val2</code> = fractional part in millionths) chosen so the API works even without a hardware FPU. <code dir=\"ltr\">sensor_value_to_double()</code> converts this into a normal <code dir=\"ltr\">double</code> for easy printing."
+            }
+          ],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Build, flash, and observe",
+          "description": "<ol dir=\"ltr\"><li><strong>Pristine build</strong> — a clean build ensures your new <code dir=\"ltr\">prj.conf</code> and <code dir=\"ltr\">app.overlay</code> are picked up correctly:\n<ul dir=\"ltr\">\n<li>VS Code: nRF Connect extension → select your build configuration → move the mouse over <span class=\"x7amdea\" style=\"text-wrap-mode: initial; font-size: 0.9rem; font-weight: 600;\">Build</span><span style=\"text-wrap-mode: initial; font-size: 0.9rem;\"> to open the build actions.&nbsp;</span>Select <span class=\"x7amdea\" style=\"text-wrap-mode: initial; font-size: 0.9rem; font-weight: 600;\">Pristine Build</span><span style=\"text-wrap-mode: initial; font-size: 0.9rem;\"> by clicking the </span><span class=\"x7amdea\" style=\"text-wrap-mode: initial; font-size: 0.9rem; font-weight: 600;\">circular arrow icon</span><span style=\"text-wrap-mode: initial; font-size: 0.9rem;\"> next to it.</span></li>\n</ul>\n\n</li>\n<li><strong>Flash</strong> to the DK</li>\n<li><strong>Open the Serial Terminal</strong> (nRF Connect for VS Code → Connected Devices → Serial Terminal), or an external tool such as <code dir=\"ltr\">nRF Serial Terminal</code>&nbsp;at the DK's default baud rate.</li></ol><div>The expected output is shown in the following screenshot.</div>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/terminal_simSensor.jpg",
+              "caption": "Serial Terminal output"
+            }
+          ],
+          "moreInfo": [
+            {
+              "label": "Why do the values fluctuate slightly?",
+              "content": "Values will fluctuate slightly around the <code dir=\"ltr\">base-temperature</code> you set in the overlay (<code dir=\"ltr\">20</code>) — this confirms the simulator is generating live data and your application is successfully fetching and reading it every 2 seconds."
+            }
+          ],
+          "codeBlocksNoCopy": []
+        }
+      ],
+      "description": "<p dir=\"ltr\"><b>Learning Objectives</b></p><p dir=\"ltr\">By the end of this chapter you will be able to:</p>\n\n<ul dir=\"ltr\">\n<li>Explain what Zephyr's sensor subsystem does and why applications use it instead of talking to hardware directly.</li>\n<li>Enable the sensor subsystem in a Zephyr/nRF Connect SDK project via Kconfig.</li>\n<li>Describe a virtual sensor device in the DeviceTree and bind it to your application.</li>\n<li>Read a sensor value in application code using the standard sensor API.</li>\n<li>Build, flash, and verify the result on your nRF93M1 DK.</li></ul><div><br></div><div><b>Background: Why a Sensor Subsystem?</b></div><div><p dir=\"ltr\">Every sensor — a real accelerometer, a temperature IC, or a simulated one — has its own register map and bus protocol. If application code talked to each sensor directly, swapping one sensor for another (or testing without hardware at all) would mean rewriting your application logic.</p>\n\n<p dir=\"ltr\">Zephyr solves this with a <strong>common sensor API</strong>: a single, standardized set of functions (<code dir=\"ltr\">sensor_sample_fetch()</code>, <code dir=\"ltr\">sensor_channel_get()</code>, …) that every sensor driver implements. Your application code calls these generic functions; the driver underneath handles the device-specific details. This is why we can develop and test with a <strong>simulated sensor</strong> now, and later swap in a real physical sensor with little or no change to <code dir=\"ltr\">main.c</code>.</p>\n\n<p dir=\"ltr\">For this exercise we use nRF Connect SDK's built-in <strong>sensor simulator</strong> (<code dir=\"ltr\">nordic,sensor-sim</code>), which generates plausible temperature, pressure, humidity, and acceleration values without any physical hardware.</p></div>"
+    },
+    {
+      "title": "3. Sensor - real sensor (nRF54L15 on-chip TEMP sensor)",
+      "description": "Next steps: enable the nRF54L15's on-chip TEMP peripheral via a DeviceTree overlay and alias, update the sensor node/channel in <code dir=\"ltr\">main.c</code> to bind to it instead of the simulated sensor, then rebuild and reflash — the fetch/get logic itself stays unchanged.",
+      "steps": [
+        {
+          "title": "Extending the Existing Project",
+          "description": "<div>Each chapter builds upon the project developed in the previous chapter. All concepts, instructions, and implementation steps introduced in the current chapter should be applied directly to the existing project.</div><div><br></div><div>The latest version of the project is available for download&nbsp;<a href=\"solutions/2-Sensor_simulated.zip\" download=\"\">here</a>&nbsp;as a ZIP file.</div>",
+          "codeBlocks": [],
+          "codeBlocksNoCopy": [],
+          "images": [],
+          "moreInfo": []
+        },
+        {
+          "title": "Add Sensor Hardware Configuration in DeviceTree ",
+          "description": "<span style=\"color: rgba(0, 0, 0, 0.8); font-family: -apple-system, BlinkMacSystemFont, &quot;SF Pro&quot;, &quot;Segoe UI&quot;, sans-serif; font-size: 14px;\">Let's enable the TEMP node (if not already </span><code style=\"background: none 0% 0% / auto repeat scroll padding-box border-box rgba(0, 0, 0, 0.04); padding: 1px 3px; border-radius: 4px; font-style: normal; font-variant: normal; font-size-adjust: none; font-language-override: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-stretch: normal; font-size: 0.92em; line-height: normal; font-family: &quot;SF Mono&quot;, ui-monospace, Menlo, Consolas, monospace; color: rgba(0, 0, 0, 0.8);\">okay</code><span style=\"color: rgba(0, 0, 0, 0.8); font-family: -apple-system, BlinkMacSystemFont, &quot;SF Pro&quot;, &quot;Segoe UI&quot;, sans-serif; font-size: 14px;\"> by default for your SoC/board revision) and create the alias your code will use.</span>",
+          "codeBlocks": [
+            {
+              "label": "app.overlay",
+              "code": "&temp {\n    status = \"okay\";\n};\n\n/ {\n    aliases {\n        die-temp0 = &temp;\n    };\n};"
+            }
+          ],
+          "images": [],
+          "moreInfo": [
+            {
+              "label": "nRF54L15 on-chip TEMP peripheral",
+              "content": "<p style=\"margin: 0px; color: rgba(0, 0, 0, 0.8); font-family: -apple-system, BlinkMacSystemFont, &quot;SF Pro&quot;, &quot;Segoe UI&quot;, sans-serif; font-size: 14px;\">The nRF54L15 contains a <span style=\"font-weight: 600;\">TEMP</span> peripheral that measures the die temperature of the chip itself (not ambient room temperature — expect it to run a few degrees above ambient once the CPU is active). Per Nordic's product specification:</p><ul style=\"margin: 0px; display: flex; flex-direction: column; gap: 6px; padding-left: 22px; list-style: disc; color: rgba(0, 0, 0, 0.8); font-family: -apple-system, BlinkMacSystemFont, &quot;SF Pro&quot;, &quot;Segoe UI&quot;, sans-serif; font-size: 14px;\"><li>Resolution: <span style=\"font-weight: 600;\">0.25 °C</span>.</li><li>The TEMP analog electronics power down automatically after a measurement completes (low power).</li><li>To hit the accuracy stated in the electrical specification, the <span style=\"font-weight: 600;\">crystal oscillator (HFXO) must be the HFCLK source</span> during measurement — this is already the default configuration on the nRF54L15, so you don't need to change anything for this workshop.</li></ul>"
+            }
+          ],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Update sensor binding",
+          "description": "In the previous chapter, we created a link from the simulated sensor definition in the DeviceTree file to the C code using <code style=\"color: rgb(14, 138, 125);\">DT_NODELABEL()</code>. We need to update this link so that it points to the TEMP sensor. Instead of&nbsp;<div><code style=\"color: rgb(14, 138, 125);\">#define SENSOR_NODE DT_NODELABEL(simulated_sensor)</code></div><div>&nbsp;we now use&nbsp;</div>",
+          "codeBlocks": [
+            {
+              "label": "main.c",
+              "code": "/* Resolves to the DeviceTree node aliased as \"die-temp0\" in our overlay */\n#define SENSOR_NODE DT_ALIAS(die_temp0)"
+            }
+          ],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Update reading from TEMP device",
+          "description": "<p class=\"isSelectedEnd\">The simulated sensor uses the following line to read the temperature sensor value:</p><pre dir=\"ltr\"><code dir=\"ltr\">if (sensor_channel_get(dev, SENSOR_CHAN_AMBIENT_TEMP, &amp;temp) &lt; 0) {</code></pre><p class=\"isSelectedEnd\">The <strong>TEMP device</strong> uses a different sensor channel for reading the temperature. Therefore, instead of <code dir=\"ltr\">SENSOR_CHAN_AMBIENT_TEMP</code>, the <strong>die temperature</strong> channel must be used:</p><pre dir=\"ltr\"><code dir=\"ltr\">SENSOR_CHAN_DIE_TEMP</code></pre>",
+          "codeBlocks": [
+            {
+              "label": "The resulting code is:",
+              "code": "if (sensor_channel_get(dev, SENSOR_CHAN_DIE_TEMP, &temp) < 0) {"
+            }
+          ],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Build, flash, and observe",
+          "description": "<ol dir=\"ltr\"><li><strong>Pristine build</strong> — a clean build ensures your new <code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">prj.conf</code> and <code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">app.overlay</code> are picked up correctly:<ul dir=\"ltr\"><li>VS Code: nRF Connect extension → select your build configuration → move the mouse over <span class=\"x7amdea\" style=\"text-wrap-mode: initial; font-size: 0.9rem; font-weight: 600;\">Build</span><span style=\"text-wrap-mode: initial; font-size: 0.9rem;\"> to open the build actions. </span>Select <span class=\"x7amdea\" style=\"text-wrap-mode: initial; font-size: 0.9rem; font-weight: 600;\">Pristine Build</span><span style=\"text-wrap-mode: initial; font-size: 0.9rem;\"> by clicking the </span><span class=\"x7amdea\" style=\"text-wrap-mode: initial; font-size: 0.9rem; font-weight: 600;\">circular arrow icon</span><span style=\"text-wrap-mode: initial; font-size: 0.9rem;\"> next to it. </span>The application is then rebuilt from a clean build directory.</li></ul></li><li><strong>Flash</strong> to the DK</li><li><strong>Open the Serial Terminal</strong> (nRF Connect for VS Code → Connected Devices → Serial Terminal), or an external tool such as <code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">nRF Serial Terminal</code> at the DK's default baud rate.</li></ol><div>Expected output:</div>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/terminal_tmpSensor.jpg",
+              "caption": "Serial Terminal"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        }
+      ]
+    },
+    {
+      "title": "4. AI-assisted development",
+      "steps": [
+        {
+          "title": "Sign up for myNordic",
+          "description": "<span style=\"font-size: 14.4px;\">Create a </span><a href=\"http://mynordic.nordicsemi.com/\" target=\"_blank\" rel=\"noopener\">myNordic</a><span style=\"font-size: 14.4px;\"> account if you don't already have one. You will need this later to log in to the AI Assistant's user interface.</span>",
+          "codeBlocks": [],
+          "codeBlocksNoCopy": [],
+          "images": [],
+          "moreInfo": []
+        },
+        {
+          "title": "Github Copilot Chat",
+          "description": "<div>Check if Github Copilot Chat extension is installed by looking for it in Extensions</div>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/githubCopilotChat.jpg",
+              "caption": "Github Copilot Chat in Extensions"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Open Chat window",
+          "description": "<div>Github Copilot Chat window must be opened. It is possible that by default the Chat window opens. If not, go to menu &quot;View&quot; and click &quot;Chat&quot; to open it.</div>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/StartChat.jpg",
+              "caption": "Open Github Copilot Chat window"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Click gear icon and add Nordic MCP",
+          "description": "<ul><li>Click on top of the Chat window on the gear</li><li>In the window that opens click on the <b>Add Server</b>&nbsp;button&nbsp;</li></ul>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/mcpServers.jpg",
+              "caption": "Add Server"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Connect to a remote HTTP server",
+          "description": "<div><ul><li>Choose the type of MCP server to add:&nbsp; &nbsp;HTTP (HTTP or Server-Send Events)</li><li><span style=\"font-size: 14.4px;\">URL of the MCP server:&nbsp; &nbsp;</span><span style=\"font-size: 14.4px;\">&nbsp;</span><b style=\"background-color: rgba(79, 209, 197, 0.16); color: rgb(14, 138, 125); font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 0.88em;\">https://aidev.nordicsemi.com/mcp</b><b style=\"background-color: rgba(79, 209, 197, 0.16); color: rgb(14, 138, 125); font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 0.88em;\"></b></li><li>Enter Server ID (name of the server that is used in VS Code):&nbsp; &nbsp;nordic-mcp</li><li>Select configuration target:&nbsp; &nbsp; Global available in all workspaces, runs locally&nbsp;</li></ul></div><div><br></div>",
+          "codeBlocks": [],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Check if Nordic MCP is running",
+          "description": "<p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" data-assistant-stream-block=\"\" data-assistant-stream-block-index=\"0\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 0.25rem; margin-top: 0px; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; background-color: rgb(252, 252, 252);\"><span class=\"x7amdea\" style=\"font-weight: 600;\">“Is Nordic MCP running?”</span> is a natural way to ask whether the Nordic MCP service/process is currently up and functioning.</p>",
+          "codeBlocks": [
+            {
+              "label": "Chat",
+              "code": "is nordic mcp running?"
+            }
+          ],
+          "images": [
+            {
+              "src": "images/IsNordicMCPrunning.jpg",
+              "caption": "Is Nordic MCP running?"
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        }
+      ],
+      "description": "<p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\">Nordic Semiconductor’s AI-assisted development integrates AI coding capabilities with the Nordic development ecosystem through the Model Context Protocol (MCP). Within VS Code, the AI assistant can combine general software-development reasoning with Nordic-specific documentation, APIs, SDK configuration, project context, and development tools. This enables the assistant to support developers across the embedded-software lifecycle—from understanding and generating application code to configuring the nRF Connect SDK, resolving build issues, and interacting with target hardware. The MCP-based approach provides the AI with structured access to relevant development context and tools, while keeping the developer in control of reviewing, validating, and executing the resulting changes.</p><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 0.25rem; margin-top: 0.25rem; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px;\">The workshop demonstrates the practical setup of Nordic AI-assisted development in VS Code:</p><ol class=\"xonam98 x1epdd7z xemmon1 xn020vs xfl32do xluzp7q x1yc453h x3yw8vx xat24cr x1xobyvs x1fv8qjw xdj266r xrxpjvj x1bxe5rh\" style=\"margin-inline: 0px; direction: ltr; padding-inline-start: 1.625rem; margin-bottom: 0.25rem; margin-top: 0px; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px;\"><li class=\"x1datfip xp5n6w9 x2xbuc6\"><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 0px; margin-top: 0px;\">Start <span class=\"x7amdea\" style=\"font-weight: 600;\">GitHub Copilot Chat</span>.</p></li><li class=\"x1datfip xp5n6w9 x2xbuc6\" style=\"margin-top: 0.5rem;\"><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 0px; margin-top: 0px;\">Add and configure the <span class=\"x7amdea\" style=\"font-weight: 600;\">Nordic MCP server</span>.&nbsp;<span style=\"text-wrap-mode: initial;\">Connect to a </span><span class=\"x7amdea\" style=\"text-wrap-mode: initial; font-weight: 600;\">remote HTTP MCP server</span><span style=\"text-wrap-mode: initial;\">.</span></p></li><li class=\"x1datfip xp5n6w9 x2xbuc6\" style=\"margin-top: 0.5rem;\"><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 0px; margin-top: 0px;\">Verify that the <span class=\"x7amdea\" style=\"font-weight: 600;\">Nordic MCP server is running and accessible</span>.</p></li></ol>"
+    },
+    {
+      "title": "5. Bluetooth",
+      "steps": [
+        {
+          "title": "Extending the Existing Project",
+          "description": "Each chapter builds upon the project developed in the previous chapter. All concepts, instructions, and implementation steps introduced in the current chapter should be applied directly to the existing project.<div><br></div><div>The latest version of the project is available for download&nbsp;<a href=\"solutions/3-Sensor_TEMP.zip\" download=\"\">here&nbsp;</a>as a ZIP file.</div>",
+          "codeBlocks": [],
+          "codeBlocksNoCopy": [],
+          "images": [],
+          "moreInfo": []
+        },
+        {
+          "title": "Use Nordic MCP: Init Bluetooth Stack and start advertising",
+          "description": "<span style=\"font-size: 0.9rem;\">Look for the </span><strong data-start=\"191\" data-end=\"215\" style=\"font-size: 0.9rem;\">permissions dropdown</strong><span style=\"font-size: 0.9rem;\"> near the chat input. And p</span>lease set the permissions to \"Allow all\".<br><br><div>Let's enter the following prompt in the VS Code Chat window, that should add Bluetooth initialization and advertising to the project.<div><br></div><div><div><div><span style=\"font-size: 0.9rem;\">⚠️ </span><strong style=\"font-size: 0.9rem;\">Take care:&nbsp;</strong><span style=\"font-size: 14.4px;\">The text we copy into the chat window contains a placeholder for entering a unique name. Before you start editing in the VS Code chat window, enter your own name. See “4. Set the Bluetooth ...”</span></div></div></div></div>",
+          "codeBlocks": [
+            {
+              "label": "Bluetooth stack initialization and advertising prompt",
+              "code": "Use the Nordic MCP server to add Bluetooth initialization and advertising to my existing project.\n\nPlease:\n1. Initialize the Bluetooth stack using the appropriate APIs and configuration for this project and its target board.\n2. Check and handle the initialization result before proceeding.\n3. Only after successful Bluetooth initialization, start Bluetooth LE advertising.\n4. Set the Bluetooth advertising/device name to <ENTER YOUR BT ADV NAME HERE>. The name must start with BAS_.\n5. Use the existing project structure and nRF Connect SDK conventions. Do not introduce unnecessary changes to unrelated code.\n6. Update any required Kconfig or project configuration so that the Bluetooth functionality is enabled.\n7. Clearly identify all files and configuration changes you make.\n8. All Bluetooth functions should be placed in the file bluetooth.c. Create a header file bluetooth.h that declares a function that declares the bluetooth_init() function..\n\nUse the Nordic MCP documentation and tools to verify that the implementation is appropriate for the project's nRF Connect SDK version and target board."
+            }
+          ],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Test your project",
+          "description": "<ul><li data-section-id=\"vbzc7h\" data-start=\"55\" data-end=\"194\">Review the proposed changes. If they are sensible and consistent with the intended behavior, choose <strong data-start=\"158\" data-end=\"166\">Keep</strong>; otherwise choose <strong data-start=\"185\" data-end=\"193\">Undo</strong>.<span aria-hidden=\"true\" class=\"PDq2pG_selectionAnchor\"></span>\n</li>\n<li data-section-id=\"1v5mjad\" data-start=\"195\" data-end=\"251\">\nFlash the resulting software/firmware to the dev kit.\n</li>\n<li data-section-id=\"xx66rj\" data-start=\"252\" data-end=\"284\">\nOpen the <strong data-start=\"264\" data-end=\"283\">Serial Terminal</strong>.\n</li>\n<li data-section-id=\"kxu94p\" data-start=\"285\" data-end=\"380\">\nReset the dev kit and inspect the received logs for errors, crashes, or unexpected behavior.\n</li>\n<li data-section-id=\"1a4d1um\" data-start=\"381\" data-end=\"504\">\nUse <strong data-start=\"388\" data-end=\"414\">nRF Connect for Mobile</strong> to scan for BLE advertising and verify that the expected device/advertisement is visible.</li></ul>",
+          "codeBlocks": [],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Add connection handling and BAS profile",
+          "description": "<div><span style=\"font-size: 14.4px;\">Add connection establishment and BAS GATT service to the existing Bluetooth implementation.</span></div>",
+          "codeBlocks": [
+            {
+              "label": "Bluetooth Connection + BAS Prompt",
+              "code": "Use Nordic MCP.\nExtend the existing Bluetooth LE implementation to include connection establishment and the Battery Service (BAS).\nThe Bluetooth stack is already initialized and connectable advertising is already running. Do not reinitialize the Bluetooth stack, recreate advertising, or replace existing Bluetooth functionality.\nFirst inspect the existing project to determine the Bluetooth SDK/framework and follow its existing APIs and architecture.\n\nRequirements:\n- Add Bluetooth connection establishment.\n- Handle connection success and failure through the existing Bluetooth event/callback mechanism.\n- Add the standard Bluetooth SIG Battery Service (BAS) to the existing GATT database.\n- Add the Battery Level characteristic with read and notification support.\n- Provide an application API to update the battery level (0–100%). \n- In the main loop, a variable named “battery_level” should be used, whose value is decremented from 100 to 0 and which is used for BAS notifications.\n- Send Battery Level notifications when the connected client has enabled them.\n- Preserve the existing initialization, advertising, connection, and application architecture.\n- Do not invent APIs; use APIs available in the detected SDK/version.\n- Build the project after implementation and fix compilation errors and warnings introduced by the changes.\n- Add all Bluetooth code to the bluetooth.c file. \n- Handle a disconnect and restarting of advertising.\n\nAfter implementation, briefly summarize:\n- Modified files.\n- Connection establishment behavior.\n- BAS implementation.\n- Battery Level update API.\n- Build/validation results."
+            }
+          ],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        },
+        {
+          "title": "Test your project",
+          "description": "<ul><li data-section-id=\"vbzc7h\" data-start=\"55\" data-end=\"194\">Review the proposed changes. If they are sensible and consistent with the intended behavior, choose <strong data-start=\"158\" data-end=\"166\">Keep</strong>; otherwise choose <strong data-start=\"185\" data-end=\"193\">Undo</strong>.<span aria-hidden=\"true\" class=\"PDq2pG_selectionAnchor\"></span></li><li data-section-id=\"1v5mjad\" data-start=\"195\" data-end=\"251\">Flash the resulting software/firmware to the dev kit.</li><li data-section-id=\"xx66rj\" data-start=\"252\" data-end=\"284\">Open the <strong data-start=\"264\" data-end=\"283\">Serial Terminal</strong>.</li><li data-section-id=\"kxu94p\" data-start=\"285\" data-end=\"380\">Reset the dev kit and check the received logs for expected startup messages, errors, warnings, crashes, or unexpected behavior.</li><li data-section-id=\"1a4d1um\" data-start=\"381\" data-end=\"504\">Use <strong data-start=\"388\" data-end=\"414\">nRF Connect for Mobile</strong> to scan for BLE advertising and verify that the expected device/advertisement is visible.&nbsp;</li><li data-section-id=\"1a4d1um\" data-start=\"381\" data-end=\"504\">Check advertising restart after disconnect.</li><li data-section-id=\"1a4d1um\" data-start=\"381\" data-end=\"504\">Check BAS (Battery Service): <br>&gt; Verify that BAS service is present after connecting.<br>&gt; Read current battery level.<br>&gt; Enable Battery Level notifications.<br>&gt; Verify that notifications can be enabled successfully.<br></li></ul>",
+          "codeBlocks": [],
+          "images": [],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        }
+      ],
+      "description": "<p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" data-assistant-stream-block=\"\" data-assistant-stream-block-index=\"1\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 0.25rem; margin-top: 0.25rem; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; background-color: rgb(252, 252, 252);\">In this chapter, all Bluetooth stack-related functionality will be implemented using <span class=\"x7amdea\" style=\"font-weight: 600;\">Nordic's AI-assisted development approach with the Nordic MCP</span>, ensuring that the implementation follows the appropriate Nordic SDK APIs, configuration, and recommended Bluetooth architecture.</p><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" data-assistant-stream-block=\"\" data-assistant-stream-block-index=\"2\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 1rem; margin-top: 1rem; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; background-color: rgb(252, 252, 252);\">The planned Bluetooth solution will extend the existing BLE implementation without changing its established stack initialization or advertising mechanism. The solution will add <span class=\"x7amdea\" style=\"font-weight: 600;\">LE Secure Connections pairing</span> to provide a secure connection between the device and a BLE central, while intentionally <span class=\"x7amdea\" style=\"font-weight: 600;\">excluding bonding and persistent pairing information</span>. In addition, the GATT database will be extended with the standard <span class=\"x7amdea\" style=\"font-weight: 600;\">Battery Service (BAS)</span>, including a readable and notifiable Battery Level characteristic.</p><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" data-assistant-stream-block=\"\" data-assistant-stream-block-index=\"3\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 1rem; margin-top: 1rem; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; background-color: rgb(252, 252, 252);\">The application will provide an interface to update the battery level and notify connected clients when notifications are enabled. For initial testing, the battery level can be simulated using a counter that decreases from 100% to 0% and then starts again at 100%.</p><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" data-assistant-stream-block=\"\" data-assistant-stream-block-index=\"4\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 1rem; margin-top: 1rem; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; background-color: rgb(252, 252, 252);\">The connection lifecycle will also be completed by handling <span class=\"x7amdea\" style=\"font-weight: 600;\">BLE disconnections and automatically restarting connectable advertising</span>. This ensures that after a connection is lost, the device becomes discoverable again and can accept a new connection without requiring a device reset.</p><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" data-assistant-stream-block=\"\" data-assistant-stream-block-index=\"5\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 1rem; margin-top: 1rem; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; background-color: rgb(252, 252, 252);\">Overall, the solution will provide a complete BLE flow:</p><p class=\"x1yc453h xma8rkl xgoqxah xutxfr x1fie51u xgyxj25 x1xobyvs x1elgs31 x1fv8qjw xcy5tzr x1ht4adc xnvauns x1c2l018 x14l7nz5 xuw7688 x1pjt2rx x160d6zm xrxpjvj\" dir=\"ltr\" data-assistant-stream-block=\"\" data-assistant-stream-block-index=\"6\" style=\"overflow-wrap: break-word; text-wrap: pretty; margin-bottom: 0.25rem; margin-top: 1rem; color: rgb(13, 13, 13); font-family: -apple-system-body, ui-sans-serif, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, &quot;Apple Color Emoji&quot;, Arial, &quot;sans-serif&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; background-color: rgb(252, 252, 252);\"><span class=\"x7amdea\" style=\"font-weight: 600;\">Advertising → Connection → LE Secure Connections pairing → GATT/BAS access → Battery notifications → Disconnection → Advertising restart → Reconnection.</span></p>"
+    },
+    {
+      "title": "7. Cellular",
+      "description": "<div>The Cellular chapter is a hands-on guide to the nRF93M1 Cat 1 bis modem, controlled entirely through AT commands. Participants set up the DK, subscribe to the modem&#39;s unsolicited notifications, connect to the cellular network, and upgrade the modem firmware from 1.4.1 to 1.5.0 over the air. They then onboard the device to nRF Cloud and use its services: location (cell and Wi-Fi based), messaging over CoAP, and device observability with metrics uploads.</div>",
+      "subChapters": [
+        {
+          "title": "Getting Started with the nRF93M1-DK",
+          "description": "<span style=\"color: rgb(0, 0, 0); font-family: &quot;Segoe UI&quot;; font-size: 14px;\">In this chapter, we will work hands-on with the </span><b style=\"color: rgb(0, 0, 0); font-family: &quot;Segoe UI&quot;; font-size: 14px;\">nRF93M1 Cat 1 bis modem</b><span style=\"color: rgb(0, 0, 0); font-family: &quot;Segoe UI&quot;; font-size: 14px;\">. Starting with basic AT commands, we will connect the modem to a cellular network and gradually move on to more advanced features. These include performing an </span><b style=\"color: rgb(0, 0, 0); font-family: &quot;Segoe UI&quot;; font-size: 14px;\">OTA firmware update</b><span style=\"color: rgb(0, 0, 0); font-family: &quot;Segoe UI&quot;; font-size: 14px;\">, provisioning the device to nRF Cloud, determining its location using n</span><b style=\"color: rgb(0, 0, 0); font-family: &quot;Segoe UI&quot;; font-size: 14px;\">RF Cloud services</b><span style=\"color: rgb(0, 0, 0); font-family: &quot;Segoe UI&quot;; font-size: 14px;\">, and exchanging messages using </span><b style=\"color: rgb(0, 0, 0); font-family: &quot;Segoe UI&quot;; font-size: 14px;\">CoAP</b><span style=\"color: rgb(0, 0, 0); font-family: &quot;Segoe UI&quot;; font-size: 14px;\">.</span>",
+          "steps": [
+            {
+              "title": "Connect the nRF93M1-DK",
+              "description": "<div><div>Connect the nRF93M1 DK to your computer using USB1. This USB connection provides power to the DK and connects to the nRF5340 running the SEGGER J-Link OB firmware.</div><div><br></div><div>USB2 is connected directly to the nRF93M1 USB interface.</div><div><br></div><div>The VCOM1 connection can be switched between UART0 of the nRF54L15 and UART1 of the nRF93M1. The routing is controlled by P2.06 of the nRF54L15.</div><div><br></div><div>With the Modem bypass application loaded, the J-Link interface exposes two virtual COM ports:</div></div><div><table style=\"width: 589.6px;\"><tbody><tr><th style=\"border: 0.8px solid rgb(216, 224, 234); background: none 0% 0% / auto repeat scroll padding-box border-box rgb(247, 249, 251);\">Virtual com-port</th><th style=\"border: 0.8px solid rgb(216, 224, 234); background: none 0% 0% / auto repeat scroll padding-box border-box rgb(247, 249, 251);\">Device</th><th style=\"border: 0.8px solid rgb(216, 224, 234); background: none 0% 0% / auto repeat scroll padding-box border-box rgb(247, 249, 251);\">Description</th></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">VCOM0</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">nRF54L15</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Connected to the nRF54L15 UART1 - Zephyr Shell</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">VCOM1</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">nRF93M1</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Connected to the nRF54L15 UART0 or nRF93M1 DK MAIN UART1</td></tr></tbody></table><div><div><br></div><div>To communicate directly with the nRF93M1 AT command host interface, first identify the virtual COM ports assigned to the DK. From the command line, run:</div></div></div>",
+              "codeBlocks": [
+                {
+                  "label": "",
+                  "code": "nrfutil device list"
+                }
+              ],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "Expected output",
+                  "code": ">nrfutil device list\n1052475354\nProduct         J-Link\nBoard version   PCA10232\nPorts           COM110, vcom: 0\n                COM111, vcom: 1\nTraits          devkit, jlink, seggerUsb, serialPorts, usb\n\nFound 1 supported device"
+                }
+              ],
+              "images": [],
+              "moreInfo": []
+            },
+            {
+              "title": "Restore the nRF54L15 firmware on the nRF93M1-DK",
+              "description": "<p style=\"color: rgb(0, 0, 0); font-family: &quot;Segoe UI&quot;; font-size: 14px;\">The <strong>Modem bypass</strong> sample is preprogrammed on the nRF93M1 DK at the factory. In the previous steps, we replaced the default firmware running on the nRF54L15. To communicate with the nRF93M1 modem through a serial terminal, we need to restore this firmware.</p><p style=\"color: rgb(0, 0, 0); font-family: &quot;Segoe UI&quot;; font-size: 14px;\">The default application is the <strong>Modem bypass</strong> sample from <em>NCS v3.5.0-preview2</em>:</p><p style=\"color: rgb(0, 0, 0); font-family: &quot;Segoe UI&quot;; font-size: 14px;\"><code style=\"color: rgb(14, 138, 125);\">nrf/samples/nrf93m1dk/modem_bypass</code></p><p style=\"color: rgb(0, 0, 0); font-family: &quot;Segoe UI&quot;; font-size: 14px;\">Although you can build the sample yourself, a precompiled Intel HEX file is provided for convenience:&nbsp;</p><p style=\"color: rgb(0, 0, 0); font-family: &quot;Segoe UI&quot;; font-size: 14px;\"><a href=\"https://m365.cloud.microsoft/hwav2/firmware/modem_bypass.hex\" target=\"_blank\" rel=\"noopener\" style=\"color: rgb(14, 138, 125);\">firmware\\modem_bypass.hex</a></p><p style=\"color: rgb(0, 0, 0); font-family: &quot;Segoe UI&quot;; font-size: 14px;\">Use the <strong>Programmer</strong> application in <strong>nRF Connect for Desktop</strong> to flash the HEX file to the nRF54L15.</p><p style=\"color: rgb(0, 0, 0); font-family: &quot;Segoe UI&quot;; font-size: 14px;\">Alternatively, the firmware can be flashed from the command line using <a href=\"https://www.nordicsemi.com/Products/Development-tools/nRF-Util\" target=\"_blank\" rel=\"noopener\" style=\"color: rgb(14, 138, 125); font-family: &quot;IBM Plex Sans&quot;, system-ui, sans-serif; font-size: 14.4px;\">nRF Util</a></p>",
+              "codeBlocks": [
+                {
+                  "label": "Restore nRF54L15 default firmware using nRFUtil",
+                  "code": "nrfutil device erase\nnrfutil device recover\nnrfutil device program --firmware firmware\\modem_bypass.hex"
+                }
+              ],
+              "codeBlocksNoCopy": [],
+              "images": [],
+              "moreInfo": []
+            },
+            {
+              "title": "Insert SIM Card and attach antenna",
+              "description": "<div>The <b>nRF93M1 DK</b> comes with an <b>Onomondo SIM card</b> that includes 10 MB of data. Registering the SIM card with Onomondo provides an additional 40 MB of data.</div><div><br></div><div>Remove the <b>nano (4FF) SIM</b> from the SIM card and insert it into the SIM card holder on the nRF93M1 DK.</div><div><br></div><div>Before continuing, make sure the provided <b>cellular antenna</b> is connected to the DK.</div>",
+              "codeBlocks": [],
+              "codeBlocksNoCopy": [],
+              "images": [],
+              "moreInfo": []
+            },
+            {
+              "title": "Check if nRF93M1 is responding correctly",
+              "description": "<div>Connect the <span style=\"font-size: 0.9rem;\">Serial Terminal from the <b>nRF Connect for Desktop</b> application, or use any other </span><span style=\"font-size: 0.9rem;\">Serial Terminal, and connect to the </span><span style=\"font-size: 0.9rem;\"><code style=\"color: rgb(14, 138, 125);\">VCOM1</code> port at 115200 baud.&nbsp;</span></div><div><span style=\"font-size: 0.9rem;\"><br></span></div><div><span style=\"font-size: 0.9rem;\">Use </span><code style=\"color: rgb(14, 138, 125);\">AT</code><span style=\"font-size: 0.9rem;\"> to confirm the nRF93M1 is responding correctly.</span></div>",
+              "codeBlocks": [
+                {
+                  "label": "Serial Terminal",
+                  "code": "AT"
+                }
+              ],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "Expected response",
+                  "code": "> AT\nOK"
+                }
+              ],
+              "images": [],
+              "moreInfo": []
+            },
+            {
+              "title": "Check Modem Firmware Version",
+              "description": "<div>Check the installed modem firmware of the nRF93M1 with: <span style=\"font-size: 0.9rem;\"><code style=\"color: rgb(14, 138, 125);\">AT+CGMR</code> . The nRF93M1-DKs kits are shipped with modem firmware 1.4.1 which needs to be </span><span style=\"font-size: 0.9rem;\">upgrade to modem firmware version 1.5.0.</span></div><div><span style=\"font-size: 0.9rem;\"><br></span></div><div><span style=\"font-size: 0.9rem;\">The following steps explain how to perform the modem firmware upgrade.</span></div>",
+              "codeBlocks": [
+                {
+                  "label": "Serial Terminal",
+                  "code": "AT+CGMR"
+                }
+              ],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "Expected response",
+                  "code": ">AT+CGMR\nmfw_nrf93m1_1.4.1\nOK"
+                }
+              ],
+              "images": [],
+              "moreInfo": []
+            },
+            {
+              "title": "Check Hardware Version",
+              "description": "Check the modem hardware version using: <code style=\"color: rgb(14, 138, 125);\">AT+CGMM</code>&nbsp;<div><br></div><div>This command reports the modem <b>hardware model/version</b>.</div>",
+              "codeBlocks": [
+                {
+                  "label": "Serial Terminal",
+                  "code": "AT+CGMM"
+                }
+              ],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "Expected Response",
+                  "code": "> AT+CGMM\nnRF93M1-LABA-A0A (R3)\nOK"
+                }
+              ],
+              "images": [],
+              "moreInfo": []
+            }
+          ]
+        },
+        {
+          "title": "Setup Unsolicited Response",
+          "description": "An unsolicited notification (formally an Unsolicited Result Code, or URC) breaks the normal AT command pattern. Normally the exchange is strictly request-response: the host sends a command, reads back the result, and the transaction is finished.&nbsp;<div><br></div><div>A URC is a line that arrives on the same link without any command having been sent. It is pushed asynchronously whenever some event occurs on the other side — a state change, an incoming message, a completed background operation — so its timing is not under the host's control.&nbsp;</div><div><br></div><div>We set up some unsolicited responses; use these commands before starting the connection. This will help you view the state of the connection.</div>",
+          "steps": [
+            {
+              "title": "+CEREG: EPS network registration status",
+              "description": "Subscribes to unsolicited EPS network registration status notifications.&nbsp;<div><br></div><div>Use <code style=\"color: rgb(14, 138, 125);\">AT+CEREG=5</code> , where <code style=\"color: rgb(14, 138, 125);\">5</code> is the URC subscription level (the maximum)</div><div><br></div><div>This command enables <code style=\"color: rgb(14, 138, 125);\">+CEREG: </code>&nbsp;unsolicited notifications. Typically you will first see <code style=\"color: rgb(14, 138, 125);\">+CEREG: 2</code> , which means it found a network and is trying to attach. If attaching to this cell fails, you may see another <code style=\"color: rgb(14, 138, 125);\">+CEREG: 2</code> with a different cell.&nbsp;</div><div><br></div><div>When successfully connected, you will see either <code style=\"color: rgb(14, 138, 125);\">+CEREG: 1</code> (registered to the home network) or <code style=\"color: rgb(14, 138, 125);\">+CEREG: 5</code> (registered and roaming).</div><div><br></div><div>With this command we only enabled the notifications, it will start reporting after enabling cellular functionality with the +CFUN command in the next steps.&nbsp;</div>",
+              "codeBlocks": [
+                {
+                  "label": "Serial Terminal",
+                  "code": "AT+CEREG=5"
+                }
+              ],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "Expected Response",
+                  "code": ">AT+CEREG=5\nOK"
+                },
+                {
+                  "label": "Expected Response after enabling cellular functionality (+CFUN) ",
+                  "code": "+CEREG: 2\n\n+CEREG: 5,\"003B\",\"005BC435\",7"
+                }
+              ],
+              "images": [],
+              "moreInfo": []
+            },
+            {
+              "title": "+CGEREP: Packet domain event reporting ",
+              "description": "Enables unsolicited notifications indicating EPS Packet Data Network (PDN) connection and bearer resource status. Notifications are sent when a packet data context is activated, deactivated, or modified. This enables unsolicited messages (URCs) from <code style=\"color: rgb(14, 138, 125);\">+CGEV</code>.&nbsp;<div><br></div><div>Use <code style=\"color: rgb(14, 138, 125);\">AT+CGEREP=1,0</code>&nbsp;<br><br></div><div><b>mode = 1</b>: Enable +CGEV event reporting. Events are forwarded directly to the terminal when the AT interface is available. If the interface is reserved, for example during an online data session, events are discarded rather than buffered.</div><div><br></div><div>After enabling it, you may see unsolicited notifications such as: <span style=\"color: rgb(0, 0, 0); font-family: &quot;Segoe UI&quot;; font-size: 14px;\"><code style=\"color: rgb(14, 138, 125);\">+CGEV: NW DETACH</code></span></div>",
+              "codeBlocks": [
+                {
+                  "label": "Serial Terminal",
+                  "code": " AT+CGEREP=1,0"
+                }
+              ],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "Expected output",
+                  "code": "> AT+CGEREP=1,0\nOK"
+                }
+              ],
+              "images": [],
+              "moreInfo": []
+            },
+            {
+              "title": "+CSCON: Signaling connection status notification",
+              "description": "Use <code style=\"color: rgb(14, 138, 125);\">AT+CSCON=1</code> to enables unsolicited notifications (<code style=\"color: rgb(14, 138, 125);\">+CSCON :&nbsp; &lt;state&gt;</code><state>) this reports changes in the <b>RRC (Radio Resource Control)</b> signaling connection state.&nbsp;</state><div><state>It tells the modem to notify the host whenever it transitions between idle and connected mode. In idle mode the modem can be in the following states: DRX, eDRX, or PSM.</state></div>",
+              "codeBlocks": [
+                {
+                  "label": "Serial Terminal",
+                  "code": "AT+CSCON=1"
+                }
+              ],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "Expected Response",
+                  "code": "> AT+CSCON=1\nOK"
+                }
+              ],
+              "images": [],
+              "moreInfo": []
+            },
+            {
+              "title": "+CMEE: Mobile termination error notification",
+              "description": "<div>When an error occurs after sending an AT command, the modem responds with ERROR by default instead of OK.</div><div><br></div><div>The AT+CMEE command enables extended error reporting using the final result code: +CME ERROR [err_nr]&nbsp;</div><br><div>Error codes are documented in the individual command descriptions. For a complete list, refer to 3GPP TS 27.007, §9.1.</div><div><br></div><div><span style=\"font-size: 0.9rem;\">Use AT+CMEE=2 , where 2 enables verbose error messages instead of error numbers.</span></div>",
+              "codeBlocks": [
+                {
+                  "label": "Serial Terminal",
+                  "code": "AT+CMEE=2"
+                }
+              ],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "Expected Response",
+                  "code": ">AT+CMEE=2\nOK"
+                }
+              ],
+              "images": [],
+              "moreInfo": []
+            }
+          ]
+        },
+        {
+          "title": "Connect to network",
+          "description": "<div>In the next steps we will connect to the network and evaluate the network connection.&amp;nbsp;</div>",
+          "steps": [
+            {
+              "title": "+CFUN: Functional mode",
+              "description": "<div>The <code style=\"color: rgb(14, 138, 125);\">AT+CFUN</code> command is used to set the modem's functional mode to <b>Minimum Functionality</b>, <b>Full Functionality</b>, or <b>Flight Mode</b>.</div><div><br></div><div>The time required to connect to a cellular network depends on several factors. When using a SIM card for the first time, it may take some time before the SIM card is activated on the network, depending on the operator and network conditions. Also, when using the module for the first time, it does not have information about the previously connected cell. Therefore, the modem may need to search across all enabled bands to find a suitable network.</div><div><br></div><div>The network registration process can be monitored using the <code style=\"color: rgb(14, 138, 125);\">+CEREG</code> unsolicited notifications.</div><div><br></div><div>Use <code style=\"color: rgb(14, 138, 125);\">AT+CFUN=1</code> , where 1 sets the module to full functionality.</div><div><br></div><div>Now wait until you see <code style=\"color: rgb(14, 138, 125);\">+CEREG: 1</code> for registration on <b>home network</b> or <code style=\"color: rgb(14, 138, 125);\">+CEREG: 5</code> for registration while <b>roaming</b>. Either response indicates that the modem has successfully registered with the cellular network.</div><div><br><div>During the registration process, you will most likely see other <code style=\"color: rgb(14, 138, 125);\">+CEREG</code> notifications, such as:</div><div><ul><li><span style=\"font-size: 0.9rem;\"><code style=\"color: rgb(14, 138, 125);\">+CEREG: 2 </code>- Not registered, but currently searching for a network.</span></li><li><code style=\"color: rgb(14, 138, 125);\">+CEREG: 3</code> - Network registration denied.</li></ul></div><br></div><div>Use: <code style=\"color: rgb(14, 138, 125);\">AT+CFUN=0</code> to switch the modem to Minimum Functionality and disconnect from the cellular network. Then reconnect using: <code style=\"color: rgb(14, 138, 125);\">AT+CFUN=1</code>&nbsp;</div><div><div><br></div><div>Notice that the second connection is typically much faster. The modem can use information from the previous network connection instead of performing a complete network search again.</div><div><br></div><div><span style=\"font-size: 0.9rem;\">Setting the module to Minimum Functionality </span><code style=\"color: rgb(14, 138, 125);\">AT+CFUN=0</code><span style=\"font-size: 0.9rem;\"> or Flight Mode </span><code style=\"color: rgb(14, 138, 125);\">AT+CFUN=4</code><span style=\"font-size: 0.9rem;\"> can take several seconds. Always wait for the command to complete before continuing.</span></div></div><div><br></div><div>It is mandatory to switch the nRF93M1 to Minimum Functionality or Flight Mode before switching off the module.<br></div><div><br></div><div>Once the modem is registered with the cellular network, we can retrieve and examine the current connection information.</div>",
+              "codeBlocks": [
+                {
+                  "label": "Serial Terminal",
+                  "code": "AT+CFUN=1"
+                }
+              ],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "Expected output",
+                  "code": "> AT+CFUN=1\nOK\n\n+CEREG: 2\n\n+CSCON: 1\n\n+CGEV: ME PDN ACT 1,0\n\n+CEREG: 5,\"003B\",\"005BC367\",7\n\n+CSCON: 0"
+                }
+              ],
+              "images": [],
+              "moreInfo": []
+            },
+            {
+              "title": "Connecting to the cellular network",
+              "description": "The minimum unsolicited notification you should enable is the +CEREG=5. This is needed to get notified that you are connected to the network.&nbsp; You can check with AT+CEREG? the current connection status.&nbsp;<div><br></div><div>Note that you don't need to enable the notifications after disconnecting from the network, this is only needed after reboot/power cycle.</div>",
+              "codeBlocks": [],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "Advised minimum commands to connect",
+                  "code": "AT+CEREG=5\nAT+CFUN=1"
+                },
+                {
+                  "label": "Advised commands to connect",
+                  "code": "AT+CEREG=5\nAT+CSCON=1\nAT+CGEREP=1\nAT+CMEE=2\nAT+CFUN=1"
+                },
+                {
+                  "label": "An example of a connection setup",
+                  "code": "> AT+CEREG=5\nOK\n> AT+CGEREP=1,0\nOK\n> AT+CSCON=1\nOK\n> AT+CMEE=2\nOK\n> AT+CFUN=1\nOK\n\n+CEREG: 2\n\n+CSCON: 1\n\n+CGEV: ME PDN ACT 1,0\n\n+CEREG: 5,\"003B\",\"005BC367\",7\n\n+CSCON: 0"
+                }
+              ],
+              "images": [],
+              "moreInfo": []
+            },
+            {
+              "title": "+COPS: Mobile network (PLMN) selection",
+              "description": "<div>With the +COPS? command we can see to which operator we are connected.<br><br></div>The third parameter of the response, <code style=\"color: rgb(14, 138, 125);\">20416</code> , is the numeric value of the mobile country code (MCC) and mobile network code (MNC) combined. In this case, MCC=204 (Netherlands) and MNC=16 (T-Mobile/Odido).&nbsp;<div><br></div><div>There are many online sources to resolve an MCC/MNC pair to an actual operator. You can check which network you are attached to using <a href=\"mcc-mnc.org\" download=\"\" style=\"color: rgb(14, 138, 125);\">mcc-mnc.org</a>.<br><br>Let's find out which network we are connected to, with AT+COPS?&nbsp;</div>",
+              "codeBlocks": [
+                {
+                  "label": "Serial Terminal",
+                  "code": "AT+COPS?"
+                }
+              ],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "Expected output",
+                  "code": "> AT+COPS?\n+COPS: 0,2,\"20416\",7\nOK"
+                }
+              ],
+              "images": [],
+              "moreInfo": []
+            },
+            {
+              "title": "+CGCONTRDP: PDP Context dynamic parameters",
+              "description": "<div>A PDP context (Packet Data Protocol context) is the data session configuration that lets a device exchange IP packets over a cellular network.</div><div><br></div><div>It is essentially a set of parameters, APN, IP type (IPv4/IPv6/both), and optionally authentication, that you define first, then activate. On activation, the network assigns an IP address and sets up the tunnel between the device and the gateway. Until a context is active, you have signal and network registration but no IP connectivity.</div><div><br></div><div>There is normally one default context that comes up automatically on attach, plus any additional ones you create and activate yourself.</div><div><br></div><div>Let's check which APN we are connected to, our IP address, with <code style=\"color: rgb(14, 138, 125);\">AT+CGCONTRDP</code>.</div>",
+              "codeBlocks": [
+                {
+                  "label": "Serial Terminal",
+                  "code": "AT+CGCONTRDP"
+                }
+              ],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "Example of output",
+                  "code": "> AT+CGCONTRDP\n+CGCONTRDP: 1,5,\"onomodo\",\"100.77.159.80.255.0.0.0\",,\"8.8.8.8\",\"8.8.4.4\",,,0\nOK"
+                }
+              ],
+              "images": [],
+              "moreInfo": []
+            }
+          ]
+        },
+        {
+          "title": "Update Modem Firmware",
+          "description": "Modem firmware for an nRF93M1 module is built, signed, and released by Nordic Semiconductor, so <span style=\"font-size: 0.9rem;\">you never compile it yourself. Your task is to deliver it, either over the air or locally through the host </span><span style=\"font-size: 0.9rem;\">serial link. Modem firmware updates are separate from host application updates.</span>",
+          "steps": [
+            {
+              "title": "Update the modem firmware over HTTP or HTTPS",
+              "description": "The AT%HTTPFOTADL command downloads a firmware package from an HTTP or HTTPS server and triggers a firmware update. This command can only be used to update the modem firmware and not the host MCU.&nbsp;<div><br></div><div>Note that after the firmware update is completed the modem has done a reboot, therefor you have <b>lost the connection</b> and need to <b>reconnect</b> again to the cellular network.</div>",
+              "codeBlocks": [
+                {
+                  "label": "To download and apply a modem firmware update:",
+                  "code": "AT%HTTPFOTADL=\"http://firmware.nrfcloud.com/93m1/mfw_nrf93m1_update_from_1.4.1_to_1.5.0.bin\",100"
+                }
+              ],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "This should result in the following:",
+                  "code": "> AT%HTTPFOTADL=\"http://firmware.nrfcloud.com/93m1/mfw_nrf93m1_update_from_1.4.1_to_1.5.0.bin\",100\nAT%HTTPFOTADL=\"http://firmware.nrfcloud.com/93m1/mfw_nrf93m1_update_from_1.4.1_to_1.5.0.bin\",100\nOK\n%HTTPURC: \"FOTA\",\"HTTPSTART\"\n%HTTPURC: \"FOTA\",\"DOWNLOADING\",0\n%HTTPURC: \"FOTA\",\"DOWNLOADING\",1\n%HTTPURC: \"FOTA\",\"DOWNLOADING\",2\n-----\n%HTTPURC: \"FOTA\",\"DOWNLOADING\",98\n%HTTPURC: \"FOTA\",\"DOWNLOADING\",99\n%HTTPURC: \"FOTA\",\"DOWNLOADING\",100\n%HTTPURC: \"FOTA\",\"DOWNLOADED\"\n%FOTA: \"APPLY\"\n%FOTA: \"UPDATING\",0\n%FOTA: \"UPDATING\",7\n%FOTA: \"UPDATING\",14\n-----\n%FOTA: \"UPDATING\",92\n%FOTA: \"UPDATING\",100\n%FOTA: \"DONE\",0\nRDY"
+                }
+              ],
+              "images": [],
+              "moreInfo": []
+            }
+          ]
+        },
+        {
+          "title": "Getting Started with nRF Cloud on the nRF93M1",
+          "description": "<div>The nRF93M1 runs the nRF Cloud client inside the module, so your host only needs AT commands. The module still has to be known to the cloud before it can use that connection. In nRF Cloud you add the device with its UUID and registration JWT. Once it is onboarded, there are two main reasons to use the account.</div><div><br></div><div><b>1. Cloud services (data and location)</b></div><div><ul><li><code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDMESSAGE</code> sends JSON data to your account.</li><li><code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDLOCATION</code> returns a position that nRF Cloud resolves from cell or Wi-Fi measurements, so no GNSS receiver is needed.</li><li>Shadow (<code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDSHADOW</code>) and FOTA (<code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDFOTA</code>) use the same provisioned connection.</li></ul></div><div><br></div><div><b>2. nRF Cloud Observability</b></div><div>The module integrates nRFCloud firmware observability. Coredumps and periodic metrics heartbeats are captured on the device, stored in the secure file system, and uploaded over the existing cellular connection. The account is where this data is received and analyzed. This is the practical way to diagnose intermittent field faults that do not reproduce on a bench.</div><div><br></div><div><ul><li><code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDOBSHEARTBEAT</code> triggers a metrics heartbeat immediately. It serializes all accumulated metric values into the chunk queue and is intended for debug use.</li><li><code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDOBSUPLOAD</code> uploads all pending observability chunks over CoAP. An optional project key parameter overrides the key compiled into the firmware.</li></ul></div>",
+          "steps": [
+            {
+              "title": "Provision the nRF93M1 in nRF Cloud",
+              "description": "Register for an <a href=\"https://nrfcloud.nordicsemi.com/\" target=\"_blank\" rel=\"noopener\" style=\"color: rgb(14, 138, 125);\">nRF Cloud</a> account, or log in to your existing account. If you already have an account, it may open the nRF Cloud legacy dashboard. Select <b>NEW EXPERIENCE</b> in the left navigation sidebar if you startup in the <b>Legacy Dashboard</b>.&nbsp;<div><br></div><div>To provision the device, we need to generate a JSON Web Token (JWT) on the nRF93M1 using our <b>team-id</b> from nRF Cloud.&nbsp;</div><div><br></div><div>Navigate to <b>Fleet</b> , select <b>Device</b>, and click <b>Add devices</b>. This is the manual way to add a single device. Use <b>Bulk edit devices </b>to provision a batch of devices.&nbsp;</div><div><br></div><div><span style=\"font-size: 0.9rem;\">Choose the nRF93M1 from the device chooser:&nbsp;&nbsp;</span><span style=\"font-size: 0.9rem;\">Select nRF93M1</span></div>",
+              "codeBlocks": [],
+              "codeBlocksNoCopy": [],
+              "images": [
+                {
+                  "src": "images/nRFCloud_prov_01.png",
+                  "caption": "Add Devices"
+                },
+                {
+                  "src": "images/nRFCloud_prov_02.png",
+                  "caption": "Choose the nRF93M1 from the device chooser:  Select nRF93M1"
+                }
+              ],
+              "moreInfo": []
+            },
+            {
+              "title": "Network time",
+              "description": "Now we need to confirm the nRF93M1 has a valid time. If the device has been connected to a network since power-on, the time should already be set (some networks do not provide network time). Let's check whether the time is available by using <code style=\"color: rgb(14, 138, 125);\">AT+CCLK?</code><div><br></div><div>If the network didn't gave a valid time the network time will report the time the module has been powered on instead of the actual time.&nbsp;</div><div><br></div><div>A response like <code style=\"color: rgb(14, 138, 125);\">+CCLK: \"00/01/01,00:00:21+00\"</code> <span style=\"font-size: 0.9rem;\">indicates that the network time is not set.&nbsp;</span></div><div><span style=\"font-size: 0.9rem;\"><br></span></div><div><span style=\"font-size: 0.9rem;\">You could connect to a network to obtain it, but during provisioning it's usually easier to set the time manually with <code style=\"color: rgb(14, 138, 125);\">AT+CCLK=\"yyyy/MM/dd,hh:mm:ss+zz\"</code> .&nbsp;</span></div><div><span style=\"font-size: 0.9rem;\"><br></span></div><div><span style=\"font-size: 0.9rem;\">Make sure the <b>time is valid</b> before continuing to the next step. As the in the next step generate JWT token is only valid for a short period.&nbsp;</span></div>",
+              "codeBlocks": [
+                {
+                  "label": "Let's check whether the time has been set:",
+                  "code": "AT+CCLK?"
+                },
+                {
+                  "label": "Set network time:",
+                  "code": "AT+CCLK=\"2026/10/01,09:56:00+00\""
+                }
+              ],
+              "codeBlocksNoCopy": [],
+              "images": [],
+              "moreInfo": []
+            },
+            {
+              "title": "Generate JWT Token",
+              "description": "We now generate the JWT token on the nRF93M1 with the command <code style=\"color: rgb(14, 138, 125);\">AT%REGJWT=<user-id> &lt;user-id&gt;</user-id></code><user-id>.</user-id><div><user-id><br></user-id></div><div><user-id><b>NOTE: </b></user-id><span style=\"font-size: 0.9rem;\">On modem firmware v1.4.1, there is a known issue where A</span><span style=\"font-size: 0.9rem;\">T%REGJWT must be entered</span><span style=\"font-size: 0.9rem;\"> in capital letters.</span></div><div><span style=\"font-size: 0.9rem;\"><br></span></div><div>In the wizard's first step, you can copy the command <span style=\"background-color: rgba(79, 209, 197, 0.16); color: rgb(14, 138, 125); font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 12.672px;\">AT%REGJWT</span><span style=\"font-size: 0.9rem;\"> aith your user-id already filled in. This JWT token is only valid for one hour, which is why the nRF93M1 needs the correct time set beforehand.</span></div><div><br></div><div>Run this copied command in the terminal on the nRF93M1. After retrieving the information, press <b>Continue</b>, copy your JWT token from the serial terminal, and move to the next step.</div>",
+              "codeBlocks": [
+                {
+                  "label": "Example only! Please use your own user-id.",
+                  "code": "AT%REGJWT=3634e806-xxxx-yyyy-8bfa-2845a9aa243b"
+                }
+              ],
+              "codeBlocksNoCopy": [],
+              "images": [
+                {
+                  "src": "images/nRFCloud_prov_03.png",
+                  "caption": "Copy the command directly from nRF Cloud's `Add New Device` → `Get Device Credentials` , which already includes your team ID."
+                }
+              ],
+              "moreInfo": []
+            },
+            {
+              "title": "Input Device Credentials",
+              "description": "<div>Copy the JWT Token from the nRF93M1 serial terminal into the next window. Remove the<code style=\"color: rgb(14, 138, 125);\"> %REGJWT:&nbsp; </code>&nbsp;from the serial output, only copy the JWT Token.</div><div><br></div><div>Press **Continue** to go to the next step.</div>",
+              "codeBlocks": [],
+              "codeBlocksNoCopy": [],
+              "images": [
+                {
+                  "src": "images/nRFCloud_prov_04.png",
+                  "caption": "Enter the device JWT Token"
+                }
+              ],
+              "moreInfo": []
+            },
+            {
+              "title": "Preview and confirm",
+              "description": "Confirm that the device UUID matches your device (<code style=\"color: rgb(14, 138, 125);\">AT%DEVICEUUID</code>). You retrieve the UUID from the serial terminal of the nRF93M1.&nbsp;<div><br></div><div>Click on <b>Continue</b> to finish the provisioning.&nbsp;</div>",
+              "codeBlocks": [],
+              "codeBlocksNoCopy": [],
+              "images": [
+                {
+                  "src": "images/nRFCloud_prov_05.png",
+                  "caption": "Confirm that UUID is correct"
+                }
+              ],
+              "moreInfo": []
+            },
+            {
+              "title": "nRF Cloud: Registration completed",
+              "description": "<div>Your device is now registered in <b>nRFCloud</b> and can be found under <b>Fleet -&gt; Devices</b> in the left sidebar.</div><div><br></div><div>At this point, the device has been <b>provisioned</b>, but no communication with nRFCloud has taken place yet. Provisioning provides the device with the required credentials and authorization to connect to your nRFCloud project.</div><div><br></div><div>In the next steps we will use some of the <code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUD</code> commands to communicate with nRFCloud.&nbsp;<br><br><b>Next step: Connect to nRFCloud using AT Commands</b></div>",
+              "codeBlocks": [],
+              "codeBlocksNoCopy": [],
+              "images": [
+                {
+                  "src": "images/nRFCloud_prov_06.png",
+                  "caption": "Device information"
+                }
+              ],
+              "moreInfo": []
+            }
+          ]
+        },
+        {
+          "title": "nRF Cloud : Location Services",
+          "description": "<div>The nRF93M1 runs the nRF Cloud client inside the module firmware, so cloud services are reached with AT commands rather than a cloud library on the host. The transport is CoAP over DTLS 1.2, which keeps payload overhead low and coexists with cellular power saving. Every cloud transaction emits a `<code style=\"color: rgb(14, 138, 125);\">%COAP:</code>` URC carrying the transport-layer status for that request, separately from the command's own response.</div><div><br></div><div>In the previous step, we onboarded our device to nRF Cloud. This is a mandatory procedure to follow before starting this chapter.&nbsp;</div><div><br></div><div>Some commands:</div><div><table style=\"width: 589.6px;\"><tbody><tr><th style=\"border: 0.8px solid rgb(216, 224, 234); background: none 0% 0% / auto repeat scroll padding-box border-box rgb(247, 249, 251);\">Command</th><th style=\"border: 0.8px solid rgb(216, 224, 234); background: none 0% 0% / auto repeat scroll padding-box border-box rgb(247, 249, 251);\">Description</th></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">%NRFCLOUDLOCATION</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Cell and Wi-Fi based positioning resolved by the cloud</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">%NRFCLOUDMESSAGE</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Publish a JSON message to the cloud</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">%NRFCLOUDSHADOW&nbsp;</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Read desired shadow values, write reported shadow values</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">%NRFCLOUDFOTA</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Modem firmware update and host application OTA</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">%NRFCLOUDOBSUPLOAD<br>%NRFCLOUDOBSHEARTBEAT<br>%NRFCLOUDOBSFORWARD</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Memfault firmware observability<br><br></td></tr></tbody></table></div>",
+          "steps": [
+            {
+              "title": "Wi-Fi Scan",
+              "description": "<code style=\"color: rgb(14, 138, 125);\">AT%WIFISCAN</code> uses the module's 2.4 GHz Wi-Fi beacon receiver to detect access points for location purposes only — it is a passive scan, not a Wi-Fi connection feature.&nbsp;<div><div><b style=\"font-size: 0.9rem;\"><br></b></div><div><b style=\"font-size: 0.9rem;\">&gt; AT%WIFISCAN=12000,1,5,3,0</b></div><div><div><b>%WIFISCAN: (-,,-28,\"00:BE:D5:20:EA:54\",11)</b></div><div><b>%WIFISCAN: (-,,-38,\"00:BE:D5:20:EA:27\",3)</b></div><div><b style=\"font-size: 0.9rem;\">OK</b></div></div><div><b><br></b></div><div>Each result line is <code style=\"color: rgb(14, 138, 125);\">%WIFISCAN: (&lt;encryption&gt;,&lt;SSID&gt;,&lt;RSSI dBm&gt;,&lt;BSSID&gt;,&lt;channel&gt;)</code>. Duplicate SSIDs are removed and results are sorted by signal strength, strongest first.&nbsp;</div><div><br></div><div>The radio is shared between the LTE modem and the WiFi scan functionality. This means the modem should either be in eDRX/PSM mode or disabled.&nbsp;&nbsp;<span style=\"font-size: 0.9rem;\">For this test disable the network connection with <code style=\"color: rgb(14, 138, 125);\">AT+CFUN=0.</code> When the you have the result you can enable the modem with <code style=\"color: rgb(14, 138, 125);\">AT+CFUN=1</code>.</span></div></div><div><span style=\"font-size: 0.9rem;\"><br></span></div><div>Start the Wi-Fi scan with <code style=\"color: rgb(14, 138, 125);\">AT%WIFISCAN=12000,1,5,3,0</code></div><div><span style=\"font-size: 0.9rem;\">Description of the parameters:</span></div><div><table style=\"width: 589.6px;\"><tbody><tr><th style=\"border: 0.8px solid rgb(216, 224, 234); background: none 0% 0% / auto repeat scroll padding-box border-box rgb(247, 249, 251);\">Value</th><th style=\"border: 0.8px solid rgb(216, 224, 234); background: none 0% 0% / auto repeat scroll padding-box border-box rgb(247, 249, 251);\">Description</th></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">12000</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Max response time in ms (5000–255000, default 12000)</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">1</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Scan rounds (1–3, default 1)</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">5</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Required SSID count (4–40, default 5)</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">3</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Search time per round in seconds (1–255, default 5)</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">0</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Priority -&nbsp; 0 = Data preferred / 1 = Wi-Fi preferred</td></tr></tbody></table><div><br></div></div><div>This retrieved data can be forwarded to your back office or used to obtain the latitude and longitude of your device.&nbsp;</div>",
+              "codeBlocks": [
+                {
+                  "label": "Serial Terminal",
+                  "code": "AT%WIFISCAN=12000,1,5,3,0"
+                }
+              ],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "Expected response:",
+                  "code": "> AT%WIFISCAN=12000,1,5,3,0\n%WIFISCAN:(-,\"\",-83,\"0A:CF:0E:18:92:33\",1)\n%WIFISCAN:(-,\"\",-83,\"2E:CF:0E:21:E1:1C\",1)\n%WIFISCAN:(-,\"petronel 9 \",-83,\"5C:A6:E6:86:E7:72\",2)\n%WIFISCAN:(-,\"\",-84,\"62:A6:E6:86:E7:72\",2)\n%WIFISCAN:(-,\"\",-86,\"92:5C:54:CA:DF:90\",6)\nOK"
+                }
+              ],
+              "images": [],
+              "moreInfo": []
+            },
+            {
+              "title": "nRF Cloud Location services",
+              "description": "<div>The <code style=\"color: rgb(14, 138, 125);\">%NRFCLOUDLOCATION</code> command triggers a cloud-based location flow.&nbsp;</div><div><br></div><div><code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDLOCATION=&lt;method&gt;,&lt;fetch_result&gt;</code> collects radio measurements locally and lets nRF Cloud resolve them into a position. There are 7 different collection methods.</div><div><br></div><div><table style=\"width: 589.6px;\"><tbody><tr><th style=\"border: 0.8px solid rgb(216, 224, 234); background: none 0% 0% / auto repeat scroll padding-box border-box rgb(247, 249, 251);\">Header</th><th style=\"border: 0.8px solid rgb(216, 224, 234); background: none 0% 0% / auto repeat scroll padding-box border-box rgb(247, 249, 251);\">Header</th></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">1</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Single-cell</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">2</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Multi-cell</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">3</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Single-cell and Multi-cell</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">4</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Wi-Fi Only</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">5</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Single-cell and Wi-Fi</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">6</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Multi-cell and Wi-Fi</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">7</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">All methods</td></tr></tbody></table><div><br></div></div><div><span style=\"font-size: 0.9rem;\">The <code style=\"color: rgb(14, 138, 125);\">&lt;fetch_result&gt;</code> parameter specifies whether the modem reports a location result after sending the collected data to nRF Cloud.</span></div><div><ul><li>0 = Report an acknowledgment without returning a location result.&nbsp;</li><li>1 = Report the location result back to the device.</li></ul></div><div><br></div><div>Regardless of the selected <code style=\"color: rgb(14, 138, 125);\">&lt;fetch_result&gt;</code>, the location is stored on the device in nRFCloud. You can visualize this in nRF Cloud or use the result directly in Google Maps.</div><div><a href=\"https://maps.google.com/?q=&lt;lat&gt;,&lt;lon&gt;\" target=\"_blank\" rel=\"noopener\" style=\"color: rgb(14, 138, 125);\">https://maps.google.com/?q=&lt;lat&gt;,&lt;lon&gt;</a></div><div><br></div><div>In the next step we will work with method 1, method 4 and method 5.&nbsp;</div>",
+              "codeBlocks": [
+                {
+                  "label": "Copy url and change <lat> & <lon> with the result of the NRFCLOUDLOCATION response",
+                  "code": "https://maps.google.com/?q=<lat>,<lon>"
+                }
+              ],
+              "codeBlocksNoCopy": [],
+              "images": [],
+              "moreInfo": []
+            },
+            {
+              "title": "Method 1 - Single Cell",
+              "description": "<div>Method 1 - Single Cell:&nbsp; <code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDLOCATION=1,1</code></div><div>Uses only the serving cell (EARFCN, PCI, cell ID, TAC, RSRP/RSRQ). Fastest and cheapest, works anywhere the module is registered, and works in RRC Connected mode. Accuracy is the size of the cell, so typically hundreds of meters to several kilometers.</div>",
+              "codeBlocks": [
+                {
+                  "label": "Serial Terminal",
+                  "code": "AT%NRFCLOUDLOCATION=1,1"
+                }
+              ],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "Expected result",
+                  "code": "> AT%NRFCLOUDLOCATION=1,1\n%COAP: RESOLVING coap.nrfcloud.com (IPv4)...\n%COAP: IPv4: 34.200.153.177, PORT: 5684\n%COAP: CONNECTING ...\n%COAP: DTLS_STATE,4\n%COAP: SENDING_AUTH\n%COAP: RESPONSE,2.01\n%COAP: CONNECTED\n%COAP: RESPONSE,2.05\n%COAP: DATA,HEX,bf01fb4049eac18cfda9e402fb40117044f8579XXXX3fb40694a2d0XXXX041904655343454c4cff\n%NRFCLOUDLOCATION: 61.494029,23.775517,100,1\nOK"
+                }
+              ],
+              "images": [],
+              "moreInfo": [
+                {
+                  "label": "Use the result in googlemaps",
+                  "content": "On the last line of the result : %NRFCLOUDLOCATION: 61.494029,23.775517,100,1 you find the latitude and longitude. Modify those in the URL to view the location in google maps.<div><div><br><code style=\"color: rgb(14, 138, 125);\">https://maps.google.com/?q=&lt;latitude&gt;,&lt;longitude&gt;</code></div><div><br></div><div><a href=\"https://maps.google.com/?q=61.494029,23.775517\" target=\"_blank\" rel=\"noopener\" style=\"color: rgb(14, 138, 125);\">https://maps.google.com/?q=61.494029,23.775517</a><br><div><br></div></div></div>"
+                }
+              ]
+            },
+            {
+              "title": "Method 4 - Wi-Fi only",
+              "description": "<div>Method 4 - Wi-Fi only:&nbsp; <code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDLOCATION=4,1</code><span style=\"font-size: 0.9rem;\"> runs a 2.4 GHz beacon scan and sends the access point <b>BSSID'</b>s and<b> RSSI</b> values. It provides the best accuracy of the three previous cell based methods, typically tens of meters, and works indoors where cellular positioning is weakest. However, it depends entirely on access point density, a rural site may return nothing usable,&nbsp; and it requires RRC Idle.</span></div><div><br></div><div>Before we can send this command we first need to do disable the cellular connection and do a Wi-Fi scan. After the Wi-Fi scan we need to enable the cellular connection to get the location using nRFCloud.</div>",
+              "codeBlocks": [
+                {
+                  "label": "Disable cellular connection",
+                  "code": "AT+CFUN=0"
+                },
+                {
+                  "label": "Scan Wi-Fi access points",
+                  "code": "AT%WIFISCAN=12000,1,5,3,0"
+                },
+                {
+                  "label": "Enable cellular coonection",
+                  "code": "AT+CFUN=1"
+                }
+              ],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "Example of the expected output",
+                  "code": "> AT+CFUN=0\nOK\n> AT%WIFISCAN=12000,1,5,3,0\n%WIFISCAN:(-,\"petronel 9 \",-81,\"5C:A6:E6:86:E7:72\",2)\n%WIFISCAN:(-,\"petronel 9 \",-82,\"5C:A6:E6:86:EA:F6\",2)\n%WIFISCAN:(-,\"\",-82,\"62:A6:E6:86:E7:72\",2)\n%WIFISCAN:(-,\"\",-83,\"62:A6:E6:86:EA:F6\",2)\n%WIFISCAN:(-,\"Ziggo3757183\",-84,\"0A:CF:0E:18:92:34\",1)\nOK\n> AT+CFUN=1\nOK\n+CEREG: 2\n+CSCON: 1\n+CEREG: 5,\"003B\",\"005BC47B\",7\n> AT%NRFCLOUDLOCATION=4,1\n%COAP: RESOLVING coap.nrfcloud.com (IPv4)...\n%COAP: IPv4: 54.145.71.75, PORT: 5684\n%COAP: CONNECTING ...\n%COAP: DTLS_STATE,4\n%COAP: SENDING_AUTH\n%COAP: RESPONSE,2.01\n%COAP: CONNECTED\n%COAP: RESPONSE,2.05\n%COAP: DATA,HEX,bf01fb4049ea79a430cc5102fb40116c223fc5e8ad03fb405739999999999a046457494649ff\n%NRFCLOUDLOCATION: 51.831837,4.355599,92,4\nOK"
+                }
+              ],
+              "images": [],
+              "moreInfo": []
+            },
+            {
+              "title": "Method 5 - Single-cell + Wi-Fi",
+              "description": "<div>Method 5 - Single-cell + Wi-Fi:&nbsp; <code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDLOCATION=5,1</code><span style=\"font-size: 0.9rem;\"> Collects both the cell and the Wi-Fi access points and lets the cloud choose. This is the robust option for a deployed device: Wi-Fi accuracy where APs exist, automatic fallback to single-cell where they do not, instead of a failed request.</span></div><div><span style=\"font-size: 0.9rem;\"><br></span></div><div><span style=\"font-size: 0.9rem;\">Like with the previous method (Wi-Fi only) we </span>first need to do disable the cellular connection and do a Wi-Fi scan. After the Wi-Fi scan we need to enable the cellular connection to get the location using nRFCloud.</div>",
+              "codeBlocks": [
+                {
+                  "label": "Disable cellular connection",
+                  "code": "AT+CFUN=0"
+                },
+                {
+                  "label": "Scan Wi-Fi access points",
+                  "code": "AT%WIFISCAN=12000,1,5,3,0"
+                },
+                {
+                  "label": "Enable cellular coonection",
+                  "code": "AT+CFUN=1"
+                }
+              ],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "Expected output:",
+                  "code": "> AT+CFUN=0\nOK\n> AT%WIFISCAN=12000,1,5,3,0\n%WIFISCAN:(-,\"petronel 9 \",-81,\"5C:A6:E6:86:E7:72\",2)\n%WIFISCAN:(-,\"petronel 9 \",-82,\"5C:A6:E6:86:EA:F6\",2)\n%WIFISCAN:(-,\"\",-82,\"62:A6:E6:86:E7:72\",2)\n%WIFISCAN:(-,\"\",-83,\"62:A6:E6:86:EA:F6\",2)\n%WIFISCAN:(-,\"Ziggo3757183\",-84,\"0A:CF:0E:18:92:34\",1)\nOK\n> AT+CFUN=1\nOK\n+CEREG: 2\n+CSCON: 1\n+CEREG: 5,\"003B\",\"005BC47B\",7\n> AT%NRFCLOUDLOCATION=5,1\n%COAP: RESPONSE,2.05\n%COAP: DATA,HEX,bf01fb4049ea787c12a01602fb40116c17f2650cca03fb405899999999999a046457494649ff\n%NRFCLOUDLOCATION: 51.831801,4.355560,98,4\nOK"
+                }
+              ],
+              "images": [],
+              "moreInfo": []
+            },
+            {
+              "title": "Viewing the position in nRF Cloud",
+              "description": "In nRF Cloud, we can now visualize our reported location based on the commands in the previous steps.<div><br></div><div>The location view is at this moment not yet transferred to the&nbsp; New Experience site. Go to the<b> Legacy App</b> in the left sidebar to view the live or historical location.</div>",
+              "codeBlocks": [],
+              "codeBlocksNoCopy": [],
+              "images": [
+                {
+                  "src": "images/nRFCloud_location_00.png",
+                  "caption": "Go to the \"Legacy App\" in the left sidebar."
+                },
+                {
+                  "src": "images/nRFCloud_location_01.png",
+                  "caption": "Select \"DEVICE MANAGEMENT\" -> \"DEVICES\""
+                },
+                {
+                  "src": "images/nRFCloud_location_02.png",
+                  "caption": "Click on your device to open a dashboard with device information."
+                },
+                {
+                  "src": "images/nRFCloud_location_03.png",
+                  "caption": "View actual or historical location data"
+                }
+              ],
+              "moreInfo": [
+                {
+                  "label": "Location window",
+                  "content": "<div>Scroll to the <b>Location</b> window. Here you can see the live location data or click on <b>View historical data</b>. The window shows the lookups from that device since opening this window. The blue circle represents the single-cell location, and the orange circles represent locations using Wi-Fi access points.</div><div><br></div>"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "nRFCloud : Messages Services ",
+          "description": "<div>In this exercise you send data from the nRF93M1 to nRF Cloud and read it back. The module sends a short JSON message to your nRF Cloud account with AT%NRFCLOUDMESSAGE. You then retrieve the message from a terminal with a cURL request to the nRF Cloud REST API. This confirms the whole path works: from the module, over the cellular network, to the cloud, and back to your PC.</div>",
+          "steps": [
+            {
+              "title": "nRF Cloud Messages",
+              "description": "<div><code style=\"color: rgb(14, 138, 125);\">%NRFCLOUDMESSAGE</code> is a one-way push of telemetry data.</div><div><br></div><div>Use: <code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDMESSAGE={\"appId\":\"BUTTON\",\"data\":\"1\"} </code><span style=\"font-size: 0.9rem;\">&nbsp;to send a JSON object or array (max 511 characters) to nRF Cloud over CoAP. This command replies <code style=\"color: rgb(14, 138, 125);\">%NRFCLOUDMESSAGE: SENT</code>.&nbsp;</span></div><div><span style=\"font-size: 0.9rem;\"><br></span></div><div><span style=\"font-size: 0.9rem;\">Use it for events and sensor readings \"fire and forget\", nothing is stored on the device side.</span></div><div><br></div><div>Like the location data the message can be viewed (only live data). Go to the <b>Legacy App</b> -&gt; <b>Device Management</b> -&gt; <b>Devices</b>. Click on your active device. Scroll to view the window \"<b>Terminal</b>\"</div>",
+              "codeBlocks": [
+                {
+                  "label": "Send some data to nRF Cloud: ",
+                  "code": "AT%NRFCLOUDMESSAGE={\"appId\":\"BUTTON\",\"data\":\"1\"}"
+                }
+              ],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "Expected response:",
+                  "code": "> AT%NRFCLOUDMESSAGE={\"appId\":\"BUTTON\",\"data\":\"1\"}\n%COAP: RESPONSE,2.01\n%NRFCLOUDMESSAGE: SENT\nOK"
+                }
+              ],
+              "images": [
+                {
+                  "src": "images/nRFCloud_location_04.png",
+                  "caption": "You can view this data at the same location as the position data in nRF Cloud."
+                }
+              ],
+              "moreInfo": []
+            },
+            {
+              "title": "Extract Messages using REST API",
+              "description": "<div>You can also extract this data directly from the cloud using the REST API interface.</div><div>The endpoint is <code style=\"color: rgb(14, 138, 125);\">ListMessages</code>&nbsp; : <code style=\"color: rgb(14, 138, 125);\">GET https://api.nrfcloud.com/v1/messages</code>, authenticated with your team's API key as a simple bearer token.</div><div><br></div><div>The API key is found in the nRF Cloud portal under in the Legacy view. Click on the icon in the top right corner, select \"<b>User Account</b>\".&nbsp; The API Key is found in the window \"<b>Current Team Details</b>\".</div><div><br></div><div>The data can be read using for example using Postmen, for simplicity we will use the \"<b>CURL</b>\" command from the command prompt.&nbsp;</div><div><br></div><div>We also need the device UUID of the device we to address in nRF Cloud.&nbsp;</div><div>Use<code style=\"color: rgb(14, 138, 125);\"> AT%DEVICEUUID</code> to retrieve the device UUID.&nbsp;</div><div><br></div><div>Keep both the UUID and API Key we will need it in the next steps.</div><div><br></div><div>You find more information about the <a href=\"https://api-docs.nrfcloud.com/#section/Overview\" target=\"_blank\" rel=\"noopener\" style=\"color: rgb(14, 138, 125);\">REST API interface</a> on the nRF Cloud website.</div>",
+              "codeBlocks": [
+                {
+                  "label": "Read UUID from nRF93M1",
+                  "code": "AT%DEVICEUUID"
+                }
+              ],
+              "codeBlocksNoCopy": [],
+              "images": [
+                {
+                  "src": "images/nRFCloud_prov_07.png",
+                  "caption": "Copy the API Key:"
+                }
+              ],
+              "moreInfo": []
+            },
+            {
+              "title": "Reading device messages with the nRF Cloud REST API",
+              "description": "The messages you send with <code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDMESSAGE </code>&nbsp;are stored in your nRF Cloud account. You can read them back from a terminal with the REST API, which is a quick way to confirm that the data really arrived in the cloud.<div><br><div>What the bellow command does:</div><div><ul><li><code style=\"color: rgb(14, 138, 125);\">curl -s -X GET:</code> sends an HTTP GET request. -s (silent) hides the progress meter so only the response is printed.</li><li><code style=\"color: rgb(14, 138, 125);\">https://api.nrfcloud.com/v1/messages:</code> the endpoint that returns device messages.</li><li><code style=\"color: rgb(14, 138, 125);\">deviceId=&lt;YOUR_DEVICE_UUID&gt;</code>: selects the device. Use the UUID you read earlier with <code style=\"color: rgb(14, 138, 125);\">AT%DEVICEUUID</code>.</li><li><b>pageLimit=5</b>: returns at most 5 messages per request, which keeps the output short.</li><li><code style=\"color: rgb(14, 138, 125);\">-H \"Authorization: Bearer &lt;YOUR_API_KEY&gt;\": </code>authenticates the request with your nRF Cloud API key.</li><li><code style=\"color: rgb(14, 138, 125);\">-H \"Accept: application/json\":</code> asks for the answer in JSON format.</li></ul></div><div><br></div><div>Steps:</div><div><ol><li>Replace <code style=\"color: rgb(14, 138, 125);\">&lt;YOUR_DEVICE_UUID&gt;</code> with the UUID of your nRF93M1.</li><li>Replace <code style=\"color: rgb(14, 138, 125);\">&lt;YOUR_API_KEY&gt;</code> with your nRF Cloud API key.</li><li>Send a message from the module with <code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDMESSAGE</code>, then run the command.</li><li>Check that your message appears in the JSON response.</li></ol></div><div><br></div><div>Tips:</div><div><ul><li>Keep the URL in quotes. Without them the shell treats &amp; as \"run in the background\" and cuts the URL off.</li><li>Add <code style=\"color: rgb(14, 138, 125);\">| jq .</code> at the end to get a readable, colored JSON output.</li><li>In PowerShell use curl.exe, because curl is an alias for another command.</li><li>Treat the API key like a password. Do not paste it into chats or commit it to a repository.</li></ul></div></div>",
+              "codeBlocks": [
+                {
+                  "label": "Run on command line:",
+                  "code": "curl -s -X GET \\\n  \"https://api.nrfcloud.com/v1/messages?deviceId=<YOUR_DEVICE_UUID>&pageLimit=5\" \\\n  -H \"Authorization: Bearer <YOUR_API_KEY>\" \\\n  -H \"Accept: application/json\""
+                }
+              ],
+              "codeBlocksNoCopy": [],
+              "images": [],
+              "moreInfo": [
+                {
+                  "label": "When using windows",
+                  "content": "<div>Copy the bellow text this doesn't have the \"\\\" as this is not accepted in windows command prompt.</div><div><br></div><div>curl -s -X GET <span style=\"font-size: 0.9rem;\">\"https://api.nrfcloud.com/v1/messages?deviceId=&lt;YOUR_DEVICE_UUID&gt;&amp;pageLimit=5\" </span><span style=\"font-size: 0.9rem;\">-H \"Authorization: Bearer &lt;YOUR_API_KEY&gt;\" </span><span style=\"font-size: 0.9rem;\">-H \"Accept: application/json\"</span></div><div><span style=\"font-size: 0.9rem;\"><br></span></div>"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "nRF Cloud : Observability Services",
+          "description": "<div>What is observability?</div><div>Observability means seeing what a device is doing in the field, so you can find out why something went wrong without having the device on your bench. The nRF93M1 integrates Memfault firmware observability. It records coredumps (a snapshot of the device state after a crash) and periodic metrics heartbeats, stores them in the secure file system, and uploads them over the existing cellular connection. This helps with intermittent faults that do not reproduce in the lab.</div><div><br></div><div>This exercise</div><div>You trigger a metrics heartbeat with AT%NRFCLOUDOBSHEARTBEAT, which collects the current metric values on the module. You then send the collected data to the cloud with AT%NRFCLOUDOBSUPLOAD, and check that it arrives in your nRF Cloud account.</div>",
+          "steps": [
+            {
+              "title": "Set the metrics data",
+              "description": "<div>After successfully connecting to the network, we will create the current metrics snapshot (chunk) for later observation in nRF Cloud. Before doing this, we need to run the following commands. The results of these commands will be stored in the metrics snapshot.&nbsp;</div><div><br></div><div>Commands that are stored in the heartbeat metrics:</div><div><ul><li><code style=\"color: rgb(14, 138, 125);\">AT+CGMR</code>&nbsp; &nbsp; &nbsp; &nbsp; // Sets modem FW version&nbsp;&nbsp;</li><li><code style=\"color: rgb(14, 138, 125);\">AT+CEREG=5 </code>// Enable full CEREG URCs (PSM, AcT, etc.)&nbsp;&nbsp;</li><li><code style=\"color: rgb(14, 138, 125);\">AT+CFUN=0</code>&nbsp; &nbsp;// Detach (triggers disconnect + connection_loss_count)&nbsp;&nbsp;</li><li><code style=\"color: rgb(14, 138, 125);\">AT+CFUN=1</code>&nbsp; &nbsp;// Reattach (triggers time_to_connect_ms, on_time_ms)&nbsp;&nbsp;</li><li><code style=\"color: rgb(14, 138, 125);\">AT+COPS?</code>&nbsp; &nbsp; &nbsp; //&nbsp; Get operator name&nbsp;&nbsp;</li><li><code style=\"color: rgb(14, 138, 125);\">AT%BCINFO</code>&nbsp; // Gets cell information (RSRP + band)</li></ul></div><div><br></div><div>In the previous steps, we already activated the URC for <code style=\"color: rgb(14, 138, 125);\">AT+CEREG=5</code> and connected with <code style=\"color: rgb(14, 138, 125);\">AT+CFUN=1</code>.&nbsp;</div><div><br></div><div>Run the following commands to update the metrics before sending them to nRF Cloud:</div>",
+              "codeBlocks": [
+                {
+                  "label": "Read modem firmware",
+                  "code": "AT+CGMR"
+                },
+                {
+                  "label": "Read network operator and country code",
+                  "code": "AT+COPS?"
+                },
+                {
+                  "label": "Read cell information",
+                  "code": "AT%BCINFO"
+                }
+              ],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "Example response:",
+                  "code": "> AT+CGMR\nmfw_nrf93m1_1.5.0\nOK\n> AT+COPS?\n+COPS: 0,2,\"20416\",7\nOK\n> AT%BCINFO\n%BCINFOSC: 3300,52,-97,-9,\"204\",\"16\",\"005BC435\",\"003B\"\n%BCINFONC: 6200,52,-80,-8\n%BCINFONC: 3700,52,-81,-9\n%BCINFONC: 1656,52,-90,-8\n%BCINFONC: 1800,52,-93,-12\n%BCINFONC: 3700,163,-96,-24\nOK"
+                }
+              ],
+              "images": [],
+              "moreInfo": []
+            },
+            {
+              "title": "Create a snapshot of the current metrics",
+              "description": "<div>We will use the command <code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDOBSHEARTBEAT</code>.&nbsp;</div><div><br></div><div>This command immediately triggers a cloud observability metrics heartbeat event and serializes all currently accumulated metric values into the chunk queue. This is not exported to the cloud, it is stored in the internal memory of the nRF93M1. This data can be uploaded to nRF Cloud using the cellular connection with an AT command or loaded into nRF Cloud using any other transport method.&nbsp;</div>",
+              "codeBlocks": [
+                {
+                  "label": "Trigger a cloud observability metrics heartbeat event",
+                  "code": "AT%NRFCLOUDOBSHEARTBEAT"
+                }
+              ],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "Expected response:",
+                  "code": "> AT%NRFCLOUDOBSHEARTBEAT\nOK"
+                }
+              ],
+              "images": [],
+              "moreInfo": []
+            },
+            {
+              "title": "Upload the Modem Symbol File",
+              "description": "The nRF93M1 sends its observability data in a compact binary format, which saves air time and power. The data contains only numbers, with no names or descriptions. The symbol file for your modem firmware version is the decode file that tells nRF Cloud what these numbers mean. With it, values such as RSRP, PSM timer, eDRX interval and modem firmware version are shown in readable form. The file must match your modem firmware version exactly, and it must be uploaded <strong>before</strong> the first heartbeat. Otherwise the Processing Log shows an error.<br><div><br></div><div>Steps:&nbsp;</div><div><ol><li><span style=\"font-size: 0.9rem;\">Read the modem firmware version with </span><span style=\"font-size: 0.9rem;\"><code style=\"color: rgb(14, 138, 125);\">AT+CGMR</code></span></li><li>Download the nRF93M1 decode symbol file that matches this version from the <a href=\"https://docs.nrfcloud.com/docs/mcu/nrf93m1-guide\" target=\"_blank\" rel=\"noopener\" style=\"color: rgb(14, 138, 125);\">nRF93M1 LTE Metrics guide</a>. It is also placed in the folder <a href=\"firmware\\nrf93m1_decode_1.5.0-fa9e2900fa3e0bd04143207a07b8dad9.elf\" download=\"\" style=\"color: rgb(14, 138, 125);\">firmware\\nrf93m1_decode_1.5.0-fa9e2900fa3e0bd04143207a07b8dad9.elf</a></li><li>Upload the file in the web app under <b>Software &gt; Symbol Files &gt; Upload Symbol File</b> (or use this <a href=\"https://mflt.io/upload-symbol-file\" target=\"_blank\" rel=\"noopener\" style=\"color: rgb(14, 138, 125);\">direct link</a>).</li><li>Confirm that the file appears in the list.</li></ol></div><div><span style=\"font-size: 0.9rem;\"><b>Tip:</b> If you update the modem firmware later, upload the symbol file for the new version too. Data from the new version cannot be decoded with the old file.</span></div>",
+              "codeBlocks": [
+                {
+                  "label": "Read modem firmware",
+                  "code": "AT+CGMR"
+                }
+              ],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "Expected Response:",
+                  "code": ">AT+CGMR\nmfw_nrf93m1_1.5.0\nOK"
+                }
+              ],
+              "images": [
+                {
+                  "src": "images/nRFCloud_observ_01.png",
+                  "caption": "Upload symbol file:"
+                }
+              ],
+              "moreInfo": []
+            },
+            {
+              "title": "Upload Observability Data to nRF Cloud",
+              "description": "<code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDOBSUPLOAD</code> uploads all pending observability data (metrics heartbeats, coredumps) from the module's on-device queue to nRF Cloud over CoAP. An optional project key overrides the key compiled into the firmware.<div><br></div><div>Optionally, you can specify a <b>Project Key</b>. This is only needed when uploading to another project (a free account doesn't support multiple projects).</div>",
+              "codeBlocks": [
+                {
+                  "label": "Upload all pending observability data:",
+                  "code": "AT%NRFCLOUDOBSUPLOAD"
+                }
+              ],
+              "codeBlocksNoCopy": [
+                {
+                  "label": "Expected response:",
+                  "code": "> AT%NRFCLOUDOBSUPLOAD\n%COAP: RESOLVING coap.nrfcloud.com (IPv4)...\n%COAP: IPv4: 54.145.71.75, PORT: 5684\n%COAP: CONNECTING ...\n%COAP: DTLS_STATE,4\n%COAP: SENDING_AUTH\n%COAP: RESPONSE,2.01\n%COAP: CONNECTED\n%COAP: RESPONSE,2.01\n%COAP: DATA,8,Accepted\n%COAP: RESPONSE,2.01\n%COAP: DATA,8,Accepted\n%COAP: RESPONSE,2.01\n%COAP: DATA,8,Accepted\n%NRFCLOUDOBSUPLOAD: UPLOADED,3\nOK"
+                }
+              ],
+              "images": [],
+              "moreInfo": []
+            },
+            {
+              "title": "View the Observability in nRF Cloud",
+              "description": "You can now view the reported data in the nRFCloud.<div><br></div><div>Select you devices in <b>Fleet -&gt; Devices</b>, click on the tab <b>Timeline </b>and select the current date/time.&nbsp;</div><div><br></div><div>Under the tab <b>Processing Log</b> you will see the received Metric Reports.</div>",
+              "codeBlocks": [],
+              "codeBlocksNoCopy": [],
+              "images": [
+                {
+                  "src": "images/nRFCloud_observ_02.png",
+                  "caption": "View the Observability in nRF Cloud"
+                }
+              ],
+              "moreInfo": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Completed",
+      "steps": [
+        {
+          "title": "Congratulation!!!",
+          "description": "<br>",
+          "codeBlocks": [],
+          "images": [
+            {
+              "src": "images/courseCompleted_noPMIC.jpg",
+              "caption": ""
+            }
+          ],
+          "moreInfo": [],
+          "codeBlocksNoCopy": []
+        }
+      ],
+      "description": ""
+    }
+  ]
+};

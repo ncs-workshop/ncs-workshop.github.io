@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Workshop Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+
+    /* Nordic Semiconductor palette: accent = Nordic Blueslate (#0032A0);
+       dark mode uses Nordic Sky (#6AD1E3). Previous green theme was
+       accent #2F6F4E / soft #E4EFE9 (light) and #57B589 / #1E2C25 (dark). */
+    --paper: #F3F6F8;
+    --panel: #FFFFFF;
+    --ink: #1B1F23;
+    --muted: #6B7280;
+    --accent: #0032A0;
+    --accent-ink: #FFFFFF;
+    --accent-soft: #E3F1F8;
+    --line: #D8E0E6;
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --paper: #14171A;
+      --panel: #1B1F22;
+      --ink: #ECECE9;
+      --muted: #9AA1A6;
+      --accent: #6AD1E3;
+      --accent-ink: #00161F;
+      --accent-soft: #123240;
+      --line: #2B2F32;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #14171A;
+    --panel: #1B1F22;
+    --ink: #ECECE9;
+    --muted: #9AA1A6;
+    --accent: #6AD1E3;
+    --accent-ink: #00161F;
+    --accent-soft: #123240;
+    --line: #2B2F32;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  html, body { height: 100%; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  code, pre, .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+
+  .app { max-width: 1180px; margin: 0 auto; padding: 20px 20px 40px; }
+
+  /* ---------- Header ---------- */
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px 24px;
+    padding: 18px env(safe-area-inset-top, 0px) 20px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 22px;
+  }
+  .title-block { flex: 1 1 320px; min-width: 0; }
+
+  .sidebar-toggle {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 0;
+    font-family: inherit;
+  }
+  .sidebar-toggle-track {
+    position: relative;
+    width: 34px;
+    height: 20px;
+    border-radius: 10px;
+    background: var(--line);
+    display: inline-block;
+    transition: background .15s ease;
+  }
+  .sidebar-toggle[aria-pressed="true"] .sidebar-toggle-track { background: var(--accent); }
+  .sidebar-toggle-thumb {
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--panel);
+    transition: transform .15s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  }
+  .sidebar-toggle[aria-pressed="true"] .sidebar-toggle-thumb { transform: translateX(14px); }
+  .sidebar-toggle-label { font-size: 12.5px; color: var(--muted); font-weight: 500; white-space: nowrap; }
+
+  /* ---------- Settings: gear button + modal ---------- */
+  .icon-btn {
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .settings-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 20, 18, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+  }
+  .settings-overlay[hidden] { display: none; }
+  .settings-panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 420px;
+    padding: 22px 24px 26px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+  }
+  .settings-panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .settings-panel-head h2 {
+    font-family: var(--title-font);
+    font-weight: var(--title-weight);
+    font-size: 19px;
+    margin: 0;
+    color: var(--ink);
+  }
+  .settings-section {
+    padding: 16px 0;
+    border-top: 1px solid var(--line);
+  }
+  .settings-section:first-of-type { border-top: none; padding-top: 0; }
+  .settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .settings-row-label { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .settings-row-hint { font-size: 12.5px; color: var(--muted); margin-top: 3px; line-height: 1.4; }
+
+  .settings-select {
+    width: 100%;
+    margin-top: 10px;
+    padding: 9px 10px;
+    border-radius: 7px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--ink);
+    font-size: 13.5px;
+    font-family: inherit;
+  }
+
+  .settings-danger-btn {
+    margin-top: 12px;
+    padding: 9px 16px;
+    border-radius: 7px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--danger, #A23B2E);
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .settings-danger-btn:hover { border-color: var(--danger, #A23B2E); background: var(--accent-soft); }
+
+  /* Theme toggle switch — same visual language as the sidebar switch */
+  .theme-toggle { flex: 0 0 auto; background: none; border: none; cursor: pointer; padding: 2px; }
+  .theme-toggle-track {
+    position: relative;
+    width: 34px;
+    height: 20px;
+    border-radius: 10px;
+    background: var(--line);
+    display: inline-block;
+    transition: background .15s ease;
+  }
+  .theme-toggle[aria-pressed="true"] .theme-toggle-track { background: var(--accent); }
+  .theme-toggle-thumb {
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--panel);
+    transition: transform .15s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  }
+  .theme-toggle[aria-pressed="true"] .theme-toggle-thumb { transform: translateX(14px); }
+  #workshopTitle {
+    font-family: var(--title-font);
+    font-weight: var(--title-weight);
+    font-size: 22px;
+    line-height: 1.2;
+    word-break: break-word;
+  }
+
+  .progress-block { flex: 0 0 auto; min-width: 220px; display: flex; align-items: center; gap: 12px; }
+  .progress-info { text-align: right; }
+  .progress-text { font-size: 13.5px; color: var(--muted); margin-bottom: 6px; white-space: nowrap; }
+  .progress-text strong { color: var(--ink); font-weight: 600; }
+  .progress-bar {
+    position: relative;
+    width: 220px;
+    height: 6px;
+    background: var(--line);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    position: absolute; inset: 0 auto 0 0;
+    width: 0%;
+    background: var(--accent);
+    border-radius: 3px;
+    transition: width .35s ease;
+  }
+
+  /* ---------- Layout ---------- */
+  .layout { display: flex; gap: 26px; align-items: flex-start; }
+  .layout.sidebar-hidden nav.steps { display: none; }
+
+  /* Sidebar (chapters + steps) */
+  nav.steps {
+    flex: 0 0 250px;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .chapter { margin-bottom: 2px; }
+
+  .chapter-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 8px 8px 4px;
+    border-radius: 6px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .chapter-header:hover { background: var(--accent-soft); }
+  .chapter-header.locked { cursor: default; opacity: .5; }
+  .chapter-header.locked:hover { background: none; }
+
+  .chapter-chevron {
+    flex: 0 0 14px;
+    font-size: 11px;
+    color: var(--muted);
+    transform: rotate(0deg);
+    transition: transform .15s ease;
+    display: inline-block;
+  }
+  .chapter.expanded > .chapter-header .chapter-chevron { transform: rotate(90deg); }
+
+  .chapter-lock {
+    flex: 0 0 auto;
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  .chapter-title {
+    flex: 1 1 auto;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink);
+    word-break: break-word;
+  }
+  .chapter-header.locked .chapter-title { color: var(--muted); }
+
+  .chapter-progress {
+    flex: 0 0 auto;
+    font-size: 11.5px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .chapter-header.viewing { background: var(--panel); border: 1px solid var(--line); }
+
+  .chapter-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-left: 18px;
+    margin-top: 2px;
+    margin-bottom: 6px;
+  }
+  .chapter:not(.expanded) .chapter-steps { display: none; }
+
+  /* Sub-chapters: a smaller header nested inside an expanded chapter */
+  .subchapter { margin: 2px 0 2px 10px; }
+  .sub-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px 6px 4px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .sub-header:hover { background: var(--accent-soft); }
+  .sub-header.viewing { background: var(--panel); border-color: var(--line); }
+  .sub-header .chapter-title { font-weight: 500; }
+  .sub-header.locked { cursor: default; opacity: .5; }
+  .sub-header.locked:hover { background: none; }
+  .subchapter.expanded > .sub-header .chapter-chevron { transform: rotate(90deg); }
+  .sub-steps { padding-left: 12px; }
+  .chapter:not(.expanded) .subchapter { display: none; }
+  .subchapter:not(.expanded) .chapter-steps { display: none; }
+
+  .step-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    background: transparent;
+  }
+  .step-row:hover { background: var(--accent-soft); }
+  .step-row.active { background: var(--panel); border-color: var(--line); }
+  .step-num {
+    flex: 0 0 22px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11.5px; font-weight: 600; color: var(--muted);
+    background: var(--panel);
+  }
+  .step-row.done .step-num { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .step-row.active .step-num { border-color: var(--accent); color: var(--accent); }
+  .step-row.active.done .step-num { color: var(--accent-ink); }
+  .step-label { font-size: 13.5px; line-height: 1.35; word-break: break-word; }
+  .step-row.done .step-label { color: var(--muted); }
+
+  /* Main step panel */
+  main.step-panel {
+    flex: 1 1 auto;
+    min-width: 0;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: clamp(20px, 3vw, 40px);
+  }
+  .step-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 6px;
+  }
+  .step-eyebrow { color: var(--accent); font-weight: 600; font-size: 13px; margin-bottom: 6px; }
+  .complete-toggle {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .complete-toggle.done { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .complete-toggle input { display: none; }
+
+  /* Description font/size come from DESCRIPTION_FONT / DESCRIPTION_FONT_SIZE
+     at the top of the script (these are just the fallbacks). */
+  :root { --desc-font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif; --desc-size: 16px; }
+  /* Title font comes from TITLE_FONT at the top of the script (these are fallbacks). */
+  :root { --title-font: "GT Eesti", "DM Sans", system-ui, -apple-system, "Segoe UI", Arial, sans-serif; --title-weight: 300; }
+  #stepDesc {
+    margin-top: 16px;
+    font-family: var(--desc-font);
+    font-size: var(--desc-size);
+    line-height: 1.6;
+    max-width: 66ch;
+  }
+  #stepDesc p { margin: 0 0 12px; }
+  #stepDesc p:last-child { margin-bottom: 0; }
+  #stepDesc ul, #stepDesc ol { margin: 0 0 12px; padding-left: 22px; }
+  #stepDesc li { margin-bottom: 4px; }
+  #stepDesc b, #stepDesc strong { font-weight: 700; }
+  #stepDesc i, #stepDesc em { font-style: italic; }
+  #stepDesc u { text-decoration: underline; }
+  #stepDesc a { color: var(--accent); text-decoration: underline; }
+  #stepDesc code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.9em; background: rgba(129, 139, 152, 0.16); padding: 0.15em 0.4em; border-radius: 5px; }
+
+  .more-info-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .more-info-btn {
+    padding: 7px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .more-info-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+
+  #infoBody { font-family: var(--desc-font); font-size: var(--desc-size); line-height: 1.6; }
+  #infoBody p { margin: 0 0 12px; }
+  #infoBody p:last-child { margin-bottom: 0; }
+  #infoBody ul, #infoBody ol { margin: 0 0 12px; padding-left: 22px; }
+  #infoBody li { margin-bottom: 4px; }
+  #infoBody b, #infoBody strong { font-weight: 700; }
+  #infoBody i, #infoBody em { font-style: italic; }
+  #infoBody u { text-decoration: underline; }
+  #infoBody a { color: var(--accent); text-decoration: underline; }
+  #infoBody code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.9em; background: rgba(129, 139, 152, 0.16); padding: 0.15em 0.4em; border-radius: 5px; }
+
+  /* Force one font/size across all description text, beating inline
+     styles pasted in from other editors. Inline code stays monospace. */
+  #stepDesc :is(span, font, div, p, ul, ol, li, a, b, strong, i, em, u, table, thead, tbody, tfoot, tr, caption, td, th),
+  #infoBody :is(span, font, div, p, ul, ol, li, a, b, strong, i, em, u, table, thead, tbody, tfoot, tr, caption, td, th) {
+    font-family: inherit !important;
+    font-size: inherit !important;
+  }
+  #stepDesc code, #stepDesc code *, #infoBody code, #infoBody code * {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace !important;
+  }
+  #stepDesc code, #infoBody code { font-size: 0.9em !important; }
+
+  /* Tables inside descriptions: visible cell borders (overriding any
+     "no border" settings pasted in from other editors), padding, and a
+     lightly shaded header row. The semi-transparent grey works in both
+     light and dark mode. */
+  #stepDesc table, #infoBody table {
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+    max-width: 100% !important;
+    margin: 4px 0 14px;
+  }
+  #stepDesc th, #stepDesc td, #infoBody th, #infoBody td {
+    border: 1px solid rgba(129, 139, 152, 0.55) !important;
+    padding: 8px 12px !important;
+    text-align: left;
+    vertical-align: top;
+    overflow-wrap: break-word;
+  }
+  #stepDesc th, #infoBody th {
+    background: rgba(129, 139, 152, 0.16);
+    font-weight: 600;
+  }
+
+  .block { margin-top: 24px; }
+  .block-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  /* Code block */
+  .code-block {
+    position: relative;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      .code-block { background: #5B6169; color: #F5F5F3; border: 1px solid var(--line); }
+    }
+  }
+  :root[data-theme="dark"] .code-block { background: #5B6169; color: #F5F5F3; border: 1px solid var(--line); }
+
+  /* Display-only code box (no Copy button): dark grey, tuned per theme so
+     it stays clearly different from the copyable box in both. */
+  .code-block.no-copy { background: #4A5057; color: #F5F5F3; }
+  .code-block.no-copy pre { padding-right: 18px; }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      .code-block.no-copy { background: #2B2F33; }
+    }
+  }
+  :root[data-theme="dark"] .code-block.no-copy { background: #2B2F33; }
+
+  .code-block pre {
+    margin: 0;
+    padding: 16px 44px 16px 18px;
+    overflow-x: auto;
+    font-size: 13.5px;
+    line-height: 1.55;
+    white-space: pre;
+  }
+  .copy-btn {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: rgba(255,255,255,0.12);
+    color: inherit;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: "Inter", system-ui, sans-serif;
+  }
+  .copy-btn:hover { background: rgba(255,255,255,0.22); }
+  .copy-btn.copied { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+
+  /* Image block */
+  .image-block img {
+    max-width: 100%;
+    display: block;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+  }
+  .image-caption {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* Footer nav */
+  .step-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .nav-btn {
+    padding: 10px 18px;
+    border-radius: 7px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .nav-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+  .nav-btn:disabled { opacity: .35; cursor: default; }
+  .nav-btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .nav-btn.primary:hover:not(:disabled) { color: var(--accent-ink); opacity: .9; }
+
+  /* Mobile */
+  @media (max-width: 760px) {
+    .layout { flex-direction: column; }
+    nav.steps {
+      position: static;
+      max-height: none;
+      width: 100%;
+    }
+    .progress-info { text-align: left; }
+    .progress-bar { width: 160px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="title-block">
+      <div id="workshopTitle"></div>
+    </div>
+    <div class="progress-block">
+      <button id="sidebarToggle" class="sidebar-toggle" type="button" aria-pressed="false">
+        <span class="sidebar-toggle-track"><span class="sidebar-toggle-thumb"></span></span>
+        <span class="sidebar-toggle-label">Sidebar</span>
+      </button>
+      <button id="imagesToggle" class="sidebar-toggle" type="button" aria-pressed="false">
+        <span class="sidebar-toggle-track"><span class="sidebar-toggle-thumb"></span></span>
+        <span class="sidebar-toggle-label">Hide images</span>
+      </button>
+      <div class="progress-info">
+        <div class="progress-text" id="progressText"></div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+    </div>
+    <button id="settingsBtn" class="icon-btn" type="button" aria-label="Settings" title="Settings">⚙</button>
+  </header>
+
+  <div class="layout">
+    <nav class="steps" id="stepsNav"></nav>
+    <main class="step-panel" id="stepPanel"></main>
+  </div>
+</div>
+
+<div id="settingsOverlay" class="settings-overlay" hidden>
+  <div class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="settings-panel-head">
+      <h2 id="settingsTitle">Settings</h2>
+      <button id="settingsClose" class="icon-btn" type="button" aria-label="Close settings">✕</button>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-row">
+        <div>
+          <div class="settings-row-label">Dark/White mode</div>
+          <div class="settings-row-hint">Overrides your system setting for this app.</div>
+        </div>
+        <button id="themeToggle" class="theme-toggle" type="button" aria-pressed="false">
+          <span class="theme-toggle-track"><span class="theme-toggle-thumb"></span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-row-label">Workshop database</div>
+      <div class="settings-row-hint">Choose which database file to load.</div>
+      <select id="dbSelect" class="settings-select"></select>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-row-label">Clear saved data</div>
+      <div class="settings-row-hint">Removes completed steps, theme, and sidebar preference stored on this device for every database. This can't be undone.</div>
+      <button id="clearStorageBtn" class="settings-danger-btn" type="button">Clear saved progress</button>
+    </div>
+  </div>
+</div>
+
+<div id="infoOverlay" class="settings-overlay" hidden>
+  <div class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+    <div class="settings-panel-head">
+      <h2 id="infoTitle"></h2>
+      <button id="infoClose" class="icon-btn" type="button" aria-label="Close">✕</button>
+    </div>
+    <div id="infoBody"></div>
+  </div>
+</div>
+
+<script>
+
+  /* ====================================================================
+     DISPLAY SETTINGS for all description text (step descriptions, chapter
+     overviews and "More info" popups). Edit these two lines:
+
+       DESCRIPTION_FONT       "Segoe UI", "Arial", or any other font that is
+                              installed on the viewer's computer.
+                              "" = keep the app's default font.
+       DESCRIPTION_FONT_SIZE  any CSS size, e.g. "14px", "16px", "1.1rem"
+
+     These override formatting pasted into descriptions (e.g. inline
+     font-family / font-size), so every description looks the same.
+     ==================================================================== */
+  var DESCRIPTION_FONT = "Segoe UI";
+  var DESCRIPTION_FONT_SIZE = "16px";
+
+  (function applyDescriptionSettings() {
+    var stacks = {
+      "arial": 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+      "segoe ui": '"Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif',
+      "segoe": '"Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif'
+    };
+    var root = document.documentElement;
+    var name = String(DESCRIPTION_FONT || "").trim();
+    if (name) {
+      var stack = stacks[name.toLowerCase()] || ('"' + name.replace(/"/g, "") + '", sans-serif');
+      root.style.setProperty("--desc-font", stack);
+    }
+    if (DESCRIPTION_FONT_SIZE) root.style.setProperty("--desc-size", DESCRIPTION_FONT_SIZE);
+  })();
+
+  /* ====================================================================
+     TITLE FONT (the workshop title and the Settings heading), Nordic style.
+     Only the title: description text is controlled by DESCRIPTION_FONT above.
+
+       TITLE_FONT              font to use first. Nordic's brand typeface is
+                               "GT Eesti" (commercial, from Grilli Type); it is
+                               used wherever it is installed. Other choices:
+                               "Segoe UI", "Arial", or any installed font.
+       TITLE_FONT_WEB_FALLBACK a free Google font loaded as the stand-in on
+                               computers without TITLE_FONT. "" = none.
+                               Suggestions: "DM Sans", "Figtree", "Outfit".
+       TITLE_FONT_WEIGHT       300 = light (the Nordic headline look), 400, 600...
+                               The stand-in font must offer this weight.
+     ==================================================================== */
+  var TITLE_FONT = "GT Eesti";
+  var TITLE_FONT_WEB_FALLBACK = "DM Sans";
+  var TITLE_FONT_WEIGHT = "300";
+
+  (function applyTitleSettings() {
+    var quote = function (name) { return '"' + String(name).replace(/"/g, "") + '"'; };
+    var stack = [];
+    var first = String(TITLE_FONT || "").trim();
+    var web = String(TITLE_FONT_WEB_FALLBACK || "").trim();
+    var weight = String(TITLE_FONT_WEIGHT || "").trim();
+    if (first) stack.push(quote(first));
+    if (web) {
+      stack.push(quote(web));
+      var link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "https://fonts.googleapis.com/css2?family=" + encodeURIComponent(web).replace(/%20/g, "+") +
+        (weight ? ":wght@" + encodeURIComponent(weight) : "") + "&display=swap";
+      document.head.appendChild(link);
+    }
+    stack.push("system-ui", "-apple-system", '"Segoe UI"', "Arial", "sans-serif");
+    var root = document.documentElement;
+    root.style.setProperty("--title-font", stack.join(", "));
+    if (weight) root.style.setProperty("--title-weight", weight);
+  })();
+
+  /* ====================================================================
+     Available workshop databases.
+     Browsers can't scan a folder's contents for security reasons, so
+     this list has to be kept up to date by hand: add one line per
+     db_*.txt file you place in this folder, and it will show up in
+     Settings → Workshop database.
+     ==================================================================== */
+  var DB_FILES = [
+    { file: "ntt2026_workshop_dach.dat", label: "NTT2026 EMEA Workshop" },
+  ];
+
+  var SELECTED_DB_KEY = "workshop-guide:selected-db";
+  var WORKSHOP = null;   // set by whichever db_*.txt file is currently loaded
+  var FLAT = [];
+  var progress = {};
+  var currentDbFile = null;
+
+  function loadSelectedDbFile() {
+    try {
+      var stored = localStorage.getItem(SELECTED_DB_KEY);
+      if (stored && DB_FILES.some(function (d) { return d.file === stored; })) return stored;
+    } catch (e) { /* ignore */ }
+    return DB_FILES[0].file;
+  }
+  function saveSelectedDbFile(file) {
+    try { localStorage.setItem(SELECTED_DB_KEY, file); } catch (e) { /* ignore */ }
+  }
+
+  // Normalize the chapters, then flatten every step into one ordered list.
+  //
+  // A chapter either holds "steps" directly (all older data files) or a list
+  // of "subChapters", each with its own title, description and steps. Steps
+  // placed directly in a chapter are kept in an "implicit" sub-chapter that has
+  // no header of its own, so the rest of the app only has to deal with one shape.
+  var CH = [];      // normalized chapters: { title, description, subs: [...] }
+  var PAGES = [];   // linear reading order: overviews + steps (drives Previous/Next)
+
+  function normalizeChapters() {
+    return WORKSHOP.chapters.map(function (chapter) {
+      var direct = chapter.steps || [];
+      var explicit = chapter.subChapters || chapter.subchapters || [];
+      var subs = [];
+      if (direct.length || !explicit.length) {
+        subs.push({ title: "", description: "", implicit: true, steps: direct, indices: [] });
+      }
+      explicit.forEach(function (sub) {
+        subs.push({ title: sub.title || "", description: sub.description || "", implicit: false, steps: sub.steps || [], indices: [] });
+      });
+      return { title: chapter.title, description: chapter.description || "", subs: subs };
+    });
+  }
+
+  function buildFlatFromWorkshop() {
+    FLAT = [];
+    PAGES = [];
+    CH = normalizeChapters();
+    CH.forEach(function (chapter, ci) {
+      if (chapter.description) PAGES.push({ type: "chapter", ci: ci });
+      chapter.subs.forEach(function (sub, subi) {
+        if (!sub.implicit && sub.description) PAGES.push({ type: "sub", ci: ci, subi: subi });
+        sub.steps.forEach(function (step, si) {
+          var gi = FLAT.length;
+          FLAT.push({
+            chapterIndex: ci,
+            subIndex: subi,
+            stepInSub: si,
+            globalIndex: gi,
+            title: step.title,
+            description: step.description,
+            codeBlocks: step.codeBlocks || [],
+            images: step.images || [],
+            moreInfo: step.moreInfo || [],
+            codeBlocksNoCopy: step.codeBlocksNoCopy || []
+          });
+          sub.indices.push(gi);
+          PAGES.push({ type: "step", ci: ci, subi: subi, gi: gi });
+        });
+      });
+    });
+  }
+
+  function chapterIndicesFor(ci) {
+    var out = [];
+    FLAT.forEach(function (s) { if (s.chapterIndex === ci) out.push(s.globalIndex); });
+    return out;
+  }
+
+  function isChapterUnlocked(ci) {
+    if (ci === 0) return true;
+    for (var c = 0; c < ci; c++) {
+      var indices = chapterIndicesFor(c);
+      for (var k = 0; k < indices.length; k++) {
+        if (!progressDone(indices[k])) return false;
+      }
+    }
+    return true;
+  }
+
+  // A sub-chapter opens once every step in the sub-chapters before it (in the
+  // same chapter) is done, on top of its chapter being unlocked. The first
+  // sub-chapter is open as soon as its chapter is.
+  function isSubUnlocked(ci, subi) {
+    if (!isChapterUnlocked(ci)) return false;
+    var subs = CH[ci].subs;
+    for (var j = 0; j < subi; j++) {
+      for (var k = 0; k < subs[j].indices.length; k++) {
+        if (!progressDone(subs[j].indices[k])) return false;
+      }
+    }
+    return true;
+  }
+
+  // Can this entry of PAGES be shown? Chapter overviews only need the chapter
+  // unlocked; sub-chapter overviews and steps also need their sub-chapter.
+  function isPageUnlocked(pg) {
+    if (!isChapterUnlocked(pg.ci)) return false;
+    return pg.type === "chapter" ? true : isSubUnlocked(pg.ci, pg.subi);
+  }
+
+  // ---------- Per-database progress (each db_*.txt keeps its own) ----------
+  function progressStorageKey(file) { return "workshop-guide:progress:v3::" + file; }
+
+  function loadProgressForDb(file) {
+    try {
+      var raw = localStorage.getItem(progressStorageKey(file));
+      if (raw) return JSON.parse(raw);
+    } catch (e) { /* ignore */ }
+    return {};
+  }
+
+  function initProgressForCurrentDb() {
+    progress = loadProgressForDb(currentDbFile);
+    if (typeof progress.currentIndex !== "number") progress.currentIndex = 0;
+    if (!progress.done) progress.done = {};
+    if (typeof progress.expandedChapter !== "number") delete progress.expandedChapter;
+    if (!progress.expandedSubs) progress.expandedSubs = {};
+  }
+
+  function progressDone(globalIndex) { return !!progress.done[globalIndex]; }
+
+  function saveProgress() {
+    try { localStorage.setItem(progressStorageKey(currentDbFile), JSON.stringify(progress)); }
+    catch (e) { /* storage unavailable — progress just won't persist */ }
+  }
+
+  function clampIndex() {
+    var max = FLAT.length - 1;
+    if (progress.currentIndex > max) progress.currentIndex = max;
+    if (progress.currentIndex < 0) progress.currentIndex = 0;
+    // If the current step's chapter or sub-chapter isn't unlocked (e.g. an earlier step
+    // was unmarked after already moving past it), fall back to the last
+    // step that's actually reachable.
+    while (progress.currentIndex > 0 && !isSubUnlocked(FLAT[progress.currentIndex].chapterIndex, FLAT[progress.currentIndex].subIndex)) {
+      progress.currentIndex--;
+    }
+  }
+
+  function escapeHtml(str) {
+    var d = document.createElement("div");
+    d.textContent = str || "";
+    return d.innerHTML;
+  }
+
+  // ---------- Header ----------
+  function renderHeader() {
+    document.getElementById("workshopTitle").textContent = (WORKSHOP && WORKSHOP.title) || "";
+    var total = FLAT.length;
+    var doneCount = FLAT.filter(function (s) { return progressDone(s.globalIndex); }).length;
+    var pct = total ? Math.round((doneCount / total) * 100) : 0;
+    document.getElementById("progressText").innerHTML =
+      "<strong>" + doneCount + " of " + total + "</strong> steps complete &middot; " +
+      (total - doneCount) + " remaining";
+    document.getElementById("progressFill").style.width = pct + "%";
+  }
+
+  // ---------- Sidebar: chapters + steps ----------
+  var navEl = document.getElementById("stepsNav");
+
+  function effectiveExpandedChapter() {
+    // Accordion: exactly one chapter open at a time. Default to the
+    // chapter containing the current step until the user picks another.
+    // Three states: a number = that chapter is open, null = the user collapsed
+    // it so none is open, undefined = nothing chosen yet (open the current one).
+    if (typeof progress.expandedChapter === "number") return progress.expandedChapter;
+    if (progress.expandedChapter === null) return null;
+    return FLAT[progress.currentIndex] ? FLAT[progress.currentIndex].chapterIndex : 0;
+  }
+
+  function isExpanded(ci, unlocked) {
+    if (!unlocked) return false;
+    return effectiveExpandedChapter() === ci;
+  }
+
+  // null = a step is showing. Otherwise { ci, subi }: the overview of chapter ci
+  // (subi === null) or of its sub-chapter subi is showing in place of a step.
+  var viewing = null;
+
+  function firstStepOfChapter(ci) {
+    var subs = CH[ci].subs;
+    for (var k = 0; k < subs.length; k++) {
+      if (subs[k].indices.length) return subs[k].indices[0];
+    }
+    return null;
+  }
+
+  // Position of whatever is currently on screen within PAGES.
+  function currentPageIndex() {
+    for (var p = 0; p < PAGES.length; p++) {
+      var pg = PAGES[p];
+      if (viewing) {
+        if (viewing.subi === null && pg.type === "chapter" && pg.ci === viewing.ci) return p;
+        if (viewing.subi !== null && pg.type === "sub" && pg.ci === viewing.ci && pg.subi === viewing.subi) return p;
+      } else if (pg.type === "step" && pg.gi === progress.currentIndex) {
+        return p;
+      }
+    }
+    return -1;
+  }
+
+  function goToPage(p) {
+    var pg = PAGES[p];
+    if (!pg) return;
+    var first;
+    progress.expandedChapter = pg.ci;
+    if (pg.type === "step") {
+      viewing = null;
+      progress.currentIndex = pg.gi;
+      progress.expandedSubs[pg.ci] = pg.subi;
+    } else if (pg.type === "sub") {
+      viewing = { ci: pg.ci, subi: pg.subi };
+      first = CH[pg.ci].subs[pg.subi].indices[0];
+      if (first !== undefined) progress.currentIndex = first;
+      progress.expandedSubs[pg.ci] = pg.subi;
+    } else {
+      viewing = { ci: pg.ci, subi: null };
+      first = firstStepOfChapter(pg.ci);
+      if (first !== null) progress.currentIndex = first;
+    }
+    saveProgress();
+    renderAll();
+  }
+
+  function makePrevButton(cur) {
+    var btn = document.createElement("button");
+    btn.className = "nav-btn";
+    btn.textContent = "\u2190 Previous";
+    btn.disabled = cur <= 0;
+    btn.addEventListener("click", function () { if (cur > 0) goToPage(cur - 1); });
+    return btn;
+  }
+
+  // Which sub-chapter is open inside chapter ci. Accordion again: one at a time,
+  // defaulting to the one that holds the current step.
+  function effectiveExpandedSub(ci) {
+    var v = progress.expandedSubs[ci];
+    if (v === null) return null;
+    if (typeof v === "number") return v;
+    var cur = FLAT[progress.currentIndex];
+    if (cur && cur.chapterIndex === ci) return cur.subIndex;
+    for (var k = 0; k < CH[ci].subs.length; k++) {
+      if (!CH[ci].subs[k].implicit) return k;
+    }
+    return null;
+  }
+
+  function renderNav() {
+    navEl.innerHTML = "";
+    CH.forEach(function (chapter, ci) {
+      var unlocked = isChapterUnlocked(ci);
+      var expanded = isExpanded(ci, unlocked);
+      var indices = chapterIndicesFor(ci);
+      var doneInChapter = indices.filter(function (gi) { return progressDone(gi); }).length;
+      var openSub = effectiveExpandedSub(ci);
+
+      var chapterEl = document.createElement("div");
+      chapterEl.className = "chapter" + (expanded ? " expanded" : "");
+
+      var headerEl = document.createElement("div");
+      headerEl.className = "chapter-header" + (unlocked ? "" : " locked") +
+        (viewing && viewing.ci === ci && viewing.subi === null ? " viewing" : "");
+      headerEl.innerHTML =
+        '<span class="chapter-chevron">' + (unlocked ? "\u25B8" : "") + '</span>' +
+        (unlocked ? "" : '<span class="chapter-lock">\uD83D\uDD12</span>') +
+        '<span class="chapter-title">' + escapeHtml(chapter.title) + '</span>' +
+        '<span class="chapter-progress">' + doneInChapter + '/' + indices.length + '</span>';
+
+      if (unlocked) {
+        headerEl.addEventListener("click", function () {
+          progress.expandedChapter = expanded ? null : ci;
+          if (chapter.description) {
+            viewing = { ci: ci, subi: null };
+          }
+          saveProgress();
+          renderAll();
+        });
+      } else {
+        headerEl.title = "Complete the previous chapter to unlock this one.";
+      }
+      chapterEl.appendChild(headerEl);
+
+      chapter.subs.forEach(function (sub, subi) {
+        var stepsWrap = document.createElement("div");
+        stepsWrap.className = "chapter-steps" + (sub.implicit ? "" : " sub-steps");
+        sub.indices.forEach(function (gi, si) {
+          var step = FLAT[gi];
+          var isDone = progressDone(gi);
+          var row = document.createElement("div");
+          row.className = "step-row" + (viewing === null && gi === progress.currentIndex ? " active" : "") + (isDone ? " done" : "");
+          row.innerHTML =
+            '<div class="step-num">' + (isDone ? "✓" : (si + 1)) + '</div>' +
+            '<div class="step-label">' + (escapeHtml(step.title) || "Step " + (si + 1)) + '</div>';
+          row.addEventListener("click", function () {
+            viewing = null;
+            progress.currentIndex = gi;
+            progress.expandedChapter = ci;
+            progress.expandedSubs[ci] = subi;
+            saveProgress();
+            renderAll();
+          });
+          stepsWrap.appendChild(row);
+        });
+
+        // Steps placed directly in the chapter have no sub-chapter header.
+        if (sub.implicit) {
+          chapterEl.appendChild(stepsWrap);
+          return;
+        }
+
+        var subUnlocked = isSubUnlocked(ci, subi);
+        var subOpen = subUnlocked && openSub === subi;
+        var doneInSub = sub.indices.filter(function (gi) { return progressDone(gi); }).length;
+        var subEl = document.createElement("div");
+        subEl.className = "subchapter" + (subOpen ? " expanded" : "");
+
+        var subHeader = document.createElement("div");
+        subHeader.className = "sub-header" + (subUnlocked ? "" : " locked") +
+          (viewing && viewing.ci === ci && viewing.subi === subi ? " viewing" : "");
+        subHeader.innerHTML =
+          '<span class="chapter-chevron">' + (subUnlocked ? "\u25B8" : "") + '</span>' +
+          (subUnlocked ? "" : '<span class="chapter-lock">\uD83D\uDD12</span>') +
+          '<span class="chapter-title">' + (escapeHtml(sub.title) || "Sub-chapter " + (subi + 1)) + '</span>' +
+          '<span class="chapter-progress">' + doneInSub + '/' + sub.indices.length + '</span>';
+        if (subUnlocked) {
+          subHeader.addEventListener("click", function () {
+            progress.expandedChapter = ci;
+            progress.expandedSubs[ci] = subOpen ? null : subi;
+            if (sub.description) {
+              viewing = { ci: ci, subi: subi };
+            }
+            saveProgress();
+            renderAll();
+          });
+        } else {
+          subHeader.title = "Complete the previous sub-chapter to unlock this one.";
+        }
+        subEl.appendChild(subHeader);
+        subEl.appendChild(stepsWrap);
+        chapterEl.appendChild(subEl);
+      });
+
+      navEl.appendChild(chapterEl);
+    });
+  }
+
+  // ---------- Main panel ----------
+  var panelEl = document.getElementById("stepPanel");
+
+  // Overview page of a chapter (v.subi === null) or of one of its sub-chapters.
+  function renderOverview(v) {
+    var chapter = CH[v.ci];
+    var sub = v.subi === null ? null : chapter.subs[v.subi];
+    var text = sub ? sub.description : chapter.description;
+    panelEl.innerHTML = "";
+
+    var eyebrow = document.createElement("div");
+    eyebrow.className = "step-eyebrow";
+    eyebrow.textContent = chapter.title + (sub ? " \u00B7 " + (sub.title || "Sub-chapter " + (v.subi + 1)) : "");
+    panelEl.appendChild(eyebrow);
+
+    if (text) {
+      var desc = document.createElement("div");
+      desc.id = "stepDesc";
+      // Authored HTML, same as step descriptions — trusted content from your
+      // own db_*.txt file, not user input.
+      desc.innerHTML = text;
+      panelEl.appendChild(desc);
+    }
+
+    var cur = currentPageIndex();
+    var nextPage = PAGES[cur + 1];
+    var stepNav = document.createElement("div");
+    stepNav.className = "step-nav";
+    var nextBtn = document.createElement("button");
+    nextBtn.className = "nav-btn primary";
+    nextBtn.textContent = (nextPage && nextPage.type !== "step") ? "Continue \u2192" : "Go to first step \u2192";
+    nextBtn.disabled = !nextPage || !isPageUnlocked(nextPage);
+    nextBtn.addEventListener("click", function () { goToPage(cur + 1); });
+    stepNav.appendChild(makePrevButton(cur));
+    stepNav.appendChild(nextBtn);
+    panelEl.appendChild(stepNav);
+  }
+
+  function renderPanel() {
+    // An overview that has become locked (e.g. an earlier step was unticked)
+    // can't stay on screen.
+    if (viewing && !isPageUnlocked(viewing.subi === null ? { type: "chapter", ci: viewing.ci } : { type: "sub", ci: viewing.ci, subi: viewing.subi })) {
+      viewing = null;
+    }
+    if (viewing) {
+      renderOverview(viewing);
+      return;
+    }
+    clampIndex();
+    var i = progress.currentIndex;
+    var step = FLAT[i];
+    if (!step) { panelEl.innerHTML = ""; return; }
+
+    panelEl.innerHTML = "";
+    var isDone = progressDone(i);
+    var chapter = CH[step.chapterIndex];
+    var sub = chapter.subs[step.subIndex];
+
+    var head = document.createElement("div");
+    head.className = "step-head";
+
+    var titleWrap = document.createElement("div");
+    titleWrap.style.flex = "1 1 auto";
+    titleWrap.style.minWidth = "0";
+    var eyebrow = document.createElement("div");
+    eyebrow.className = "step-eyebrow";
+    eyebrow.textContent = chapter.title + (sub.implicit ? "" : " \u00B7 " + (sub.title || "Sub-chapter " + (step.subIndex + 1))) +
+      " \u00B7 Step " + (step.stepInSub + 1) + " of " + sub.steps.length + (step.title ? " \u00B7 " + step.title : "");
+    titleWrap.appendChild(eyebrow);
+
+    var toggle = document.createElement("label");
+    toggle.className = "complete-toggle" + (isDone ? " done" : "");
+    toggle.innerHTML = '<input type="checkbox"' + (isDone ? " checked" : "") + '> <span>' + (isDone ? "Completed" : "Mark complete") + '</span>';
+    toggle.querySelector("input").addEventListener("change", function (e) {
+      progress.done[i] = e.target.checked;
+      saveProgress();
+      renderAll();
+    });
+
+    head.appendChild(titleWrap);
+    head.appendChild(toggle);
+    panelEl.appendChild(head);
+
+    if (step.description) {
+      var desc = document.createElement("div");
+      desc.id = "stepDesc";
+      // description is authored HTML (bold/italic/underline/lists etc.),
+      // trusted content from your own db_*.txt file — not user input.
+      desc.innerHTML = step.description;
+      panelEl.appendChild(desc);
+    }
+
+    if (step.moreInfo && step.moreInfo.length) {
+      var moreWrap = document.createElement("div");
+      moreWrap.className = "more-info-row";
+      step.moreInfo.forEach(function (item) {
+        var moreBtn = document.createElement("button");
+        moreBtn.type = "button";
+        moreBtn.className = "more-info-btn";
+        moreBtn.textContent = "\u24D8 " + (item.label || "More info");
+        moreBtn.addEventListener("click", function () {
+          openInfoModal(item.label || "More info", item.content || "");
+        });
+        moreWrap.appendChild(moreBtn);
+      });
+      panelEl.appendChild(moreWrap);
+    }
+
+    if (!hideImages) {
+      (step.images || []).forEach(function (img) {
+        var block = document.createElement("div");
+        block.className = "block image-block";
+        var imEl = document.createElement("img");
+        imEl.src = img.src;
+        imEl.alt = img.caption || step.title || "Workshop step image";
+        block.appendChild(imEl);
+        if (img.caption) {
+          var cap = document.createElement("div");
+          cap.className = "image-caption";
+          cap.textContent = img.caption;
+          block.appendChild(cap);
+        }
+        panelEl.appendChild(block);
+      });
+    }
+
+    // Copyable boxes first, then the display-only ones (codeBlocksNoCopy).
+    var allCodeBlocks = (step.codeBlocks || []).concat(
+      (step.codeBlocksNoCopy || []).map(function (cb) {
+        return { label: cb.label, code: cb.code, copy: false };
+      })
+    );
+    allCodeBlocks.forEach(function (cb) {
+      var block = document.createElement("div");
+      block.className = "block";
+      if (cb.label) {
+        var label = document.createElement("div");
+        label.className = "block-label";
+        label.textContent = cb.label;
+        block.appendChild(label);
+      }
+      // A block is display-only (no Copy button) when the data file sets
+      // copy: false on it.
+      var noCopy = cb.copy === false || cb.noCopy === true || cb.copyable === false;
+      var codeWrap = document.createElement("div");
+      codeWrap.className = "code-block" + (noCopy ? " no-copy" : "");
+      var pre = document.createElement("pre");
+      pre.textContent = cb.code || "";
+      codeWrap.appendChild(pre);
+
+      if (!noCopy) {
+      var copyBtn = document.createElement("button");
+      copyBtn.className = "copy-btn";
+      copyBtn.textContent = "Copy";
+      copyBtn.addEventListener("click", function () {
+        var text = cb.code || "";
+        var done = function () {
+          copyBtn.textContent = "Copied!";
+          copyBtn.classList.add("copied");
+          setTimeout(function () { copyBtn.textContent = "Copy"; copyBtn.classList.remove("copied"); }, 1400);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done).catch(function () { fallbackCopy(text, done); });
+        } else {
+          fallbackCopy(text, done);
+        }
+      });
+      codeWrap.appendChild(copyBtn);
+      }
+
+      block.appendChild(codeWrap);
+      panelEl.appendChild(block);
+    });
+
+    var stepNav = document.createElement("div");
+    stepNav.className = "step-nav";
+
+    // Previous/Next walk the linear page list, so they behave the same at every
+    // level: Next from a chapter's last step lands on the next chapter's (or
+    // sub-chapter's) overview if it has one, and Previous from a first step
+    // lands on that overview rather than skipping past it.
+    var cur = currentPageIndex();
+    var isLast = cur === PAGES.length - 1;
+    var prevBtn = makePrevButton(cur);
+
+    var nextBtn = document.createElement("button");
+    nextBtn.className = "nav-btn primary";
+    nextBtn.textContent = isLast ? "Finish" : "Next step \u2192";
+    nextBtn.disabled = isLast && isDone;
+    nextBtn.addEventListener("click", function () {
+      progress.done[i] = true;
+      var nextPage = PAGES[cur + 1];
+      // Only advance if completing this step actually unlocked the next
+      // chapter — guards against ever landing on a locked one.
+      if (nextPage && isPageUnlocked(nextPage)) {
+        goToPage(cur + 1);
+      } else {
+        saveProgress();
+        renderAll();
+      }
+    });
+
+    stepNav.appendChild(prevBtn);
+    stepNav.appendChild(nextBtn);
+    panelEl.appendChild(stepNav);
+  }
+
+  function fallbackCopy(text, done) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); done(); } catch (e) { /* ignore */ }
+    document.body.removeChild(ta);
+  }
+
+  // ---------- Sidebar show/hide switch (a device-wide preference,
+  // independent of which database is currently loaded) ----------
+  var SIDEBAR_HIDDEN_KEY = "workshop-guide:sidebar-hidden";
+  var layoutEl = document.querySelector(".layout");
+  var sidebarToggleEl = document.getElementById("sidebarToggle");
+  var sidebarHidden = false;
+  try { sidebarHidden = localStorage.getItem(SIDEBAR_HIDDEN_KEY) === "1"; } catch (e) { /* ignore */ }
+
+  function applySidebarState() {
+    layoutEl.classList.toggle("sidebar-hidden", sidebarHidden);
+    sidebarToggleEl.setAttribute("aria-pressed", sidebarHidden ? "false" : "true");
+  }
+  sidebarToggleEl.addEventListener("click", function () {
+    sidebarHidden = !sidebarHidden;
+    try { localStorage.setItem(SIDEBAR_HIDDEN_KEY, sidebarHidden ? "1" : "0"); } catch (e) { /* ignore */ }
+    applySidebarState();
+  });
+  applySidebarState();
+
+  // ---------- Images show/hide switch (device-wide; default: shown) ----------
+  var HIDE_IMAGES_KEY = "workshop-guide:hide-images";
+  var imagesToggleEl = document.getElementById("imagesToggle");
+  var hideImages = false;
+  try { hideImages = localStorage.getItem(HIDE_IMAGES_KEY) === "1"; } catch (e) { /* ignore */ }
+  function applyImagesToggleState() {
+    imagesToggleEl.setAttribute("aria-pressed", hideImages ? "true" : "false");
+  }
+  imagesToggleEl.addEventListener("click", function () {
+    hideImages = !hideImages;
+    try { localStorage.setItem(HIDE_IMAGES_KEY, hideImages ? "1" : "0"); } catch (e) { /* ignore */ }
+    applyImagesToggleState();
+    renderPanel();
+  });
+  applyImagesToggleState();
+
+  // ---------- Theme (dark / light) — also device-wide, not per-database ----------
+  var THEME_KEY = "workshop-guide:theme";
+  var themeToggleEl = document.getElementById("themeToggle");
+
+  function loadStoredTheme() {
+    try { return localStorage.getItem(THEME_KEY); } catch (e) { return null; }
+  }
+  function saveStoredTheme(theme) {
+    try {
+      if (theme) localStorage.setItem(THEME_KEY, theme);
+      else localStorage.removeItem(THEME_KEY);
+    } catch (e) { /* storage unavailable */ }
+  }
+  function isCurrentlyDark() {
+    var stored = loadStoredTheme();
+    if (stored === "dark") return true;
+    if (stored === "light") return false;
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  function applyStoredTheme() {
+    var stored = loadStoredTheme();
+    if (stored === "dark" || stored === "light") {
+      document.documentElement.setAttribute("data-theme", stored);
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+    }
+    themeToggleEl.setAttribute("aria-pressed", isCurrentlyDark() ? "true" : "false");
+  }
+  themeToggleEl.addEventListener("click", function () {
+    var nextTheme = isCurrentlyDark() ? "light" : "dark";
+    saveStoredTheme(nextTheme);
+    applyStoredTheme();
+  });
+  applyStoredTheme();
+
+  // ---------- Settings modal ----------
+  var settingsOverlayEl = document.getElementById("settingsOverlay");
+  var settingsBtnEl = document.getElementById("settingsBtn");
+  var settingsCloseEl = document.getElementById("settingsClose");
+
+  function openSettings() { settingsOverlayEl.hidden = false; }
+  function closeSettings() { settingsOverlayEl.hidden = true; }
+
+  settingsBtnEl.addEventListener("click", openSettings);
+  settingsCloseEl.addEventListener("click", closeSettings);
+  settingsOverlayEl.addEventListener("click", function (e) {
+    if (e.target === settingsOverlayEl) closeSettings();
+  });
+
+  // ---------- "More info" popup ----------
+  var infoOverlayEl = document.getElementById("infoOverlay");
+  var infoTitleEl = document.getElementById("infoTitle");
+  var infoBodyEl = document.getElementById("infoBody");
+  var infoCloseEl = document.getElementById("infoClose");
+
+  function openInfoModal(title, contentHtml) {
+    infoTitleEl.textContent = title;
+    // contentHtml is authored HTML from your own db_*.txt file — same
+    // trust level as step descriptions, not user input.
+    infoBodyEl.innerHTML = contentHtml;
+    infoOverlayEl.hidden = false;
+  }
+  function closeInfoModal() { infoOverlayEl.hidden = true; }
+
+  infoCloseEl.addEventListener("click", closeInfoModal);
+  infoOverlayEl.addEventListener("click", function (e) {
+    if (e.target === infoOverlayEl) closeInfoModal();
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    if (!infoOverlayEl.hidden) closeInfoModal();
+    else if (!settingsOverlayEl.hidden) closeSettings();
+  });
+
+  // ---------- Workshop database picker ----------
+  var dbSelectEl = document.getElementById("dbSelect");
+
+  function populateDbSelect() {
+    dbSelectEl.innerHTML = "";
+    DB_FILES.forEach(function (entry) {
+      var opt = document.createElement("option");
+      opt.value = entry.file;
+      opt.textContent = entry.label + " (" + entry.file + ")";
+      if (entry.file === currentDbFile) opt.selected = true;
+      dbSelectEl.appendChild(opt);
+    });
+  }
+  dbSelectEl.addEventListener("change", function () {
+    switchDatabase(dbSelectEl.value);
+  });
+
+  function loadDbScript(file, onload, onerror) {
+    var existing = document.getElementById("dbScript");
+    if (existing) existing.parentNode.removeChild(existing);
+    var s = document.createElement("script");
+    s.id = "dbScript";
+    s.src = file;
+    s.onload = onload;
+    s.onerror = onerror;
+    document.body.appendChild(s);
+  }
+
+  function switchDatabase(file) {
+    loadDbScript(file, function () {
+      currentDbFile = file;
+      saveSelectedDbFile(file);
+      buildFlatFromWorkshop();
+      initProgressForCurrentDb();
+      populateDbSelect();
+      // On load, show the overview of whichever chapter you're currently
+      // in (based on saved progress, or chapter 1 if there is none yet),
+      // instead of dropping straight onto the step itself — as long as
+      // that chapter has a description.
+      clampIndex();
+      viewing = null;
+      var landingStep = FLAT[progress.currentIndex] || FLAT[0];
+      if (landingStep) {
+        var lch = CH[landingStep.chapterIndex];
+        var lsub = lch.subs[landingStep.subIndex];
+        if (lch.description) {
+          viewing = { ci: landingStep.chapterIndex, subi: null };
+        } else if (!lsub.implicit && lsub.description) {
+          viewing = { ci: landingStep.chapterIndex, subi: landingStep.subIndex };
+        }
+      }
+      renderAll();
+    }, function () {
+      alert("Could not load \"" + file + "\". Make sure it's in the same folder as workshop-guide.html.");
+    });
+  }
+
+  // ---------- Clear saved data (all databases) ----------
+  document.getElementById("clearStorageBtn").addEventListener("click", function () {
+    var ok = confirm("Clear all saved progress and preferences on this device, for every workshop database? This can't be undone.");
+    if (!ok) return;
+    try {
+      var toRemove = [];
+      for (var k = 0; k < localStorage.length; k++) {
+        var key = localStorage.key(k);
+        if (key && key.indexOf("workshop-guide:") === 0) toRemove.push(key);
+      }
+      toRemove.forEach(function (key) { localStorage.removeItem(key); });
+    } catch (e) { /* storage unavailable */ }
+    location.reload();
+  });
+
+  function renderAll() {
+    renderHeader();
+    renderNav();
+    renderPanel();
+  }
+
+  // ---------- Startup: load the last-selected (or default) database ----------
+  switchDatabase(loadSelectedDbFile());
+</script>
+</body>
+</html>
