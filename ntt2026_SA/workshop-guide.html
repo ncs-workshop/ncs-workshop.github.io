@@ -47,6 +47,8 @@
     --accent-soft: #123240;
     --line: #2B2F32;
   }
+  /* The hidden attribute must always win, even over classes that set display. */
+  [hidden] { display: none !important; }
   html { scroll-padding-top: env(safe-area-inset-top, 0px); }
   html, body { height: 100%; }
   * { box-sizing: border-box; }
@@ -195,6 +197,35 @@
     font-weight: 500;
     cursor: pointer;
   }
+  .admin-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+  .admin-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 9px 10px;
+    border-radius: 7px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--ink);
+    font-size: 13.5px;
+    font-family: inherit;
+  }
+  .admin-btn {
+    flex: 0 0 auto;
+    padding: 9px 16px;
+    border-radius: 7px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--ink);
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .admin-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .admin-btn[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .admin-link-btn { background: none; border: none; color: var(--muted); font-size: 12.5px; cursor: pointer; text-decoration: underline; }
+  .admin-msg { min-height: 1.2em; margin-top: 6px; font-size: 12.5px; color: var(--danger, #A23B2E); }
+  .admin-note { margin: 12px 4px 0; font-size: 11.5px; color: var(--muted); }
+
   .settings-danger-btn:hover { border-color: var(--danger, #A23B2E); background: var(--accent-soft); }
 
   /* Theme toggle switch — same visual language as the sidebar switch */
@@ -657,6 +688,26 @@
       <div class="settings-row-hint">Removes completed steps, theme, and sidebar preference stored on this device for every database. This can't be undone.</div>
       <button id="clearStorageBtn" class="settings-danger-btn" type="button">Clear saved progress</button>
     </div>
+
+    <div class="settings-section">
+      <div id="adminGate">
+        <div class="settings-row-label">Admin</div>
+        <div class="settings-row-hint">Enter the admin password to show the admin tools.</div>
+        <div class="admin-row">
+          <input id="adminPassword" class="admin-input" type="password" autocomplete="off" placeholder="Password" aria-label="Admin password">
+          <button id="adminLoginBtn" class="admin-btn" type="button">Enter</button>
+        </div>
+        <div id="adminMsg" class="admin-msg" role="alert"></div>
+      </div>
+      <div id="adminControls" hidden>
+        <div class="settings-row-label">Admin</div>
+        <div class="settings-row-hint">Opens every chapter and sub-chapter without marking any step complete, so the progress count stays as it is.</div>
+        <div class="admin-row">
+          <button id="adminUnlockAllBtn" class="admin-btn" type="button" aria-pressed="false">Unlock all chapters</button>
+          <button id="adminHideBtn" class="admin-link-btn" type="button">Hide admin section</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -742,6 +793,14 @@
   })();
 
   /* ====================================================================
+     ADMIN SECTION (Settings window). ADMIN_PASSWORD is the password that
+     reveals the hidden admin tools. This is only a soft gate: the password
+     is stored in this file, so anyone who opens the page source can read
+     it. Don't reuse a real password here.
+     ==================================================================== */
+  var ADMIN_PASSWORD = "nordic";
+
+  /* ====================================================================
      Available workshop databases.
      Browsers can't scan a folder's contents for security reasons, so
      this list has to be kept up to date by hand: add one line per
@@ -749,7 +808,10 @@
      Settings → Workshop database.
      ==================================================================== */
   var DB_FILES = [
-    { file: "ntt2026_workshop_dach.dat", label: "NTT2026 EMEA Workshop" },
+    { file: "db_nordic.txt", label: "Nordic Tech Tour 2026" },
+    { file: "db_docker.txt", label: "Docker Workshop (demo)" },
+    { file: "db_python_intro.txt", label: "Python Basics (demo)" },
+    { file: "db_ntt2026-copy.dat", label: "NTT 2026 (copy)" }
   ];
 
   var SELECTED_DB_KEY = "workshop-guide:selected-db";
@@ -829,6 +891,7 @@
   }
 
   function isChapterUnlocked(ci) {
+    if (adminUnlockAll) return true;   // admin override (Settings -> Admin)
     if (ci === 0) return true;
     for (var c = 0; c < ci; c++) {
       var indices = chapterIndicesFor(c);
@@ -843,6 +906,7 @@
   // same chapter) is done, on top of its chapter being unlocked. The first
   // sub-chapter is open as soon as its chapter is.
   function isSubUnlocked(ci, subi) {
+    if (adminUnlockAll) return true;   // admin override (Settings -> Admin)
     if (!isChapterUnlocked(ci)) return false;
     var subs = CH[ci].subs;
     for (var j = 0; j < subi; j++) {
@@ -1103,6 +1167,13 @@
 
       navEl.appendChild(chapterEl);
     });
+
+    if (adminUnlockAll) {
+      var note = document.createElement("div");
+      note.className = "admin-note";
+      note.textContent = "\uD83D\uDD13 Admin: all chapters unlocked";
+      navEl.appendChild(note);
+    }
   }
 
   // ---------- Main panel ----------
@@ -1432,6 +1503,52 @@
     if (!infoOverlayEl.hidden) closeInfoModal();
     else if (!settingsOverlayEl.hidden) closeSettings();
   });
+
+  // ---------- Admin section: hidden until the password is entered ----------
+  var ADMIN_UNLOCK_KEY = "workshop-guide:admin-unlock-all";
+  var adminAuthed = false;      // revealed for this page visit only
+  var adminUnlockAll = false;   // the override itself is remembered on this device
+  try { adminUnlockAll = localStorage.getItem(ADMIN_UNLOCK_KEY) === "1"; } catch (e) { /* ignore */ }
+
+  var adminGateEl = document.getElementById("adminGate");
+  var adminControlsEl = document.getElementById("adminControls");
+  var adminPasswordEl = document.getElementById("adminPassword");
+  var adminMsgEl = document.getElementById("adminMsg");
+  var adminUnlockBtnEl = document.getElementById("adminUnlockAllBtn");
+
+  function renderAdminSection() {
+    adminGateEl.hidden = adminAuthed;
+    adminControlsEl.hidden = !adminAuthed;
+    adminUnlockBtnEl.textContent = adminUnlockAll ? "Lock chapters again" : "Unlock all chapters";
+    adminUnlockBtnEl.setAttribute("aria-pressed", adminUnlockAll ? "true" : "false");
+  }
+
+  function tryAdminLogin() {
+    if (adminPasswordEl.value === ADMIN_PASSWORD) {
+      adminAuthed = true;
+      adminMsgEl.textContent = "";
+    } else {
+      adminMsgEl.textContent = "Wrong password.";
+    }
+    adminPasswordEl.value = "";
+    renderAdminSection();
+  }
+
+  document.getElementById("adminLoginBtn").addEventListener("click", tryAdminLogin);
+  adminPasswordEl.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") tryAdminLogin();
+  });
+  adminUnlockBtnEl.addEventListener("click", function () {
+    adminUnlockAll = !adminUnlockAll;
+    try { localStorage.setItem(ADMIN_UNLOCK_KEY, adminUnlockAll ? "1" : "0"); } catch (e) { /* ignore */ }
+    renderAdminSection();
+    renderAll();   // re-locking also moves you back to the last step you can reach
+  });
+  document.getElementById("adminHideBtn").addEventListener("click", function () {
+    adminAuthed = false;
+    renderAdminSection();
+  });
+  renderAdminSection();
 
   // ---------- Workshop database picker ----------
   var dbSelectEl = document.getElementById("dbSelect");
