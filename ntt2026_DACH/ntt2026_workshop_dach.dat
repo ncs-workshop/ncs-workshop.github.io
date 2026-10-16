@@ -547,7 +547,7 @@ var WORKSHOP = {
       "steps": [
         {
           "title": "Extending the Existing Project",
-          "description": "Each chapter builds upon the project developed in the previous chapter. All concepts, instructions, and implementation steps introduced in the current chapter should be applied directly to the existing project.<div><br></div><div>The latest version of the project is available for download&nbsp;<a href=\"solutions/5-Bluetooth.zip\" download=\"\">here&nbsp;</a>as a ZIP file.</div>",
+          "description": "Each chapter builds upon the project developed in the previous chapter. All concepts, instructions, and implementation steps introduced in the current chapter should be applied directly to the existing project.<div><br></div><div>The latest version of the project is available for download&nbsp;<a href=\"solutions/5-Bluetooth.zip\" download=\"\">here</a><a href=\"solutions/5-Bluetooth.zip\" download=\"\">&nbsp;</a>as a ZIP file.</div>",
           "codeBlocks": [],
           "codeBlocksNoCopy": [],
           "images": [],
@@ -1141,6 +1141,10 @@ var WORKSHOP = {
                 {
                   "label": "Enable cellular coonection",
                   "code": "AT+CFUN=1"
+                },
+                {
+                  "label": "Get Location from nRF Cloud",
+                  "code": "AT%NRFCLOUDLOCATION=4,1"
                 }
               ],
               "codeBlocksNoCopy": [
@@ -1167,6 +1171,10 @@ var WORKSHOP = {
                 {
                   "label": "Enable cellular coonection",
                   "code": "AT+CFUN=1"
+                },
+                {
+                  "label": "Get Location from nRF Cloud",
+                  "code": "AT%NRFCLOUDLOCATION=5,1"
                 }
               ],
               "codeBlocksNoCopy": [
