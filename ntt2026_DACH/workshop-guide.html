@@ -173,6 +173,15 @@
   }
   .settings-row-label { font-size: 14px; font-weight: 600; color: var(--ink); }
   .settings-row-hint { font-size: 12.5px; color: var(--muted); margin-top: 3px; line-height: 1.4; }
+  .settings-copyright {
+    margin-top: 4px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    font-size: 11.5px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.4;
+  }
 
   .settings-select {
     width: 100%;
@@ -227,6 +236,8 @@
   .admin-note { margin: 12px 4px 0; font-size: 11.5px; color: var(--muted); }
 
   .settings-danger-btn:hover { border-color: var(--danger, #A23B2E); background: var(--accent-soft); }
+  .settings-danger-btn:disabled { opacity: .45; cursor: not-allowed; }
+  .settings-danger-btn:disabled:hover { border-color: var(--line); background: var(--panel); }
 
   /* Theme toggle switch — same visual language as the sidebar switch */
   .theme-toggle { flex: 0 0 auto; background: none; border: none; cursor: pointer; padding: 2px; }
@@ -708,6 +719,8 @@
         </div>
       </div>
     </div>
+
+    <div class="settings-copyright">Nordic Semiconductor, App Developer: ChrisKurz, Version: <span id="guideVersion"></span></div>
   </div>
 </div>
 
@@ -800,6 +813,16 @@
      ==================================================================== */
   var ADMIN_PASSWORD = "nordic";
 
+  /* App version — shown in the copyright line at the bottom of the Settings menu. */
+  var GUIDE_VERSION = "v1.0.0";
+
+  /* Chapter / sub-chapter locking.
+     true  = a chapter (or sub-chapter) opens only after every step before it is marked complete.
+     false = everything is open from the start; the Admin section in Settings is hidden.
+     The Workshop Data Builder sets this value when it creates the guide. */
+  var LOCKING_ENABLED = true;
+  (function () { var el = document.getElementById("guideVersion"); if (el) el.textContent = GUIDE_VERSION; })();
+
   /* ====================================================================
      Available workshop databases.
      Browsers can't scan a folder's contents for security reasons, so
@@ -809,6 +832,7 @@
      ==================================================================== */
   var DB_FILES = [
     { file: "ntt2026_workshop_dach.dat", label: "Nordic Tech Tour 2026 Workshop" },
+    { file: "Sensor_Add-on.dat", label: "Optional - Sensor Add-on Board" }
   ];
 
   var SELECTED_DB_KEY = "workshop-guide:selected-db";
@@ -888,6 +912,7 @@
   }
 
   function isChapterUnlocked(ci) {
+    if (LOCKING_ENABLED === false) return true;   // locking switched off for this guide
     if (adminUnlockAll) return true;   // admin override (Settings -> Admin)
     if (ci === 0) return true;
     for (var c = 0; c < ci; c++) {
@@ -903,6 +928,7 @@
   // same chapter) is done, on top of its chapter being unlocked. The first
   // sub-chapter is open as soon as its chapter is.
   function isSubUnlocked(ci, subi) {
+    if (LOCKING_ENABLED === false) return true;   // locking switched off for this guide
     if (adminUnlockAll) return true;   // admin override (Settings -> Admin)
     if (!isChapterUnlocked(ci)) return false;
     var subs = CH[ci].subs;
@@ -1165,7 +1191,7 @@
       navEl.appendChild(chapterEl);
     });
 
-    if (adminUnlockAll) {
+    if (adminUnlockAll && LOCKING_ENABLED !== false) {
       var note = document.createElement("div");
       note.className = "admin-note";
       note.textContent = "\uD83D\uDD13 Admin: all chapters unlocked";
@@ -1509,6 +1535,10 @@
 
   var adminGateEl = document.getElementById("adminGate");
   var adminControlsEl = document.getElementById("adminControls");
+  if (LOCKING_ENABLED === false) {   // nothing to unlock, so hide the whole Admin section
+    var adminSectionEl = adminGateEl.closest(".settings-section");
+    if (adminSectionEl) adminSectionEl.hidden = true;
+  }
   var adminPasswordEl = document.getElementById("adminPassword");
   var adminMsgEl = document.getElementById("adminMsg");
   var adminUnlockBtnEl = document.getElementById("adminUnlockAllBtn");
@@ -1605,7 +1635,13 @@
   }
 
   // ---------- Clear saved data (all databases) ----------
-  document.getElementById("clearStorageBtn").addEventListener("click", function () {
+  var clearStorageBtnEl = document.getElementById("clearStorageBtn");
+  if (LOCKING_ENABLED === false) {   // greyed out while chapter locking is switched off
+    clearStorageBtnEl.disabled = true;
+    clearStorageBtnEl.title = "Not available: chapter locking is switched off in this guide.";
+  }
+  clearStorageBtnEl.addEventListener("click", function () {
+    if (LOCKING_ENABLED === false) return;
     var ok = confirm("Clear all saved progress and preferences on this device, for every workshop database? This can't be undone.");
     if (!ok) return;
     try {
