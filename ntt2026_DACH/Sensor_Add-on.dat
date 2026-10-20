@@ -20,7 +20,7 @@ var WORKSHOP = {
         },
         {
           "title": "Schematic",
-          "description": "Here is the schematic of the Sensor Add-on Board",
+          "description": "<div>Here is the schematic of the Sensor Add-on Board</div>",
           "codeBlocks": [],
           "codeBlocksNoCopy": [],
           "images": [
@@ -119,6 +119,20 @@ var WORKSHOP = {
         {
           "title": "Serial Terminal",
           "description": "<div>Connect the board to the Serial Terminal and check whether the sensors have been configured correctly and whether the measured values are displayed.</div>",
+          "codeBlocks": [],
+          "codeBlocksNoCopy": [],
+          "images": [],
+          "moreInfo": []
+        }
+      ]
+    },
+    {
+      "title": "Wrap-up",
+      "description": "",
+      "steps": [
+        {
+          "title": "Solution",
+          "description": "<span style=\"font-size: 14.4px;\">The solution to this hands-on chapter can be downloaded&nbsp;</span><a href=\"solutions/3a_Sensor-Addon.zip\" download=\"\">here</a>",
           "codeBlocks": [],
           "codeBlocksNoCopy": [],
           "images": [],
