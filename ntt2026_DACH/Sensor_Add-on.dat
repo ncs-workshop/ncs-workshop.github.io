@@ -132,7 +132,7 @@ var WORKSHOP = {
       "steps": [
         {
           "title": "Solution",
-          "description": "<span style=\"font-size: 14.4px;\">The solution to this hands-on chapter can be downloaded&nbsp;</span><a href=\"solutions/3a_Sensor-Addon.zip\" download=\"\">here</a>",
+          "description": "<span style=\"font-size: 14.4px;\">The solution to this hands-on chapter can be downloaded&nbsp;</span><a href=\"solutions/3a-Sensor_Addon.zip\" download=\"\">here</a>",
           "codeBlocks": [],
           "codeBlocksNoCopy": [],
           "images": [],
