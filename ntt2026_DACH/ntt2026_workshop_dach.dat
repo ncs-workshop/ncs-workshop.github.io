@@ -620,7 +620,7 @@ var WORKSHOP = {
         },
         {
           "title": "Add the sensor read function",
-          "description": "<strong>Add the sensor read function</strong> and print raw values, before touching the fuel gauge library at all — this isolates \"can I talk to the PMIC\" from \"does the algorithm work\".",
+          "description": "<strong>Add the sensor read function</strong> and print raw values, before touching the fuel gauge library at all — this isolates \"can I talk to the PMIC\" from \"does the algorithm work\".<div><br></div><div><b>NOTE:</b>&nbsp;The measured values are also read in here using the Zephyr Sensing subsystem. This means we also use the functions <code>sensor_sample_fetch()</code>&nbsp;and <code>sensor_channel_get()</code> here.&nbsp;</div>",
           "codeBlocks": [
             {
               "label": "main.c",
