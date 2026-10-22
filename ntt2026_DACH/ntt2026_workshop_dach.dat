@@ -559,28 +559,11 @@ var WORKSHOP = {
           "codeBlocks": [
             {
               "label": "prj.conf",
-              "code": "# Enable I2C support\nCONFIG_I2C=y\n\n# Enable float-based math\nCONFIG_FPU=y\n\n# nPM13xx and Fuel Gauge support\nCONFIG_MFD=y\nCONFIG_MFD_NPM13XX=y\nCONFIG_REGULATOR=y\nCONFIG_REGULATOR_NPM13XX=y\nCONFIG_NPM13XX_CHARGER=y\nCONFIG_NRF_FUEL_GAUGE=y\n"
+              "code": "# Enable I2C support\nCONFIG_I2C=y\n\n# Enable float-based math\nCONFIG_FPU=y\n\n# nPM13xx Fuel Gauge support\nCONFIG_NRF_FUEL_GAUGE=y\n"
             }
           ],
           "images": [],
-          "moreInfo": [
-            {
-              "label": "MFD_NPM13XX / REGULATOR_NPM13XX",
-              "content": "<code dir=\"ltr\">MFD_NPM13XX</code> / <code dir=\"ltr\">REGULATOR_NPM13XX</code> bring in the base chip driver and its buck/LDO regulators."
-            },
-            {
-              "label": "NPM13XX_CHARGER",
-              "content": "<code dir=\"ltr\">NPM13XX_CHARGER</code> is the Zephyr <strong>sensor</strong> driver that reads V/I/T off the chip."
-            },
-            {
-              "label": "NRF_FUEL_GAUGE",
-              "content": "<code dir=\"ltr\">NRF_FUEL_GAUGE</code> pulls in Nordic's algorithm library from nrfxlib."
-            },
-            {
-              "label": "FPU",
-              "content": "The FPU/cbprintf lines are there because the fuel gauge math is float-based and you'll want <code dir=\"ltr\">%f</code> in <code dir=\"ltr\">printk</code>."
-            }
-          ],
+          "moreInfo": [],
           "codeBlocksNoCopy": []
         },
         {
