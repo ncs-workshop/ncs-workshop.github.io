@@ -623,8 +623,12 @@ var WORKSHOP = {
           "description": "<strong>Add the sensor read function</strong> and print raw values, before touching the fuel gauge library at all — this isolates \"can I talk to the PMIC\" from \"does the algorithm work\".<div><br></div><div><b>NOTE:</b>&nbsp;The measured values are also read in here using the Zephyr Sensing subsystem. This means we also use the functions <code>sensor_sample_fetch()</code>&nbsp;and <code>sensor_channel_get()</code> here.&nbsp;</div>",
           "codeBlocks": [
             {
-              "label": "main.c",
-              "code": "#include <nrf_fuel_gauge.h>\n\nstatic int read_sensors(float *voltage, float *current, float *temp)\n{\n    struct sensor_value value;\n    int err = sensor_sample_fetch(charger);\n    if (err) {\n        printk(\"Error: nPM13xx sample update error\\n\");\n        return err;\n    }\n\n    sensor_channel_get(charger, SENSOR_CHAN_GAUGE_VOLTAGE, &value);\n    *voltage = (float)value.val1 + ((float)value.val2 / 1000000.f);\n\n    sensor_channel_get(charger, SENSOR_CHAN_GAUGE_AVG_CURRENT, &value);\n    *current = (float)value.val1 + ((float)value.val2 / 1000000.f);\n\n    sensor_channel_get(charger, SENSOR_CHAN_GAUGE_TEMP, &value);\n    *temp = (float)value.val1 + ((float)value.val2 / 1000000.f);\n\n    return 0;\n}"
+              "label": "main.c  =>  Add to the include list at the beginning of the file",
+              "code": "#include <nrf_fuel_gauge.h>"
+            },
+            {
+              "label": "main.c ",
+              "code": "static int read_sensors(float *voltage, float *current, float *temp)\n{\n    struct sensor_value value;\n    int err = sensor_sample_fetch(charger);\n    if (err) {\n        printk(\"Error: nPM13xx sample update error\\n\");\n        return err;\n    }\n\n    sensor_channel_get(charger, SENSOR_CHAN_GAUGE_VOLTAGE, &value);\n    *voltage = (float)value.val1 + ((float)value.val2 / 1000000.f);\n\n    sensor_channel_get(charger, SENSOR_CHAN_GAUGE_AVG_CURRENT, &value);\n    *current = (float)value.val1 + ((float)value.val2 / 1000000.f);\n\n    sensor_channel_get(charger, SENSOR_CHAN_GAUGE_TEMP, &value);\n    *temp = (float)value.val1 + ((float)value.val2 / 1000000.f);\n\n    return 0;\n}"
             }
           ],
           "images": [],
