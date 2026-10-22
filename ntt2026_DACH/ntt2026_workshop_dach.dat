@@ -646,7 +646,7 @@ var WORKSHOP = {
         },
         {
           "title": "Polling loop",
-          "description": "Add the polling loop last.<div><br></div><div><div><b>Note:</b> place below code in main() function before the</div><div><span style=\"font-size: 14.4px;\"><code>&nbsp; &nbsp; bluetooth_battery_level_update()</code></span></div><div>function is called. This allows us easily to replace the simulated <code style=\"color: rgb(14, 138, 125);\">batt_level</code> by the real State-of-Charge (<code>soc</code>) value.</div></div>",
+          "description": "Add the polling loop last.<div><br></div><div><div><b>Note:</b> place below code in main() function before the</div><div><span style=\"font-size: 14.4px;\">&nbsp; &nbsp; &nbsp; &nbsp; <code>bluetooth_battery_level_update()</code></span></div><div>function is called. This allows us easily to replace the simulated <code style=\"color: rgb(14, 138, 125);\">batt_level</code> by the real State-of-Charge (<code>soc</code>) value.</div></div>",
           "codeBlocks": [
             {
               "label": "main.c => main() function => in entire loop",
@@ -659,7 +659,7 @@ var WORKSHOP = {
         },
         {
           "title": "Use State-of-Charge value for Bluetooth Notification",
-          "description": "<div><span style=\"font-size: 14.4px;\">In the previous chapter, we transmitted the battery level via Bluetooth. The level was simulated in that case. Since we now have a calculated SOC level, we can use it.</span></div><div><span style=\"font-size: 14.4px;\"><br></span></div><div><span style=\"font-size: 14.4px;\">We will modify the function&nbsp;</span></div><div><span style=\"font-size: 14.4px;\">&nbsp; &nbsp; &nbsp;<code>err = app_battery_level_update(batt_level);</code></span></div><div><span style=\"font-size: 14.4px;\">as shown below. Note that the <code>batt_level</code> simulation can be removed.</span></div>",
+          "description": "<div><span style=\"font-size: 14.4px;\">In the previous chapter, we transmitted the battery level via Bluetooth. The level was simulated in that case. Since we now have a calculated SOC level, we can use it.</span></div><div><span style=\"font-size: 14.4px;\"><br></span></div><div><span style=\"font-size: 14.4px;\">We will modify the function&nbsp;</span></div><div><span style=\"font-size: 14.4px;\">&nbsp; &nbsp; &nbsp;<code>err = app_battery_level_update(batt_level);</code></span></div><div><span style=\"font-size: 14.4px;\">as shown below. Note that the <code>batt_level</code> simulation can be removed.</span></div><div><span style=\"font-size: 14.4px;\"><br></span></div><div><span style=\"font-size: 14.4px;\"><b>Note</b>: It's possible that the AI tool used a different function name in your project.&nbsp;</span></div>",
           "codeBlocks": [
             {
               "label": "main.c => use SoC from Fuel Gauge instead of simulated value",
