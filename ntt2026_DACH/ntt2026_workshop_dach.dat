@@ -633,7 +633,7 @@ var WORKSHOP = {
         },
         {
           "title": "Fuel Gauge library",
-          "description": "<div>Bring in the fuel gauge library and initialize it.</div>",
+          "description": "<div>Bring in the fuel gauge library and initialize it.</div><div><br></div><div><b>Note:</b>&nbsp;The code snippet assumes that the variable <code>err</code> was already declared in the previous step. Since the code generated in previous chapter varies, it is possible that a different variable name was used during the variable declaration or the error handling is done within the <i>bluetooth.c</i> file. In that case, you must declare the variable <code>err</code> here:</div><div>&nbsp; &nbsp;<code>int err;</code>&nbsp;</div>",
           "codeBlocks": [
             {
               "label": "main.c => main() function",
