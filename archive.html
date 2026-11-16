@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Archived Nordic Semiconductor workshops and historical workshop resources.">
+  <title>Archived Workshops | Nordic Semiconductor</title>
+  <style>
+:root {
+  --blueslate: #0032A0;
+  --blue: #00A2C6;
+  --sky: #6AD1E3;
+  --text: #333F48;
+  --muted: #768692;
+  --grey-light: #D9E1E2;
+  --bg: #F4F7F7;
+  --card: #FFFFFF;
+  --font: "Segoe UI Light", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --font-semi: "Segoe UI Semilight", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+html { min-height: 100%; }
+body {
+  margin: 0; min-height: 100vh; display: flex; flex-direction: column;
+  background: var(--bg); color: var(--text);
+  font-family: var(--font-semi); font-size: 1.0625rem; line-height: 1.5;
+}
+header {
+  position: relative; overflow: hidden; background: var(--blueslate); color: #fff;
+  padding: clamp(2rem, 6vw, 4rem) clamp(1.25rem, 6vw, 5rem) clamp(3rem, 9vw, 6.5rem);
+}
+header::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--blue);
+}
+.brand {
+  display: inline-block; color: #fff; text-decoration: none;
+  font-family: var(--font); font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  font-weight: 300; letter-spacing: .02em;
+}
+h1 {
+  margin: clamp(2.5rem, 8vw, 5rem) 0 0; max-width: 16ch;
+  font-family: var(--font); font-weight: 300;
+  font-size: clamp(2.5rem, 7vw, 4.75rem); line-height: 1.05; letter-spacing: -0.01em;
+}
+.lede { margin: 1.25rem 0 0; max-width: 46ch; color: #DCE6F7; }
+main {
+  flex: 1; width: 100%; max-width: 62rem; margin: 0 auto;
+  padding: 0 clamp(1.25rem, 6vw, 5rem) 2rem;
+}
+.panel {
+  position: relative; margin-top: -2.5rem; background: var(--card); border-radius: 6px;
+  box-shadow: 0 1px 0 var(--grey-light), 0 12px 32px rgba(0, 50, 160, .10);
+  padding: clamp(1.25rem, 4vw, 2.25rem);
+}
+h2 {
+  margin: 0 0 1rem; font-family: var(--font-semi); font-weight: 600;
+  font-size: 1.25rem; color: var(--blueslate);
+}
+ul.links { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--grey-light); }
+ul.links li { border-bottom: 1px solid var(--grey-light); }
+a.workshop-link {
+  display: flex; align-items: center; gap: 1rem; padding: 1.1rem .5rem;
+  color: var(--text); text-decoration: none; transition: background-color .15s ease;
+}
+a.workshop-link:hover { background: #EEF6F8; }
+a.workshop-link:focus-visible, .archive-link a:focus-visible {
+  outline: 3px solid var(--blue); outline-offset: 3px;
+}
+.dot {
+  flex: none; width: 2.5rem; height: 2.5rem; border-radius: 50%;
+  background: var(--blue); position: relative;
+}
+.dot::after {
+  content: ""; position: absolute; left: 50%; top: 50%; width: .55rem; height: .55rem;
+  border-top: 2px solid #fff; border-right: 2px solid #fff;
+  transform: translate(-70%, -50%) rotate(45deg);
+}
+.workshop-text { display: flex; flex-direction: column; min-width: 0; }
+.workshop-name { font-family: var(--font-semi); font-weight: 600; font-size: 1.15rem; color: var(--text); }
+.meta { color: var(--muted); font-size: .95rem; }
+.archive-link {
+  margin: 2rem 0 0; padding: 1rem clamp(1.25rem, 4vw, 2.25rem);
+  border-top: 1px solid var(--grey-light); font-size: .82rem;
+}
+.archive-link a {
+  display: inline-flex; align-items: center; gap: .5rem; color: var(--muted);
+  text-decoration: none; padding: .25rem 0;
+}
+.archive-link a:hover { color: var(--blueslate); }
+.dot-sm {
+  width: 1rem; height: 1rem; border-radius: 50%; background: var(--muted);
+  position: relative; flex: none;
+}
+.dot-sm::after {
+  content: ""; position: absolute; left: 50%; top: 50%; width: .25rem; height: .25rem;
+  border-top: 1px solid #fff; border-right: 1px solid #fff;
+  transform: translate(-70%, -50%) rotate(45deg);
+}
+.archive-intro { color: var(--muted); margin: 0 0 1.5rem; }
+.year-heading { margin-top: 2rem; }
+.notice {
+  margin-top: 2rem; padding: 1rem 1.1rem; background: #F4F7F7;
+  border-left: 3px solid var(--muted); color: var(--muted); font-size: .9rem;
+}
+.notice strong { color: var(--text); }
+.notice p { margin: .4rem 0 0; }
+.back-link { display: inline-block; margin: 1.5rem 0 0; color: var(--blueslate); font-size: .9rem; text-decoration: none; }
+.back-link:hover { text-decoration: underline; }
+footer {
+  padding: 1.5rem clamp(1.25rem, 6vw, 5rem); color: var(--muted);
+  font-size: .85rem; border-top: 1px solid var(--grey-light);
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+  </style>
+</head>
+<body>
+  <header>
+    <!-- Replace this text wordmark with your approved Nordic Semiconductor SVG logo if desired. -->
+    <a class="brand" href="index.html" aria-label="Nordic Semiconductor home">NORDIC SEMICONDUCTOR</a>
+    <h1>Workshop archive</h1>
+    <p class="lede">Previous Nordic Semiconductor workshops and technical resources.</p>
+  </header>
+
+  <main>
+    <section class="panel" aria-labelledby="archive-heading">
+      <h2 id="archive-heading">Archived workshops</h2>
+      <p class="archive-intro">Browse materials from completed workshops. The newest archived workshops are listed first.</p>
+
+      <div class="notice" role="note" aria-label="Archive maintenance information">
+        <strong>Important information</strong>
+        <p>
+          Archived workshop materials are retained for historical reference only.
+          They are no longer actively maintained or updated by Nordic Semiconductor.
+          Hardware, software, SDK versions, documentation and instructions may be
+          outdated or incompatible with current development environments.
+        </p>
+      </div>
+
+      <h2 class="year-heading">2026</h2>
+      <ul class="links">
+        <li>
+          <a class="workshop-link" href="ntt2026_SA/workshop-guide.html">
+            <span class="dot" aria-hidden="true"></span>
+            <span class="workshop-text">
+              <span class="workshop-name">Nordic Tech Tour EMEA 2026: Hands-on Workshop</span>
+              <span class="meta">13. October 2026, Cape Town, South Africa<br>
+                                 15. October 2026, Johannesburg, South Africa</span>
+            </span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- Add future archived workshops under the appropriate year.
+           Keep each workshop's original folder and URL unchanged. -->
+
+    </section>
+
+    <a class="back-link" href="index.html">&larr; Back to available workshops</a>
+  </main>
+
+  <footer>&copy; Nordic Semiconductor</footer>
+</body>
+</html>

@@ -976,8 +976,16 @@ var WORKSHOP = {
           "description": "<div>The nRF93M1 runs the nRF Cloud client inside the module, so your host only needs AT commands. The module still has to be known to the cloud before it can use that connection. In nRF Cloud you add the device with its UUID and registration JWT. Once it is onboarded, there are two main reasons to use the account.</div><div><br></div><div><b>1. Cloud services (data and location)</b></div><div><ul><li><code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDMESSAGE</code> sends JSON data to your account.</li><li><code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDLOCATION</code> returns a position that nRF Cloud resolves from cell or Wi-Fi measurements, so no GNSS receiver is needed.</li><li>Shadow (<code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDSHADOW</code>) and FOTA (<code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDFOTA</code>) use the same provisioned connection.</li></ul></div><div><br></div><div><b>2. nRF Cloud Observability</b></div><div>The module integrates nRFCloud firmware observability. Coredumps and periodic metrics heartbeats are captured on the device, stored in the secure file system, and uploaded over the existing cellular connection. The account is where this data is received and analyzed. This is the practical way to diagnose intermittent field faults that do not reproduce on a bench.</div><div><br></div><div><ul><li><code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDOBSHEARTBEAT</code> triggers a metrics heartbeat immediately. It serializes all accumulated metric values into the chunk queue and is intended for debug use.</li><li><code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDOBSUPLOAD</code> uploads all pending observability chunks over CoAP. An optional project key parameter overrides the key compiled into the firmware.</li></ul></div>",
           "steps": [
             {
-              "title": "Provision the nRF93M1 in nRF Cloud",
-              "description": "Register for an <a href=\"https://nrfcloud.nordicsemi.com/\" target=\"_blank\" rel=\"noopener\" style=\"color: rgb(14, 138, 125);\">nRF Cloud</a> account, or log in to your existing account. If you already have an account, it may open the nRF Cloud legacy dashboard. Select <b>NEW EXPERIENCE</b> in the left navigation sidebar if you startup in the <b>Legacy Dashboard</b>.&nbsp;<div><br></div><div>To provision the device, we need to generate a JSON Web Token (JWT) on the nRF93M1 using our <b>team-id</b> from nRF Cloud.&nbsp;</div><div><br></div><div>Navigate to <b>Fleet</b> , select <b>Device</b>, and click <b>Add devices</b>. This is the manual way to add a single device. Use <b>Bulk edit devices </b>to provision a batch of devices.&nbsp;</div><div><br></div><div><span style=\"font-size: 0.9rem;\">Choose the nRF93M1 from the device chooser:&nbsp;&nbsp;</span><span style=\"font-size: 0.9rem;\">Select nRF93M1</span></div>",
+              "title": "Access nRF Cloud",
+              "description": "Register for an&nbsp;<a href=\"http://nrfcloud.com/\" target=\"_blank\" rel=\"noopener\">nRF Cloud</a>&nbsp;account or log in to your existing account.",
+              "codeBlocks": [],
+              "codeBlocksNoCopy": [],
+              "images": [],
+              "moreInfo": []
+            },
+            {
+              "title": "Add your device to nRF Cloud",
+              "description": "<div><span style=\"font-size: 0.9rem;\">To provision the device, we need to generate a JSON Web Token (JWT) on the nRF93M1</span><span style=\"font-size: 0.9rem;\">.&nbsp;</span></div><div><ol style=\"list-style-type: decimal;\"><li><span style=\"font-size: 14.4px;\">In the nRF Cloud dashboard, navigate to <b>Fleet</b>.</span></li><li>Select <b>Device</b> and click <b>Add devices</b>.</li><li><span style=\"font-size: 0.9rem;\">In the device chooser, select <b>nRF93M1</b>.</span></li></ol></div>",
               "codeBlocks": [],
               "codeBlocksNoCopy": [],
               "images": [
@@ -993,25 +1001,8 @@ var WORKSHOP = {
               "moreInfo": []
             },
             {
-              "title": "Network time",
-              "description": "Now we need to confirm the nRF93M1 has a valid time. If the device has been connected to a network since power-on, the time should already be set (some networks do not provide network time). Let's check whether the time is available by using <code style=\"color: rgb(14, 138, 125);\">AT+CCLK?</code><div><br></div><div>If the network didn't gave a valid time the network time will report the time the module has been powered on instead of the actual time.&nbsp;</div><div><br></div><div>A response like <code style=\"color: rgb(14, 138, 125);\">+CCLK: \"00/01/01,00:00:21+00\"</code> <span style=\"font-size: 0.9rem;\">indicates that the network time is not set.&nbsp;</span></div><div><span style=\"font-size: 0.9rem;\"><br></span></div><div><span style=\"font-size: 0.9rem;\">You could connect to a network to obtain it, but during provisioning it's usually easier to set the time manually with <code style=\"color: rgb(14, 138, 125);\">AT+CCLK=\"yyyy/MM/dd,hh:mm:ss+zz\"</code> .&nbsp;</span></div><div><span style=\"font-size: 0.9rem;\"><br></span></div><div><span style=\"font-size: 0.9rem;\">Make sure the <b>time is valid</b> before continuing to the next step. As the in the next step generate JWT token is only valid for a short period.&nbsp;</span></div>",
-              "codeBlocks": [
-                {
-                  "label": "Let's check whether the time has been set:",
-                  "code": "AT+CCLK?"
-                },
-                {
-                  "label": "Set network time:",
-                  "code": "AT+CCLK=\"2026/10/01,09:56:00+00\""
-                }
-              ],
-              "codeBlocksNoCopy": [],
-              "images": [],
-              "moreInfo": []
-            },
-            {
               "title": "Generate JWT Token",
-              "description": "We now generate the JWT token on the nRF93M1 with the command <code style=\"color: rgb(14, 138, 125);\">AT%REGJWT=<user-id> &lt;user-id&gt;</user-id></code><user-id>.</user-id><div><user-id><br></user-id></div><div><user-id><b>NOTE: </b></user-id><span style=\"font-size: 0.9rem;\">On modem firmware v1.4.1, there is a known issue where A</span><span style=\"font-size: 0.9rem;\">T%REGJWT must be entered</span><span style=\"font-size: 0.9rem;\"> in capital letters.</span></div><div><span style=\"font-size: 0.9rem;\"><br></span></div><div>In the wizard's first step, you can copy the command <span style=\"background-color: rgba(79, 209, 197, 0.16); color: rgb(14, 138, 125); font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 12.672px;\">AT%REGJWT</span><span style=\"font-size: 0.9rem;\"> aith your user-id already filled in. This JWT token is only valid for one hour, which is why the nRF93M1 needs the correct time set beforehand.</span></div><div><br></div><div>Run this copied command in the terminal on the nRF93M1. After retrieving the information, press <b>Continue</b>, copy your JWT token from the serial terminal, and move to the next step.</div>",
+              "description": "<div><span style=\"font-size: 14.4px;\">We will now generate a JSON Web Token (JWT) on the nRF93M1. This token is required to provision the device with nRF Cloud.</span></div><div><span style=\"font-size: 14.4px;\"><br></span></div><div><ol style=\"list-style-type: decimal;\"><li><span style=\"font-size: 14.4px;\">In the nRF Cloud wizard, locate the <b>Get your JWT token </b>section under <b>Get Device Credentials</b>.</span></li><li>Copy the provided AT command. Your <b>team ID</b> is already included in the command:<br>AT%REGJWT=&lt;team-id&gt;</li><li>Open the serial terminal connected to the nRF93M1 and execute the copied AT command.</li><li>Copy the generated JWT from the serial terminal.</li><li>Return to the nRF Cloud wizard and click <b>Continue </b>to proceed to the next step.</li></ol></div><div><b>Note – Modem firmware v1.4.1<br></b>Due to a known issue in modem firmware v1.4.1, the AT%REGJWT command must be entered using uppercase letters.<b></b></div>",
               "codeBlocks": [
                 {
                   "label": "Example only! Please use your own user-id.",
@@ -1025,11 +1016,16 @@ var WORKSHOP = {
                   "caption": "Copy the command directly from nRF Cloud's `Add New Device` → `Get Device Credentials` , which already includes your team ID."
                 }
               ],
-              "moreInfo": []
+              "moreInfo": [
+                {
+                  "label": "Note about Device System Time",
+                  "content": "<p data-pm-slice=\"1 3 []\">JWTs typically contain time-related claims, such as <strong>Issued At (</strong><code dir=\"ltr\"><strong>iat</strong></code><strong>)</strong> and <strong>Expiration Time (</strong><code dir=\"ltr\"><strong>exp</strong></code><strong>)</strong>, which indicate when the token was created and when it becomes invalid. Some JWT generation methods, such as <code dir=\"ltr\">AT%JWT</code>, therefore require the device's system clock to be correctly set.</p><p><span style=\"font-size: 0.9rem;\">If you need to check or set the device's system time for other applications, keep the following in mind:</span></p><ul data-spread=\"false\"><li><p>Some cellular networks automatically provide the device with the current time.</p></li><li><p>To check the current device time, execute <code dir=\"ltr\">AT+CCLK?</code> in the serial terminal.</p></li><li><p>If necessary, you can manually set the device time using <code dir=\"ltr\">AT+CCLK</code>, for example:</p><p><code dir=\"ltr\">AT+CCLK=\"2026/11/19,09:56:00+00\"</code></p></li></ul><div><span style=\"font-size: 0.9rem;\">However, when generating a JWT for nRF Cloud provisioning using </span><code dir=\"ltr\" style=\"color: rgb(14, 138, 125);\">AT%REGJWT</code><span style=\"font-size: 0.9rem;\">, the device's system time is not checked. Therefore, </span><strong style=\"font-size: 0.9rem;\">no time synchronization is required</strong><span style=\"font-size: 0.9rem;\"> before executing this command.</span></div>"
+                }
+              ]
             },
             {
               "title": "Input Device Credentials",
-              "description": "<div>Copy the JWT Token from the nRF93M1 serial terminal into the next window. Remove the<code style=\"color: rgb(14, 138, 125);\"> %REGJWT:&nbsp; </code>&nbsp;from the serial output, only copy the JWT Token.</div><div><br></div><div>Press **Continue** to go to the next step.</div>",
+              "description": "<div>Copy the JWT Token from the nRF93M1 serial terminal into the next window. Remove the<code style=\"color: rgb(14, 138, 125);\"> %REGJWT:&nbsp; </code>&nbsp;from the serial output, only copy the JWT Token.</div><div><br></div><div>Press <b>Continue</b>&nbsp;to go to the next step.</div>",
               "codeBlocks": [],
               "codeBlocksNoCopy": [],
               "images": [
@@ -1073,7 +1069,7 @@ var WORKSHOP = {
           "description": "<div>The nRF93M1 runs the nRF Cloud client inside the module firmware, so cloud services are reached with AT commands rather than a cloud library on the host. The transport is CoAP over DTLS 1.2, which keeps payload overhead low and coexists with cellular power saving. Every cloud transaction emits a `<code style=\"color: rgb(14, 138, 125);\">%COAP:</code>` URC carrying the transport-layer status for that request, separately from the command's own response.</div><div><br></div><div>In the previous step, we onboarded our device to nRF Cloud. This is a mandatory procedure to follow before starting this chapter.&nbsp;</div><div><br></div><div>Some commands:</div><div><table style=\"width: 589.6px;\"><tbody><tr><th style=\"border: 0.8px solid rgb(216, 224, 234); background: none 0% 0% / auto repeat scroll padding-box border-box rgb(247, 249, 251);\">Command</th><th style=\"border: 0.8px solid rgb(216, 224, 234); background: none 0% 0% / auto repeat scroll padding-box border-box rgb(247, 249, 251);\">Description</th></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">%NRFCLOUDLOCATION</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Cell and Wi-Fi based positioning resolved by the cloud</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">%NRFCLOUDMESSAGE</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Publish a JSON message to the cloud</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">%NRFCLOUDSHADOW&nbsp;</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Read desired shadow values, write reported shadow values</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">%NRFCLOUDFOTA</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Modem firmware update and host application OTA</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">%NRFCLOUDOBSUPLOAD<br>%NRFCLOUDOBSHEARTBEAT<br>%NRFCLOUDOBSFORWARD</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Memfault firmware observability<br><br></td></tr></tbody></table></div>",
           "steps": [
             {
-              "title": "Wi-Fi Scan",
+              "title": "A Little Theory: Wi-Fi Scan",
               "description": "<code style=\"color: rgb(14, 138, 125);\">AT%WIFISCAN</code> uses the module's 2.4 GHz Wi-Fi beacon receiver to detect access points for location purposes only — it is a passive scan, not a Wi-Fi connection feature.&nbsp;<div><div><b style=\"font-size: 0.9rem;\"><br></b></div><div><b style=\"font-size: 0.9rem;\">&gt; AT%WIFISCAN=12000,1,5,3,0</b></div><div><div><b>%WIFISCAN: (-,,-28,\"00:BE:D5:20:EA:54\",11)</b></div><div><b>%WIFISCAN: (-,,-38,\"00:BE:D5:20:EA:27\",3)</b></div><div><b style=\"font-size: 0.9rem;\">OK</b></div></div><div><b><br></b></div><div>Each result line is <code style=\"color: rgb(14, 138, 125);\">%WIFISCAN: (&lt;encryption&gt;,&lt;SSID&gt;,&lt;RSSI dBm&gt;,&lt;BSSID&gt;,&lt;channel&gt;)</code>. Duplicate SSIDs are removed and results are sorted by signal strength, strongest first.&nbsp;</div><div><br></div><div>The radio is shared between the LTE modem and the WiFi scan functionality. This means the modem should either be in eDRX/PSM mode or disabled.&nbsp;&nbsp;<span style=\"font-size: 0.9rem;\">For this test disable the network connection with <code style=\"color: rgb(14, 138, 125);\">AT+CFUN=0.</code> When the you have the result you can enable the modem with <code style=\"color: rgb(14, 138, 125);\">AT+CFUN=1</code>.</span></div></div><div><span style=\"font-size: 0.9rem;\"><br></span></div><div>Start the Wi-Fi scan with <code style=\"color: rgb(14, 138, 125);\">AT%WIFISCAN=12000,1,5,3,0</code></div><div><span style=\"font-size: 0.9rem;\">Description of the parameters:</span></div><div><table style=\"width: 589.6px;\"><tbody><tr><th style=\"border: 0.8px solid rgb(216, 224, 234); background: none 0% 0% / auto repeat scroll padding-box border-box rgb(247, 249, 251);\">Value</th><th style=\"border: 0.8px solid rgb(216, 224, 234); background: none 0% 0% / auto repeat scroll padding-box border-box rgb(247, 249, 251);\">Description</th></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">12000</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Max response time in ms (5000–255000, default 12000)</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">1</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Scan rounds (1–3, default 1)</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">5</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Required SSID count (4–40, default 5)</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">3</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Search time per round in seconds (1–255, default 5)</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">0</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Priority -&nbsp; 0 = Data preferred / 1 = Wi-Fi preferred</td></tr></tbody></table><div><br></div></div><div>This retrieved data can be forwarded to your back office or used to obtain the latitude and longitude of your device.&nbsp;</div>",
               "codeBlocks": [
                 {
@@ -1091,7 +1087,7 @@ var WORKSHOP = {
               "moreInfo": []
             },
             {
-              "title": "nRF Cloud Location services",
+              "title": "A Little Theory: nRF Cloud Location services",
               "description": "<div>The <code style=\"color: rgb(14, 138, 125);\">%NRFCLOUDLOCATION</code> command triggers a cloud-based location flow.&nbsp;</div><div><br></div><div><code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDLOCATION=&lt;method&gt;,&lt;fetch_result&gt;</code> collects radio measurements locally and lets nRF Cloud resolve them into a position. There are 7 different collection methods.</div><div><br></div><div><table style=\"width: 589.6px;\"><tbody><tr><th style=\"border: 0.8px solid rgb(216, 224, 234); background: none 0% 0% / auto repeat scroll padding-box border-box rgb(247, 249, 251);\">Header</th><th style=\"border: 0.8px solid rgb(216, 224, 234); background: none 0% 0% / auto repeat scroll padding-box border-box rgb(247, 249, 251);\">Header</th></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">1</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Single-cell</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">2</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Multi-cell</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">3</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Single-cell and Multi-cell</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">4</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Wi-Fi Only</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">5</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Single-cell and Wi-Fi</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">6</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">Multi-cell and Wi-Fi</td></tr><tr><td style=\"border: 0.8px solid rgb(216, 224, 234);\">7</td><td style=\"border: 0.8px solid rgb(216, 224, 234);\">All methods</td></tr></tbody></table><div><br></div></div><div><span style=\"font-size: 0.9rem;\">The <code style=\"color: rgb(14, 138, 125);\">&lt;fetch_result&gt;</code> parameter specifies whether the modem reports a location result after sending the collected data to nRF Cloud.</span></div><div><ul><li>0 = Report an acknowledgment without returning a location result.&nbsp;</li><li>1 = Report the location result back to the device.</li></ul></div><div><br></div><div>Regardless of the selected <code style=\"color: rgb(14, 138, 125);\">&lt;fetch_result&gt;</code>, the location is stored on the device in nRFCloud. You can visualize this in nRF Cloud or use the result directly in Google Maps.</div><div><a href=\"https://maps.google.com/?q=&lt;lat&gt;,&lt;lon&gt;\" target=\"_blank\" rel=\"noopener\" style=\"color: rgb(14, 138, 125);\">https://maps.google.com/?q=&lt;lat&gt;,&lt;lon&gt;</a></div><div><br></div><div>In the next step we will work with method 1, method 4 and method 5.&nbsp;</div>",
               "codeBlocks": [
                 {
@@ -1188,31 +1184,27 @@ var WORKSHOP = {
             },
             {
               "title": "Viewing the position in nRF Cloud",
-              "description": "In nRF Cloud, we can now visualize our reported location based on the commands in the previous steps.<div><br></div><div>The location view is at this moment not yet transferred to the&nbsp; New Experience site. Go to the<b> Legacy App</b> in the left sidebar to view the live or historical location.</div>",
+              "description": "In nRF Cloud, we can now visualize our reported location based on the commands in the previous steps.<div><ol style=\"list-style-type: decimal;\"><li><span style=\"font-size: 0.9rem;\">Click </span><b style=\"font-size: 0.9rem;\">Devices</b><span style=\"font-size: 0.9rem;\"> in the left sidebar and select your device.&nbsp;</span></li><li><span style=\"font-size: 0.9rem;\">Open the </span><b style=\"font-size: 0.9rem;\">Overview</b><span style=\"font-size: 0.9rem;\"> tab.&nbsp;</span></li><li><span style=\"font-size: 0.9rem;\">The </span><b style=\"font-size: 0.9rem;\">Recent location</b><span style=\"font-size: 0.9rem;\"> tile shows the latest location report: its coordinates, the source (GNSS, Cellular or Wi-Fi), the accuracy, and when it arrived.</span></li></ol></div><div><span style=\"font-size: 0.9rem;\">Click </span><b style=\"font-size: 0.9rem;\">Inspect recent data</b><span style=\"font-size: 0.9rem;\"> to open a map and a table of the last 10 location reports.</span></div>",
               "codeBlocks": [],
               "codeBlocksNoCopy": [],
               "images": [
                 {
                   "src": "images/nRFCloud_location_00.png",
-                  "caption": "Go to the \"Legacy App\" in the left sidebar."
+                  "caption": "Click \"Devices\" in the left sidebar and select your device."
                 },
                 {
                   "src": "images/nRFCloud_location_01.png",
-                  "caption": "Select \"DEVICE MANAGEMENT\" -> \"DEVICES\""
+                  "caption": "The \"Overview\" tab shows the \"Recent location\" tile."
                 },
                 {
                   "src": "images/nRFCloud_location_02.png",
-                  "caption": "Click on your device to open a dashboard with device information."
-                },
-                {
-                  "src": "images/nRFCloud_location_03.png",
-                  "caption": "View actual or historical location data"
+                  "caption": "Click \"Inspect recent data\" to view the last 10 location reports."
                 }
               ],
               "moreInfo": [
                 {
-                  "label": "Location window",
-                  "content": "<div>Scroll to the <b>Location</b> window. Here you can see the live location data or click on <b>View historical data</b>. The window shows the lookups from that device since opening this window. The blue circle represents the single-cell location, and the orange circles represent locations using Wi-Fi access points.</div><div><br></div>"
+                  "label": "Inspect recent data",
+                  "content": "<div>The <b>Inspect recent data</b> dialog shows the last 10 location reports from your device on a map and in a table. Each row lists when the report was received, the source (GNSS, Cellular or Wi-Fi), the latitude and longitude, and the accuracy.</div><div><br></div><div>Compare the accuracy of the lookups from the previous steps: Method 1 (single cell), Method 4 (Wi-Fi only) and Method 5 (single cell + Wi-Fi). Single cell is the least accurate, often in the range of kilometers.</div>"
                 }
               ]
             }
@@ -1224,7 +1216,7 @@ var WORKSHOP = {
           "steps": [
             {
               "title": "nRF Cloud Messages",
-              "description": "<div><code style=\"color: rgb(14, 138, 125);\">%NRFCLOUDMESSAGE</code> is a one-way push of telemetry data.</div><div><br></div><div>Use: <code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDMESSAGE={\"appId\":\"BUTTON\",\"data\":\"1\"} </code><span style=\"font-size: 0.9rem;\">&nbsp;to send a JSON object or array (max 511 characters) to nRF Cloud over CoAP. This command replies <code style=\"color: rgb(14, 138, 125);\">%NRFCLOUDMESSAGE: SENT</code>.&nbsp;</span></div><div><span style=\"font-size: 0.9rem;\"><br></span></div><div><span style=\"font-size: 0.9rem;\">Use it for events and sensor readings \"fire and forget\", nothing is stored on the device side.</span></div><div><br></div><div>Like the location data the message can be viewed (only live data). Go to the <b>Legacy App</b> -&gt; <b>Device Management</b> -&gt; <b>Devices</b>. Click on your active device. Scroll to view the window \"<b>Terminal</b>\"</div>",
+              "description": "<div><code style=\"color: rgb(14, 138, 125);\">%NRFCLOUDMESSAGE</code> is a one-way push of telemetry data.</div><div><br></div><div>Use: <code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDMESSAGE={\"appId\":\"BUTTON\",\"data\":\"1\"} </code><span style=\"font-size: 0.9rem;\">&nbsp;to send a JSON object or array (max 511 characters) to nRF Cloud over CoAP. This command replies <code style=\"color: rgb(14, 138, 125);\">%NRFCLOUDMESSAGE: SENT</code>.&nbsp;</span></div><div><span style=\"font-size: 0.9rem;\"><br></span></div><div><span style=\"font-size: 0.9rem;\">Use it for events and sensor readings \"fire and forget\", nothing is stored on the device side.</span></div><div><br></div><div>You can view the message in the same place as the location data. Click <b>Devices</b> and select your device, then open the <b>Overview</b> tab. The <b>Last app message received</b> tile shows the message you just sent: <code style=\"color: rgb(14, 138, 125);\">BUTTON: 1</code>.</div><div><br></div><div>Click <b>Inspect recent data</b> on the tile to see more messages: the table lists the last 10 messages, and selecting a row shows its full JSON.</div>",
               "codeBlocks": [
                 {
                   "label": "Send some data to nRF Cloud: ",
@@ -1239,15 +1231,15 @@ var WORKSHOP = {
               ],
               "images": [
                 {
-                  "src": "images/nRFCloud_location_04.png",
-                  "caption": "You can view this data at the same location as the position data in nRF Cloud."
+                  "src": "images/nRFCloud_messages_01.png",
+                  "caption": "The \"Last app message received\" tile shows the BUTTON message. Click \"Inspect recent data\" to see more messages."
                 }
               ],
               "moreInfo": []
             },
             {
               "title": "Extract Messages using REST API",
-              "description": "<div>You can also extract this data directly from the cloud using the REST API interface.</div><div>The endpoint is <code style=\"color: rgb(14, 138, 125);\">ListMessages</code>&nbsp; : <code style=\"color: rgb(14, 138, 125);\">GET https://api.nrfcloud.com/v1/messages</code>, authenticated with your team's API key as a simple bearer token.</div><div><br></div><div>The API key is found in the nRF Cloud portal under in the Legacy view. Click on the icon in the top right corner, select \"<b>User Account</b>\".&nbsp; The API Key is found in the window \"<b>Current Team Details</b>\".</div><div><br></div><div>The data can be read using for example using Postmen, for simplicity we will use the \"<b>CURL</b>\" command from the command prompt.&nbsp;</div><div><br></div><div>We also need the device UUID of the device we to address in nRF Cloud.&nbsp;</div><div>Use<code style=\"color: rgb(14, 138, 125);\"> AT%DEVICEUUID</code> to retrieve the device UUID.&nbsp;</div><div><br></div><div>Keep both the UUID and API Key we will need it in the next steps.</div><div><br></div><div>You find more information about the <a href=\"https://api-docs.nrfcloud.com/#section/Overview\" target=\"_blank\" rel=\"noopener\" style=\"color: rgb(14, 138, 125);\">REST API interface</a> on the nRF Cloud website.</div>",
+              "description": "<div>You can also extract this data directly from the cloud using the REST API interface.</div><div>The endpoint is List nRF9x Device Messages: <code style=\"color: rgb(14, 138, 125);\">GET https://api.nrfcloud.com/v1/organizations/&lt;ORG_SLUG&gt;/projects/&lt;PROJECT_SLUG&gt;/messages</code>, authenticated with an <b>Organization Auth Token</b> (OAT) as a bearer token.</div><div><br></div><div><b>Create an Organization Auth Token:</b></div><div><ol><li>Go to <b>Admin</b> -&gt; <b>Organization Auth Tokens</b> and click <b>Create Token</b>. You need to be an organization admin to do this.</li><li>Enter a <b>Description</b>, select your project under <b>Projects</b>, and under <b>Permissions</b> choose <b>Custom</b> with the <code style=\"color: rgb(14, 138, 125);\">device:read</code> permission. Then click <b>OK</b>.</li><li>Copy the token. It is shown only once.</li></ol></div><div><b>Find your slugs:</b> go to <b>Project Settings</b> -&gt; <b>General</b> and copy the <b>Organization Slug</b> and the <b>Project Slug</b>.</div><div><br></div><div>The data can be read using, for example, Postman. For simplicity we will use the \"<b>CURL</b>\" command from the command prompt.&nbsp;</div><div><br></div><div>We also need the UUID of the device we want to address in nRF Cloud.&nbsp;</div><div>Use<code style=\"color: rgb(14, 138, 125);\"> AT%DEVICEUUID</code> to retrieve the device UUID.&nbsp;</div><div><br></div><div>Keep the UUID, the token and both slugs. You need them in the next step.</div><div><br></div><div>You find more information about the <a href=\"https://docs.nrfcloud.com/api/list-device-messages\" target=\"_blank\" rel=\"noopener\" style=\"color: rgb(14, 138, 125);\">List nRF9x Device Messages</a> endpoint on the nRF Cloud website.</div>",
               "codeBlocks": [
                 {
                   "label": "Read UUID from nRF93M1",
@@ -1257,19 +1249,31 @@ var WORKSHOP = {
               "codeBlocksNoCopy": [],
               "images": [
                 {
-                  "src": "images/nRFCloud_prov_07.png",
-                  "caption": "Copy the API Key:"
+                  "src": "images/nRFCloud_oat_01.png",
+                  "caption": "Go to \"Admin\" -> \"Organization Auth Tokens\" and click \"Create Token\"."
+                },
+                {
+                  "src": "images/nRFCloud_oat_02.png",
+                  "caption": "Enter a description, select your project, and choose \"Custom\" permissions with device:read."
+                },
+                {
+                  "src": "images/nRFCloud_oat_03.png",
+                  "caption": "Copy the token. It is shown only once."
+                },
+                {
+                  "src": "images/nRFCloud_oat_04.png",
+                  "caption": "Copy the Organization Slug and Project Slug from \"Project Settings\" -> \"General\"."
                 }
               ],
               "moreInfo": []
             },
             {
               "title": "Reading device messages with the nRF Cloud REST API",
-              "description": "The messages you send with <code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDMESSAGE </code>&nbsp;are stored in your nRF Cloud account. You can read them back from a terminal with the REST API, which is a quick way to confirm that the data really arrived in the cloud.<div><br><div>What the bellow command does:</div><div><ul><li><code style=\"color: rgb(14, 138, 125);\">curl -s -X GET:</code> sends an HTTP GET request. -s (silent) hides the progress meter so only the response is printed.</li><li><code style=\"color: rgb(14, 138, 125);\">https://api.nrfcloud.com/v1/messages:</code> the endpoint that returns device messages.</li><li><code style=\"color: rgb(14, 138, 125);\">deviceId=&lt;YOUR_DEVICE_UUID&gt;</code>: selects the device. Use the UUID you read earlier with <code style=\"color: rgb(14, 138, 125);\">AT%DEVICEUUID</code>.</li><li><b>pageLimit=5</b>: returns at most 5 messages per request, which keeps the output short.</li><li><code style=\"color: rgb(14, 138, 125);\">-H \"Authorization: Bearer &lt;YOUR_API_KEY&gt;\": </code>authenticates the request with your nRF Cloud API key.</li><li><code style=\"color: rgb(14, 138, 125);\">-H \"Accept: application/json\":</code> asks for the answer in JSON format.</li></ul></div><div><br></div><div>Steps:</div><div><ol><li>Replace <code style=\"color: rgb(14, 138, 125);\">&lt;YOUR_DEVICE_UUID&gt;</code> with the UUID of your nRF93M1.</li><li>Replace <code style=\"color: rgb(14, 138, 125);\">&lt;YOUR_API_KEY&gt;</code> with your nRF Cloud API key.</li><li>Send a message from the module with <code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDMESSAGE</code>, then run the command.</li><li>Check that your message appears in the JSON response.</li></ol></div><div><br></div><div>Tips:</div><div><ul><li>Keep the URL in quotes. Without them the shell treats &amp; as \"run in the background\" and cuts the URL off.</li><li>Add <code style=\"color: rgb(14, 138, 125);\">| jq .</code> at the end to get a readable, colored JSON output.</li><li>In PowerShell use curl.exe, because curl is an alias for another command.</li><li>Treat the API key like a password. Do not paste it into chats or commit it to a repository.</li></ul></div></div>",
+              "description": "The messages you send with <code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDMESSAGE </code>&nbsp;are stored in your nRF Cloud account. You can read them back from a terminal with the REST API, which is a quick way to confirm that the data really arrived in the cloud.<div><br><div>What the command below does:</div><div><ul><li><code style=\"color: rgb(14, 138, 125);\">curl -s -X GET:</code> sends an HTTP GET request. -s (silent) hides the progress meter so only the response is printed.</li><li><code style=\"color: rgb(14, 138, 125);\">https://api.nrfcloud.com/v1/organizations/&lt;ORG_SLUG&gt;/projects/&lt;PROJECT_SLUG&gt;/messages:</code> the endpoint that returns device messages for your organization and project.</li><li><code style=\"color: rgb(14, 138, 125);\">deviceId=&lt;YOUR_DEVICE_UUID&gt;</code>: selects the device. Use the UUID you read earlier with <code style=\"color: rgb(14, 138, 125);\">AT%DEVICEUUID</code>.</li><li><b>pageLimit=5</b>: returns at most 5 messages per request, which keeps the output short.</li><li><code style=\"color: rgb(14, 138, 125);\">-H \"Authorization: Bearer &lt;YOUR_OAT&gt;\": </code>authenticates the request with your Organization Auth Token.</li><li><code style=\"color: rgb(14, 138, 125);\">-H \"Accept: application/json\":</code> asks for the answer in JSON format.</li></ul></div><div><br></div><div>Steps:</div><div><ol><li>Replace <code style=\"color: rgb(14, 138, 125);\">&lt;YOUR_DEVICE_UUID&gt;</code> with the UUID of your nRF93M1.</li><li>Replace <code style=\"color: rgb(14, 138, 125);\">&lt;ORG_SLUG&gt;</code> and <code style=\"color: rgb(14, 138, 125);\">&lt;PROJECT_SLUG&gt;</code> with your Organization Slug and Project Slug.</li><li>Replace <code style=\"color: rgb(14, 138, 125);\">&lt;YOUR_OAT&gt;</code> with your Organization Auth Token.</li><li>Send a message from the module with <code style=\"color: rgb(14, 138, 125);\">AT%NRFCLOUDMESSAGE</code>, then run the command.</li><li>Check that your message appears in the JSON response.</li></ol></div><div><br></div><div>Tips:</div><div><ul><li>Keep the URL in quotes. Without them the shell treats &amp; as \"run in the background\" and cuts the URL off.</li><li>Add <code style=\"color: rgb(14, 138, 125);\">| jq .</code> at the end to get a readable, colored JSON output.</li><li>In PowerShell use curl.exe, because curl is an alias for another command.</li><li>Treat the Organization Auth Token like a password. Do not paste it into chats or commit it to a repository.</li></ul></div></div>",
               "codeBlocks": [
                 {
                   "label": "Run on command line:",
-                  "code": "curl -s -X GET \\\n  \"https://api.nrfcloud.com/v1/messages?deviceId=<YOUR_DEVICE_UUID>&pageLimit=5\" \\\n  -H \"Authorization: Bearer <YOUR_API_KEY>\" \\\n  -H \"Accept: application/json\""
+                  "code": "curl -s -X GET \\\n  \"https://api.nrfcloud.com/v1/organizations/<ORG_SLUG>/projects/<PROJECT_SLUG>/messages?deviceId=<YOUR_DEVICE_UUID>&pageLimit=5\" \\\n  -H \"Authorization: Bearer <YOUR_OAT>\" \\\n  -H \"Accept: application/json\""
                 }
               ],
               "codeBlocksNoCopy": [],
@@ -1277,7 +1281,7 @@ var WORKSHOP = {
               "moreInfo": [
                 {
                   "label": "When using windows",
-                  "content": "<div>Copy the bellow text this doesn't have the \"\\\" as this is not accepted in windows command prompt.</div><div><br></div><div>curl -s -X GET <span style=\"font-size: 0.9rem;\">\"https://api.nrfcloud.com/v1/messages?deviceId=&lt;YOUR_DEVICE_UUID&gt;&amp;pageLimit=5\" </span><span style=\"font-size: 0.9rem;\">-H \"Authorization: Bearer &lt;YOUR_API_KEY&gt;\" </span><span style=\"font-size: 0.9rem;\">-H \"Accept: application/json\"</span></div><div><span style=\"font-size: 0.9rem;\"><br></span></div>"
+                  "content": "<div>Copy the text below. It doesn't have the \"\\\" line continuations, which the Windows command prompt does not accept.</div><div><br></div><div>curl -s -X GET <span style=\"font-size: 0.9rem;\">\"https://api.nrfcloud.com/v1/organizations/&lt;ORG_SLUG&gt;/projects/&lt;PROJECT_SLUG&gt;/messages?deviceId=&lt;YOUR_DEVICE_UUID&gt;&amp;pageLimit=5\" </span><span style=\"font-size: 0.9rem;\">-H \"Authorization: Bearer &lt;YOUR_OAT&gt;\" </span><span style=\"font-size: 0.9rem;\">-H \"Accept: application/json\"</span></div><div><span style=\"font-size: 0.9rem;\"><br></span></div>"
                 }
               ]
             }
